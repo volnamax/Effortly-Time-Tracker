@@ -1,0 +1,31 @@
+\documentclass{bmstu}
+\usepackage{mylistsettings} 
+
+\usepackage{amssymb} % For \checkmark
+\usepackage{pifont} % For \ding{55}
+
+\bibliography{biblio}
+
+\begin{document}
+	\makecourseworktitle
+	{Информатика и системы управления} % Название факультета
+	{Программное обеспечение ЭВМ и информационные технологии} % Название кафедры
+	{Разработка базы данных для хранения и обработки данных для приложения учета и аудита времени, потраченного на рабочие и личные задачи} % Тема работы
+	{М.~Ю.~Вольняга/ИУ7-66Б} % Номер группы/ФИО студента (если авторов несколько, их необходимо разделить запятой)
+	{К.~Л.~Тассов} % ФИО научного руководителя
+	{} % ФИО консультанта (необязательный аргумент; если консультантов несколько, их необходимо разделить запя
+		
+	\maketableofcontents
+	
+	\include{03-introduction}
+	\include{04-analysis}
+	\include{05-design}
+	\include{06-implementation}
+	\include{07-research}
+	\include{08-conclusion}
+	\include{09-appendix}
+	
+	\makebibliography
+
+
+\end{document}

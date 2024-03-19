@@ -31,3 +31,16 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+
+# tex
+*.aux
+*.log
+*.bcf
+*.out
+*.run.xml
+*.gz
+*.synctexgz
+*.toc
+*.bbl
+*.blg

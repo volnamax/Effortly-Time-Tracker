@@ -1,0 +1,43 @@
+\begin{appendices}
+	\chapter{}
+
+\includelistingpretty
+{k.cpp} % Имя файла с расширением (файл должен быть расположен в директории inc/lst/)
+{c++} % Язык программирования (необязательный аргумент)
+{Реализация алгоритма k-средних} % Подпись листинга
+
+\clearpage
+
+\chapter{}
+
+\begin{center}
+	\begin{longtable}[c]{|c|c|}
+		\captionsetup{justification=raggedright,singlelinecheck=off}
+		\caption{Зависимость времени выполнения (в мс) от количества потоков 
+		\label{tbl:1}}
+		\\ 
+		\hline
+		Количество потоков & Время выполнения (мс) 
+		\csvreader{inc/csv/execution_times.csv}{}
+		{\\ \hline \csvcoli & \csvcolii} 
+		\\ \hline
+	\end{longtable}
+\end{center}
+
+
+
+\begin{center}
+	\begin{longtable}[c]{|c|c|c|}
+		\captionsetup{justification=raggedright,singlelinecheck=off}
+		\caption{Зависимость времени выполнения (в мс) от количества входных файлов 
+			\label{tbl:2}}
+		\\ 
+		\hline
+		Количество файлов & ПР(мс) & ПРОДП(мс)
+		\csvreader{inc/csv/time_comparison.csv}{}
+		{\\ \hline \csvcoli & \csvcolii & \csvcoliii} 
+		\\ \hline
+	\end{longtable}
+\end{center}
+
+\end{appendices}
