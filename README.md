@@ -4,7 +4,7 @@ Android application for conveniently measuring time for everyday or work tasks
 
 # useful link
 
-[my er](https://vertabelo.com/blog/chen-erd-notation/)
+[my er](https://vertabelo.com/blog/chen-erd-notation/)  
 
 [my er](https://dbdiagram.io/d/65cdf790ac844320ae364a42)
 

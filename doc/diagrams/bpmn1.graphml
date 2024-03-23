@@ -17,12 +17,12 @@
     <node id="n0" yfiles.foldertype="group">
       <data key="d6">
         <y:TableNode configuration="com.yworks.bpmn.Pool">
-          <y:Geometry height="650.5400793650794" width="1841.0365718374997" x="-70.0" y="-627.5400793650794"/>
+          <y:Geometry height="650.5400793650794" width="1854.3628906249996" x="-83.3263187875" y="-627.5400793650794"/>
           <y:Fill color="#FFF2BC" color2="#D4D4D4CC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="22.37646484375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="l" rotationAngle="270.0" textColor="#000000" verticalTextPosition="bottom" visible="true" width="322.4423828125" x="4.0" xml:space="preserve" y="164.04884827628968">Процесс добавление пользователей в группу</y:NodeLabel>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" rotationAngle="270.0" textColor="#000000" verticalTextPosition="bottom" visible="true" width="81.07421875" x="33.0" xml:space="preserve" y="85.51229538690473">пользователь<y:LabelModel><y:RowNodeLabelModel offset="3.0"/></y:LabelModel><y:ModelParameter><y:RowNodeLabelModelParameter horizontalPosition="0.0" id="row_0" inside="true"/></y:ModelParameter></y:NodeLabel>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" rotationAngle="270.0" textColor="#000000" verticalTextPosition="bottom" visible="true" width="40.5859375" x="33.0" xml:space="preserve" y="419.52647569444446">Админ<y:LabelModel><y:RowNodeLabelModel offset="3.0"/></y:LabelModel><y:ModelParameter><y:RowNodeLabelModelParameter horizontalPosition="0.0" id="row_1" inside="true"/></y:ModelParameter></y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" rotationAngle="270.0" textColor="#000000" verticalTextPosition="bottom" visible="true" width="201.525390625" x="33.0" xml:space="preserve" y="25.286709449404725">Авторизированный пользователь 1<y:LabelModel><y:RowNodeLabelModel offset="3.0"/></y:LabelModel><y:ModelParameter><y:RowNodeLabelModelParameter horizontalPosition="0.0" id="row_0" inside="true"/></y:ModelParameter></y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" rotationAngle="270.0" textColor="#000000" verticalTextPosition="bottom" visible="true" width="201.525390625" x="33.0" xml:space="preserve" y="339.05674913194446">Авторизированный пользователь 2<y:LabelModel><y:RowNodeLabelModel offset="3.0"/></y:LabelModel><y:ModelParameter><y:RowNodeLabelModelParameter horizontalPosition="0.0" id="row_1" inside="true"/></y:ModelParameter></y:NodeLabel>
           <y:StyleProperties>
             <y:Property name="y.view.tabular.TableNodePainter.ALTERNATE_ROW_STYLE">
               <y:SimpleStyle fillColor="#474A4340" lineColor="#000000" lineType="line" lineWidth="1.0"/>
@@ -46,13 +46,13 @@
           </y:StyleProperties>
           <y:State autoResize="true" closed="false" closedHeight="80.0" closedWidth="100.0"/>
           <y:Insets bottom="0" bottomF="0.0" left="0" leftF="0.0" right="0" rightF="0.0" top="0" topF="0.0"/>
-          <y:BorderInsets bottom="145" bottomF="145.0" left="20" leftF="20.0" right="0" rightF="0.0" top="25" topF="25.000223586309744"/>
+          <y:BorderInsets bottom="145" bottomF="145.0" left="33" leftF="33.3263187875" right="0" rightF="0.0" top="25" topF="25.000223586309744"/>
           <y:Table autoResizeTable="true" defaultColumnWidth="360.0" defaultMinimumColumnWidth="30.0" defaultMinimumRowHeight="30.0" defaultRowHeight="107.0">
             <y:DefaultColumnInsets bottom="3.0" left="3.0" right="3.0" top="20.0"/>
             <y:DefaultRowInsets bottom="3.0" left="20.0" right="3.0" top="3.0"/>
             <y:Insets bottom="0.0" left="30.0" right="0.0" top="0.0"/>
             <y:Columns>
-              <y:Column id="column_0" minimumWidth="30.0" width="1788.0365718374997">
+              <y:Column id="column_0" minimumWidth="30.0" width="1801.3628906249996">
                 <y:Insets bottom="3.0" left="3.0" right="3.0" top="20.0"/>
               </y:Column>
             </y:Columns>
@@ -135,8 +135,8 @@
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="142.73828125" x="19.930859374999955" xml:space="preserve" y="10.798828125">отправить предложение 
 о вступлении  в группу<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
-                <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_ABSTRACT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_ABSTRACT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ACTIVITY_TYPE"/>
@@ -212,7 +212,6 @@
           </data>
         </node>
         <node id="n0::n7">
-          <data key="d5"/>
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
               <y:Geometry height="24.0" width="35.0" x="784.88207965" y="-249.5"/>
@@ -236,7 +235,6 @@
           </data>
         </node>
         <node id="n0::n8">
-          <data key="d5"/>
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
               <y:Geometry height="24.0" width="35.0" x="784.88207965" y="-549.9412698412698"/>
@@ -276,7 +274,6 @@
           </data>
         </node>
         <node id="n0::n10">
-          <data key="d5"/>
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
               <y:Geometry height="55.0" width="85.0" x="875.3737567333332" y="-565.4412698412698"/>
@@ -285,8 +282,8 @@
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="79.228515625" x="2.8857421875" xml:space="preserve" y="10.798828125">рассмотреть 
 предложение<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
-                <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_ABSTRACT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_ABSTRACT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ACTIVITY_TYPE"/>
@@ -296,7 +293,6 @@
           </data>
         </node>
         <node id="n0::n11">
-          <data key="d5"/>
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
               <y:Geometry height="55.0" width="104.84169162995613" x="1087.2389911083333" y="-480.44126984126984"/>
@@ -305,8 +301,8 @@
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="92.728515625" x="6.056588002478065" xml:space="preserve" y="10.798828125">оправить ответ 
 одобренно<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
-                <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_ABSTRACT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_ABSTRACT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ACTIVITY_TYPE"/>
@@ -316,7 +312,6 @@
           </data>
         </node>
         <node id="n0::n12">
-          <data key="d5"/>
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
               <y:Geometry height="55.0" width="104.84169162995613" x="1164.5171585092144" y="-565.4412698412698"/>
@@ -325,8 +320,8 @@
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="94.890625" x="4.975533314978065" xml:space="preserve" y="10.798828125">отправить ответ
  не ободрено<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
-                <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_ABSTRACT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_ABSTRACT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ACTIVITY_TYPE"/>
@@ -336,13 +331,12 @@
           </data>
         </node>
         <node id="n0::n13">
-          <data key="d5"/>
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="70.68474879999997" width="118.5875968" x="0.0" y="-361.1848347174603"/>
+              <y:Geometry height="70.68474879999997" width="163.80000000000007" x="0.0" y="-361.1848347174603"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="62.8046875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="109.849609375" x="4.3689937125" xml:space="preserve" y="3.940030649999983">У админа имеется 
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="62.8046875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="145.240234375" x="9.279882812500034" xml:space="preserve" y="3.940030649999983">У пользователя имеется 
 проект и создана 
 группа на основе 
 этого проекта<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
@@ -356,7 +350,6 @@
           </data>
         </node>
         <node id="n0::n14">
-          <data key="d5"/>
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
               <y:Geometry height="24.0" width="35.0" x="1298.5158687125" y="-549.9412698412698"/>
@@ -380,7 +373,6 @@
           </data>
         </node>
         <node id="n0::n15">
-          <data key="d5"/>
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
               <y:Geometry height="24.0" width="35.0" x="1298.5158687125" y="-337.84246031746034"/>
@@ -397,7 +389,6 @@
           </data>
         </node>
         <node id="n0::n16">
-          <data key="d5"/>
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Event.withShadow">
               <y:Geometry height="30.0" width="30.0" x="1466.1365718375" y="-340.84246031746034"/>
@@ -412,8 +403,8 @@
                 </y:ModelParameter>
               </y:NodeLabel>
               <y:StyleProperties>
-                <y:Property class="com.yworks.yfiles.bpmn.view.EventCharEnum" name="com.yworks.bpmn.characteristic" value="EVENT_CHARACTERISTIC_END"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.EventCharEnum" name="com.yworks.bpmn.characteristic" value="EVENT_CHARACTERISTIC_END"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="EVENT_TYPE_PLAIN"/>
@@ -422,7 +413,6 @@
           </data>
         </node>
         <node id="n0::n17">
-          <data key="d5"/>
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
               <y:Geometry height="24.0" width="35.0" x="1298.5158687125" y="-249.5"/>
@@ -439,7 +429,6 @@
           </data>
         </node>
         <node id="n0::n18">
-          <data key="d5"/>
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
               <y:Geometry height="55.0" width="60.0" x="1451.1365718375" y="-180.0"/>
@@ -456,7 +445,6 @@
           </data>
         </node>
         <node id="n0::n19">
-          <data key="d5"/>
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
               <y:Geometry height="55.0" width="163.79999999999995" x="1399.2365718375" y="-265.0"/>
@@ -465,8 +453,8 @@
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="140.037109375" x="11.881445312500091" xml:space="preserve" y="10.798828125">добавить пользователя 
 в группу<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
-                <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_ABSTRACT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_ABSTRACT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ACTIVITY_TYPE"/>
@@ -476,7 +464,6 @@
           </data>
         </node>
         <node id="n0::n20">
-          <data key="d5"/>
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
               <y:Geometry height="55.0" width="115.0" x="1593.0365718374997" y="-265.0"/>
@@ -485,8 +472,8 @@
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="108.232421875" x="3.3837890625" xml:space="preserve" y="10.798828125">обновить проекты 
 у пользователя<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
-                <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_ABSTRACT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_ABSTRACT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ACTIVITY_TYPE"/>
@@ -496,7 +483,6 @@
           </data>
         </node>
         <node id="n0::n21">
-          <data key="d5"/>
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
               <y:Geometry height="55.0" width="60.0" x="1620.0" y="-480.44126984126984"/>
@@ -513,7 +499,6 @@
           </data>
         </node>
         <node id="n0::n22">
-          <data key="d5"/>
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Event.withShadow">
               <y:Geometry height="30.0" width="30.0" x="1738.0365718374997" y="-252.5"/>
@@ -528,8 +513,8 @@
                 </y:ModelParameter>
               </y:NodeLabel>
               <y:StyleProperties>
-                <y:Property class="com.yworks.yfiles.bpmn.view.EventCharEnum" name="com.yworks.bpmn.characteristic" value="EVENT_CHARACTERISTIC_END"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.EventCharEnum" name="com.yworks.bpmn.characteristic" value="EVENT_CHARACTERISTIC_END"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="EVENT_TYPE_PLAIN"/>
@@ -626,7 +611,6 @@
       </data>
     </edge>
     <edge id="n0::e6" source="n0::n3" target="n0::n7">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="91.30000000000001" sy="-0.0" tx="0.0" ty="0.0"/>
@@ -637,7 +621,6 @@
       </data>
     </edge>
     <edge id="n0::e7" source="n0::n7" target="n0::n8">
-      <data key="d9"/>
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.bpmn.Connection">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -653,7 +636,6 @@
       </data>
     </edge>
     <edge id="n0::e8" source="n0::n8" target="n0::n10">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="-42.5" ty="-0.0"/>
@@ -664,7 +646,6 @@
       </data>
     </edge>
     <edge id="n0::e9" source="n0::n10" target="n0::n9">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="42.5" sy="-0.0" tx="0.0" ty="0.0"/>
@@ -675,7 +656,6 @@
       </data>
     </edge>
     <edge id="n0::e10" source="n0::n9" target="n0::n11">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="-52.42084581497807" ty="-0.0">
@@ -689,7 +669,6 @@
       </data>
     </edge>
     <edge id="n0::e11" source="n0::n9" target="n0::n12">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="-52.420845814978065" ty="-0.0"/>
@@ -702,10 +681,12 @@
       </data>
     </edge>
     <edge id="n0::e12" source="n0::n0" target="n0::n13">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
+            <y:Point x="59.2937984" y="-281.67123015873017"/>
+            <y:Point x="81.90000000000003" y="-281.67123015873017"/>
+          </y:Path>
           <y:LineStyle color="#000000" type="dashed" width="1.0"/>
           <y:Arrows source="none" target="none"/>
           <y:BendStyle smoothed="false"/>
@@ -713,7 +694,6 @@
       </data>
     </edge>
     <edge id="n0::e13" source="n0::n12" target="n0::n14">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="-1.8856855016097493" sy="0.0" tx="0.0" ty="0.0"/>
@@ -724,7 +704,6 @@
       </data>
     </edge>
     <edge id="n0::e14" source="n0::n14" target="n0::n15">
-      <data key="d9"/>
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.bpmn.Connection">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -740,7 +719,6 @@
       </data>
     </edge>
     <edge id="n0::e15" source="n0::n15" target="n0::n16">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -751,7 +729,6 @@
       </data>
     </edge>
     <edge id="n0::e16" source="n0::n11" target="n0::n17">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="52.42084581497807" sy="-0.0" tx="0.0" ty="0.0">
@@ -765,7 +742,6 @@
       </data>
     </edge>
     <edge id="n0::e17" source="n0::n17" target="n0::n19">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="-81.89999999999998" ty="-0.0"/>
@@ -776,7 +752,6 @@
       </data>
     </edge>
     <edge id="n0::e18" source="n0::n19" target="n0::n18">
-      <data key="d9"/>
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.bpmn.Connection">
           <y:Path sx="0.0" sy="27.5" tx="0.0" ty="0.0"/>
@@ -789,7 +764,6 @@
       </data>
     </edge>
     <edge id="n0::e19" source="n0::n19" target="n0::n20">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="81.89999999999998" sy="-0.0" tx="-57.50000000000001" ty="-0.0"/>
@@ -800,7 +774,6 @@
       </data>
     </edge>
     <edge id="n0::e20" source="n0::n20" target="n0::n21">
-      <data key="d9"/>
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.bpmn.Connection">
           <y:Path sx="0.0" sy="-27.5" tx="0.0" ty="0.0">
@@ -819,7 +792,6 @@
       </data>
     </edge>
     <edge id="n0::e21" source="n0::n20" target="n0::n22">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="57.50000000000001" sy="-0.0" tx="0.0" ty="0.0"/>
