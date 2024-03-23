@@ -1,92 +1,180 @@
-# PPO
+# Effortly-Time-Tracker
 
+Приложение по учету и аудиту времени, потраченного на рабочие и личные задачи.
 
+# Идея
 
-## Getting started
+Приложение для управления задачами и аналитики времени, объединяет функциональность канбан-досок в стиле Trello для планирования и организации проектов, задач и карточек с возможностями измерения времени по методике Toggl Track.
+Приложение предназначено для эффективного планирования, как рабочих, так и личных задач, с возможностью группировки пользователей для совместной работы над проектами и задачами.
+Основное отличие от остальных приложений — это наличие таймера для отслеживания времени выполнения каждой задачи, организованных в удобные канбан-доски.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+# Предметная область
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+"Управление временем и задачами" --- эта область затрагивает процессы планирования, отслеживания и анализа времени, затрачиваемого на выполнение различных задач и проектов.
 
-## Add your files
+# Анализ аналогичных решений
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+| Решение      | мое (Effortly-Time-Tracker) | clockify.me | toggl.com/track | timecamp.com | trello.com |
+|-| -|-|-|-|-|
+|Ограничение бесплатного плана | Полностью бесплатное ПО | Доступ к дополнительным функциям (нет ограничений по количеству пользователей)|До 5 пользователей, только базовые функции|I пользователь, основные функции учета времени| Минимальные возможности по организации и управление  групп и проектов|
+|Подходит для| Фрилансерам, Небольшим командам (организациям) и пользователям для отслеживания личных задач  |Предприятия и большие команды, которым требуется хороший трекер и табель учета|Фрилансерам и небольшим командам, с целью простого тайм-менеджмента|Малые предприятия, которым нужен простой тайм-менеджмент, мониторинг работников, выставление счетов|Индивидуальные пользователи и команды для управления проектами и задачами |
+|Таймер| ✅ | ✅|✅|✅|❌|
+|Неограниченное количество проектов| ✅|✅|✅|$|$|
+|Составление отчетов / экспорт данных|✅ CSV | ✅ PDF, CSV, Excel | ✅ PDF, CSV; $ Excel| ✅ \$ PDF, $ Excel|❌ JSON и $CSV|
+|Неограниченное количество пользователей| ✅ |✅|$|$|$|
+|ПЛАТФОРМЫ | Android |Android / ios / desktop |Android / ios / desktop| Android / ios / desktop | Android / ios |
+|канбан-доски| ✅|❌|❌|❌|✅|
 
-```
-cd existing_repo
-git remote add origin https://git.iu7.bmstu.ru/vm21u004/ppo.git
-git branch -M main
-git push -uf origin main
-```
+# Обоснование целесообразности и актуальности проекта
 
-## Integrate with your tools
+Данный проект предлагает инновационное решение — приложение, объединяющее канбан-доски для визуального управления задачами с интегрированным таймером для учета времени на каждую задачу.
+Несмотря на популярность канбан-досок среди программистов и широкой аудитории пользователей сервисов вроде Trello, существующий рынок не предлагает инструментов, похожих на мою идею.
+Я и мои друзья стакнулись с проблемой, нет удобных сервисов для учета времени задач в виде канбан-досок. Мое приложение должно решить эту проблему.
+ Приложение подойдет для личного и корпоративного использования, удовлетворяя запросы как индивидуальных исполнителей, так и организаций с почасовой оплатой труда.
 
-- [ ] [Set up project integrations](https://git.iu7.bmstu.ru/vm21u004/ppo/-/settings/integrations)
+#### Роль пользователя
 
-## Collaborate with your team
+0) регистрация и аутентификация;
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+1) Добавление :
 
-## Test and Deploy
+- личных проектов;
+- личных задач;
+- личных тегов;
+- записи в todo-list;
 
-Use the built-in continuous integration in GitLab.
+2) Изменение или удаление:
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+- личных проектов;
+- личных задач;
+- личных тегов;
+- записи в todo-list;
 
-***
+3) Просмотр:
 
-# Editing this README
+- личных проектов;
+- личных задач;
+- личных тегов;
+- todo-list;
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+4) Поиск:
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+- личных проектов;
+- личных задач;
+- личных тегов;
 
-## Name
-Choose a self-explaining name for your project.
+5) Замер времени выполнение задач
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+#### Роль админ (в группе)
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+0) регистрация и аутентификация;
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+1) Добавление :
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+- личных проектов;
+- личных задач;
+- личных тегов;
+- записи в todo-list;
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+2) Изменение или удаление:
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+- личных проектов;
+- личных задач;
+- личных тегов;
+- записи в todo-list;
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+3) Просмотр:
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+- личных проектов;
+- личных задач;
+- личных тегов;
+- todo-list;
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+4) Поиск:
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+- личных проектов;
+- личных задач;
+- личных тегов;
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+5) Замер времени выполнение задач
 
-## License
-For open source projects, say how it is licensed.
+6) **Создание группы:**
+    - добавление имени и изменение;
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+7) **редактировние группы:**
+    - добавление/удаление пользователей;
+    - добавление и удаление аудита;
+
+#### Роль аудит
+
+0) регистрация и аутентификация;
+
+1) Добавление :
+
+- личных проектов;
+- личных задач;
+- личных тегов;
+- записи в todo-list;
+
+2) Изменение или удаление:
+
+- личных проектов;
+- личных задач;
+- личных тегов;
+- записи в todo-list;
+
+3) Просмотр:
+
+- личных проектов;
+- личных задач;
+- личных тегов;
+- todo-list;
+
+4) Поиск:
+
+- личных проектов;
+- личных задач;
+- личных тегов;
+
+5) Замер времени выполнение задач
+
+6) **просмотр аналитики группы**
+
+7) **сохранение аналитики группы**
+
+# Use-Case - диаграмма
+
+![alt text](img/use_case.jpg)
+
+[pdf-format](img/use_case.pdf)
+
+# ER-диаграмма сущностей
+
+![alt text](img/er_rus-1.jpg)
+[pdf-format](img/er_rus.pdf)  
+
+# Пользовательские сценарии
+
+**Пользователь** обладает возможностью создавать (изменять, просматривать, искать) проекты и задачи в этих проектов, добавлять(изменять, просматривать, искать) теги для проекта и создавать(изменять, просматривать) записи в листе задач. Также может измерять замер времени для задачи. Роль требует авторизации.
+
+**Администратор** обладает таким же набором функциональности как у пользователя, но с дополнительными возможностями: создавать (изменять) группы, добавлять в них пользователей и удалять их из группы, также назначать аудита группы. Роль требует авторизации.
+
+**Аудит** обладает таким же набором функциональности как у пользователя, но с дополнительными возможностями: просматривать аналитики группы и сохранение ее.
+Роль требует авторизации.
+
+Пользователь проходит регистрацию и после этого может создать проект и редактировать его (добавлять в него задачи, измерять время итд), также пользователь может создать группу и тогда он перейдет в роль администратора и сможет добавлять других пользователей в группу и назначит аудита группы. Аудит группы может сохранять и просматривать аналитику группы.
+
+# Формализация бизнес-правил BPMN
+
+Вход в систему.
+
+![alt text](img/photo_2024-02-29_16-41-24.jpg)
+
+Создание проекта.
+![alt text](img/bpmn.jpg)
+
+[pdf format](img/bpmn.pdf)
+
+Процесс добавление пользователя в группу.
+![alt text](img/bpmn1.jpg)
+[pdf format](img/bpmn1.pdf)
