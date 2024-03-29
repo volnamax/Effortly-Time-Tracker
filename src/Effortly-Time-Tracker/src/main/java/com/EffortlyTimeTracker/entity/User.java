@@ -1,4 +1,4 @@
-package com.EffortlyTimeTracker.controller.entity;
+package com.EffortlyTimeTracker.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,4 +25,12 @@ public class User {
 //  private Date data_sign_in ;
 //  private Date data_last_log_in ;
 
+  @Override
+  public String toString() {
+    return "User{" +
+            "id_user=" + id_user +
+            ", user_name='" + user_name + '\'' +
+            ", user_secondname='" + user_secondname + '\'' +
+            '}';
+  }
 }
