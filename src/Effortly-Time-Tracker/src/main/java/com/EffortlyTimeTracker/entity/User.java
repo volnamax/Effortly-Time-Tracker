@@ -18,8 +18,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id_user;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Integer id_user;
 
     @Column(name = "user_name")
     String userName;
@@ -39,9 +39,11 @@ public class User {
     @Column(name = "data_last_login")
     LocalDateTime dataLastLogin;
 
-    @Column
     @Enumerated(EnumType.STRING)
-    Role role;
+    private Role role;
+    public enum Role {
+        ADMIN, USER, GUEST
+    }
 
     @OneToMany(mappedBy = "user")
     private List<Project> projects;

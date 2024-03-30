@@ -1,35 +1,32 @@
 package com.EffortlyTimeTracker.entity;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import javax.management.relation.Role;
-import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
-@Table(name = "todolist")
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TodoList {
+@Entity
+@Table(name = "tags")
+public class ProjectTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
     @Column
-    String content;
+    String name;
 
     @Column
-    String status;
+    String color;
 
-    @Column
-    String priority;
-
-    @Column(name = "due_data")
-    LocalDateTime dueData;
+    @ManyToMany(mappedBy = "tags")
+    List<TableTask> tableTasks;
 }

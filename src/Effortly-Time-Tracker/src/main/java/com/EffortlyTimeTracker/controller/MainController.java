@@ -36,8 +36,8 @@ public class MainController {
     public void addUser(@RequestBody UserDTO userDTO) {
         log.info("New row+ " +
                 userRep.save(User.builder()
-                        .user_name(userDTO.getUser_name())
-                        .user_secondname(userDTO.getUser_secondname())
+                        .userName(userDTO.getUser_name())
+                        .userSecondname(userDTO.getUser_secondname())
                         .build()));
     }
 

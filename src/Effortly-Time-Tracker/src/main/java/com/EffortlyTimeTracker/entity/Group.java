@@ -1,5 +1,6 @@
 package com.EffortlyTimeTracker.entity;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -9,27 +10,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "todolist")
+@Table(name = "users")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TodoList {
+public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    Integer id_user;
 
-    @Column
-    String content;
-
-    @Column
-    String status;
-
-    @Column
-    String priority;
-
-    @Column(name = "due_data")
-    LocalDateTime dueData;
 }

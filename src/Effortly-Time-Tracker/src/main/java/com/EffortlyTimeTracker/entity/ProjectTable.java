@@ -4,32 +4,30 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import javax.management.relation.Role;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "todolist")
+@Table(name = "table")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TodoList {
+public class ProjectTable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
     @Column
-    String content;
+    String name;
+
+    @Column
+    String description;
 
     @Column
     String status;
 
-    @Column
-    String priority;
-
-    @Column(name = "due_data")
-    LocalDateTime dueData;
+    @OneToMany(mappedBy = "table")
+    private List<TableTask> todoLists;
 }
