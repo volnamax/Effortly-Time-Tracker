@@ -2,14 +2,18 @@ package com.EffortlyTimeTracker.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE) 
+
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
