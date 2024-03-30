@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
+import javax.management.relation.Role;
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -12,29 +15,46 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE) 
-
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Integer id_user;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Long id_user;
 
-  //@Column (unique = true)
-  private String user_name;
+    @Column(name = "user_name")
+    String userName;
 
-  //  @Column(name = "usnameS", nullable = false)
-  private String user_secondname;
-//  private String email;
-//  private String description;
-//  private Date data_sign_in ;
-//  private Date data_last_log_in ;
+    @Column(name = "user_secondname")
+    String userSecondname;
 
-  @Override
-  public String toString() {
-    return "User{" +
-            "id_user=" + id_user +
-            ", user_name='" + user_name + '\'' +
-            ", user_secondname='" + user_secondname + '\'' +
-            '}';
-  }
+    @Column
+    String email;
+
+    @Column
+    String description;
+
+    @Column(name = "data_sign_in")
+    LocalDateTime dataSignIn;
+
+    @Column(name = "data_last_login")
+    LocalDateTime dataLastLogin;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    Role role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Project> projects;
+
+    @OneToMany(mappedBy = "user")
+    private List<TodoList> todoLists;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id_user=" + id_user +
+                ", user_name='" + userName + '\'' +
+                ", user_secondname='" + userSecondname + '\'' +
+                '}';
+    }
 }
