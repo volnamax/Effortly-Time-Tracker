@@ -12,29 +12,33 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "projects")
+@Table(name = "Projects")
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    Integer projectId;
 
-    @Column
+    @Column(name = "name", nullable = false)
     String name;
 
-    @Column
+    @Column(name = "description", nullable = true)
     String description;
 
-    @OneToMany(mappedBy = "project")
-    List<ProjectTable> tables;
+    // Связь с пользователем
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    User userProject;
 
-    @OneToMany(mappedBy = "project")
-    List<ProjectTag> tags;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+     List<TableProject> tables;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    User user;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TagProject> tags;
+
+    @OneToOne(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    Group groupP;
 }
 
 

@@ -3,14 +3,11 @@ package com.EffortlyTimeTracker.controller;
 import com.EffortlyTimeTracker.DTO.UserDTO;
 import com.EffortlyTimeTracker.entity.User;
 import com.EffortlyTimeTracker.repository.UserRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -64,7 +61,7 @@ public class MainController {
     @PutMapping("/api/change/user")
     // @RequestBody - запросить какой то обхект  автомачическая сереализация (получили как json oбъект )
     public String changeUser(@RequestBody User user) {
-        if (!userRep.existsById(user.getId_user())) {
+        if (!userRep.existsById(user.getUserId())) {
             return "not user id ";
         }
         return userRep.save(user).toString();

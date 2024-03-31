@@ -4,35 +4,34 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "Todolist")
+@Table(name = "TableProject")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TodoList {
+public class TableProject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer todoId;
+    Integer tableId;
 
-    @Column(name = "content", nullable = true)
-    String content;
+    @Column(name = "name", nullable = false)
+    String name;
+
+    @Column(name = "description", nullable = true)
+    String description;
 
     @Column(name = "status", nullable = false)
     String status;
 
-    @Column(name = "prioryty", nullable = true)
-    String priority;
-
-    @Column(name = "due_data", nullable = true)
-    LocalDateTime dueData;
-
-    // Связь с пользователем
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
-    User userTodo;
+    @JoinColumn(name = "projectId")
+    Project project;
+
+    @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TaskTable> tasks;
 }

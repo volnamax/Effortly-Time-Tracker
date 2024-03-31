@@ -4,12 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import javax.management.relation.Role;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "AppUsers")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -19,42 +20,47 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id_user;
+    Integer userId;
 
-    @Column(name = "user_name")
+    @Column(name = "user_name", nullable = false)
     String userName;
 
-    @Column(name = "user_secondname")
+    @Column(name = "user_secondname", nullable = false)
     String userSecondname;
 
-    @Column
+    @Column(name = "email", nullable = false, unique = true)
     String email;
-
-    @Column
+//todo nullable false
+    @Column(name = "description", nullable = true)
     String description;
 
-    @Column(name = "data_sign_in")
+    @Column(name = "data_sign_in", nullable = true)
     LocalDateTime dataSignIn;
 
-    @Column(name = "data_last_login")
+    @Column(name = "data_last_login", nullable = true)
     LocalDateTime dataLastLogin;
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
     public enum Role {
         ADMIN, USER, GUEST
     }
 
-    @OneToMany(mappedBy = "user")
-    private List<Project> projects;
+    //cascade = CascadeType.ALL указывает, что все операции, включая удаление, распространяются с пользователя на его проекты.
+    // orphanRemoval = true означает, что любой проект, который больше не ассоциирован с пользователем, будет автоматически удален.
+    @OneToMany(mappedBy = "userProject", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Project> projects;
 
-    @OneToMany(mappedBy = "user")
-    private List<TodoList> todoLists;
+    @OneToMany(mappedBy = "userTodo", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TodoList> todoLists;
 
+    @ManyToMany(mappedBy = "usersGroup")
+    private Set<Group> groupsUsers = new HashSet<>();
     @Override
     public String toString() {
         return "User{" +
-                "id_user=" + id_user +
+                "id_user=" + userId +
                 ", user_name='" + userName + '\'' +
                 ", user_secondname='" + userSecondname + '\'' +
                 '}';

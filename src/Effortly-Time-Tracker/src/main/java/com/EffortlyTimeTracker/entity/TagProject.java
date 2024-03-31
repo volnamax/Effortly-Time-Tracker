@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
+import java.util.Set;
 
 
 @Getter
@@ -15,18 +15,25 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "tags")
-public class ProjectTag {
+@Table(name = "TagProject")
+public class TagProject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    Integer tagId;
 
-    @Column
+    @Column(name = "name", nullable = false)
     String name;
 
-    @Column
+    @Column(name = "color", nullable = true)
     String color;
 
+    // Связь с проектом
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name ="projectId")
+    Project project;
+
     @ManyToMany(mappedBy = "tags")
-    List<TableTask> tableTasks;
+    Set<TaskTable> tasks;
+
+
 }
