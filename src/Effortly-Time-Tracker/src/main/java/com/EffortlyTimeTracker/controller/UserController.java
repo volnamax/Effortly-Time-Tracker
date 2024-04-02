@@ -17,7 +17,7 @@ import java.util.List;
 @Slf4j //loginig
 @RestController
 @RequiredArgsConstructor
-public class MainController {
+public class UserController {
     private final UserRepository userRep;
 
     @PostMapping("/api/add/user")
@@ -26,8 +26,9 @@ public class MainController {
         log.info("New row+ " + userRep.save(user));
 
     }
+
     @Operation(summary = "добаляет нового пользователя через дто",
-    description = "more info")
+            description = "more info")
     @PostMapping("/api/user/add-dto")
     // @RequestBody - запросить какой то обхект  автомачическая сереализация (получили как json oбъект )
     public void addUser(@RequestBody UserDTO userDTO) {
