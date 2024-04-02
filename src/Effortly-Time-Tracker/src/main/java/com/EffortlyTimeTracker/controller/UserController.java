@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @Tag(name = "User-controller") // documentation
 @Slf4j //loginig
@@ -31,34 +33,29 @@ public class UserController {
     public User addUser(@Valid @RequestBody UserDTO userDTO) {
         return userService.addUser(userDTO);
     }
+
     @Operation(summary = "Dell user by id",
             description = "need id")
     @DeleteMapping("/del")
     public void deleteUser(@RequestParam(required = true) Integer id_user) {
         userService.delUserById(id_user);
     }
-
-
-/*
-    // magic throws
-    @SneakyThrows
-    @GetMapping("/api/get/users")
-    public List<User> getAll() {
-        return userRep.findAll();
+    @Operation(summary = "Get user by id",
+            description = "need id")
+    @GetMapping("/get")
+    public User getUser(@RequestParam(required = true) Integer id_user) {
+        return userService.getUserById(id_user);
     }
 
-
-    @GetMapping("/api/get/user")
+    @Operation(summary = "Get all user")
+    @GetMapping("/get-all")
+    public List<User> getUser() {
+        return userService.getAllUsers();
+    }
+/*
+   @GetMapping("/api/get/user")
     public User getUser(@RequestParam(required = true) Integer id_user) {
         return userRep.findById(id_user).orElseThrow(() -> new RuntimeException("User not found with id: " + id_user));
-    }
-
-    @DeleteMapping("/api/del/user")
-    public void deleteUser(@RequestParam(required = true) Integer id_user) {
-        userRep.deleteById(id_user);
-    }
-
-
 
     //изменение знаяения
     @PutMapping("/api/change/user")
@@ -67,9 +64,7 @@ public class UserController {
         if (!userRep.existsById(user.getUserId())) {
             return "not user id ";
         }
-        return userRep.save(user).toString();
-
-    }
+        return userRep.save(user).toString();}
     */
 }
 

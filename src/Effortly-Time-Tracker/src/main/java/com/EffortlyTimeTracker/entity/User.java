@@ -60,6 +60,7 @@ public class User {
                 '}';
     }
 
+
     public enum Role {
         ADMIN, USER, GUEST
     }

@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class UserService {
@@ -39,5 +41,21 @@ public class UserService {
         userRepository.deleteById(id);
         log.info("user with id {} delete", id);
     }
+
+    public User getUserById(Integer id) {
+        User user  = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoudException(id));
+        log.info("Get = " + user);
+
+        return user;
+    }
+
+    public List<User> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        log.info("GetALL = " + users);
+        return users;
+    }
+
+
 
 }
