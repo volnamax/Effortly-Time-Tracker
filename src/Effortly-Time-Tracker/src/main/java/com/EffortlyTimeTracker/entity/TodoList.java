@@ -22,11 +22,22 @@ public class TodoList {
     @Column(name = "content", nullable = true)
     String content;
 
-    @Column(name = "status", nullable = false)
-    String status;
 
-    @Column(name = "prioryty", nullable = true)
-    String priority;
+    @Enumerated(EnumType.STRING)
+    private TodoList.Status status;
+
+    public enum Status {
+        NO_ACTIVE, ACTIVE
+    }
+
+
+    @Enumerated(EnumType.STRING)
+    private TodoList.Priority priority;
+
+    public enum Priority {
+        IMPORTANT_URGENTLY, NO_IMPORTANT_URGENTLY, IMPORTANT_NO_URGENTLY, NO_IMPORTANT_NO_URGENTLY
+    }
+
 
     @Column(name = "due_data", nullable = true)
     LocalDateTime dueData;

@@ -49,7 +49,6 @@ public class ProjectService {
         log.info("Project with id {} deleted", projectId);
     }
 
-
     public Project getProjectsById(Integer id) {
         Project proj  = projectRepository.findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException(id));

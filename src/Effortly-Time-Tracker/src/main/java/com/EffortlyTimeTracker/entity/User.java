@@ -42,6 +42,20 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+    public enum Role {
+        ADMIN, USER, GUEST
+    }
+
+    //cascade = CascadeType.ALL указывает, что все операции, включая удаление, распространяются с пользователя на его проекты.
+    // orphanRemoval = true означает, что любой проект, который больше не ассоциирован с пользователем, будет автоматически удален.
+    @OneToMany(mappedBy = "userProject", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Project> projects;
+
+    @OneToMany(mappedBy = "userTodo", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TodoList> todoLists;
+
+    @ManyToMany(mappedBy = "usersGroup")
+    private Set<Group> groupsUsers = new HashSet<>();
 
     @Override
     public String toString() {
@@ -59,21 +73,5 @@ public class User {
                 ", groupsUsers=" + groupsUsers +
                 '}';
     }
-
-
-    public enum Role {
-        ADMIN, USER, GUEST
-    }
-
-    //cascade = CascadeType.ALL указывает, что все операции, включая удаление, распространяются с пользователя на его проекты.
-    // orphanRemoval = true означает, что любой проект, который больше не ассоциирован с пользователем, будет автоматически удален.
-    @OneToMany(mappedBy = "userProject", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Project> projects;
-
-    @OneToMany(mappedBy = "userTodo", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<TodoList> todoLists;
-
-    @ManyToMany(mappedBy = "usersGroup")
-    private Set<Group> groupsUsers = new HashSet<>();
 
 }
