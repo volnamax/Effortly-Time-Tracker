@@ -1,5 +1,5 @@
 package com.EffortlyTimeTracker.service;
-import com.EffortlyTimeTracker.exception.InvalidProjectException;
+import com.EffortlyTimeTracker.exception.project.InvalidProjectException;
 
 import com.EffortlyTimeTracker.DTO.ProjectDTO;
 import com.EffortlyTimeTracker.entity.*;

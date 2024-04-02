@@ -43,6 +43,23 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", userSecondname='" + userSecondname + '\'' +
+                ", email='" + email + '\'' +
+                ", description='" + description + '\'' +
+                ", dataSignIn=" + dataSignIn +
+                ", dataLastLogin=" + dataLastLogin +
+                ", role=" + role +
+                ", projects=" + projects +
+                ", todoLists=" + todoLists +
+                ", groupsUsers=" + groupsUsers +
+                '}';
+    }
+
     public enum Role {
         ADMIN, USER, GUEST
     }
@@ -57,12 +74,5 @@ public class User {
 
     @ManyToMany(mappedBy = "usersGroup")
     private Set<Group> groupsUsers = new HashSet<>();
-    @Override
-    public String toString() {
-        return "User{" +
-                "id_user=" + userId +
-                ", user_name='" + userName + '\'' +
-                ", user_secondname='" + userSecondname + '\'' +
-                '}';
-    }
+
 }

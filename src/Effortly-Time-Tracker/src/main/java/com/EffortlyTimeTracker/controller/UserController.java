@@ -2,43 +2,44 @@ package com.EffortlyTimeTracker.controller;
 
 import com.EffortlyTimeTracker.DTO.UserDTO;
 import com.EffortlyTimeTracker.entity.User;
-import com.EffortlyTimeTracker.repository.UserRepository;
+import com.EffortlyTimeTracker.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
-
-@Tag(name = "main-method") // documentation
+@Tag(name = "User-controller") // documentation
 @Slf4j //loginig
 @RestController
-@RequiredArgsConstructor
+@RequestMapping("api/user")
 public class UserController {
-    private final UserRepository userRep;
+    private final UserService userService;
 
-    @PostMapping("/api/add/user")
-    // @RequestBody - запросить какой то обхект  автомачическая сереализация (получили как json oбъект )
-    public void addUser(@RequestBody User user) {
-        log.info("New row+ " + userRep.save(user));
-
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @Operation(summary = "добаляет нового пользователя через дто",
-            description = "more info")
-    @PostMapping("/api/user/add-dto")
-    // @RequestBody - запросить какой то обхект  автомачическая сереализация (получили как json oбъект )
-    public void addUser(@RequestBody UserDTO userDTO) {
-        log.info("New row+ " +
-                userRep.save(User.builder()
-                        .userName(userDTO.getUser_name())
-                        .userSecondname(userDTO.getUser_secondname())
-                        .build()));
+    @Operation(summary = "Add user for dto obj",
+            description = "need name , sname, email, role (ADMIN, USER, GUEST)")
+    @PostMapping("/add")
+    @ResponseStatus(HttpStatus.CREATED)
+    public User addUser(@Valid @RequestBody UserDTO userDTO) {
+        return userService.addUser(userDTO);
+    }
+    @Operation(summary = "Dell user by id",
+            description = "need id")
+    @DeleteMapping("/del")
+    public void deleteUser(@RequestParam(required = true) Integer id_user) {
+        userService.delUserById(id_user);
     }
 
+
+/*
     // magic throws
     @SneakyThrows
     @GetMapping("/api/get/users")
@@ -58,6 +59,7 @@ public class UserController {
     }
 
 
+
     //изменение знаяения
     @PutMapping("/api/change/user")
     // @RequestBody - запросить какой то обхект  автомачическая сереализация (получили как json oбъект )
@@ -68,38 +70,6 @@ public class UserController {
         return userRep.save(user).toString();
 
     }
-    /*
-        @Autowired
-        //  сереализация
-        private ObjectMapper objectMapper;
-
-      @GetMapping("/api/main")
-    public String mainListener(){
-        return  "hello";
-    }
-
-    @GetMapping("/api/user")
-    public String givetUser() {
-        User user = new User(1, "max", "Vol");
-        String jsonData  = null;
-        try {
-            jsonData = objectMapper.writeValueAsString(user);
-        } catch (JsonProcessingException e){
-           System.out.println("Error user");
-        }
-        return jsonData;
-    }
-
-    @PostMapping("/api/spec")
-    public String giveSpecialUser(@RequestParam String name){
-        User user = new User(1, name, "Vol");
-        String jsonData  = null;
-        try {
-            jsonData = objectMapper.writeValueAsString(user);
-        } catch (JsonProcessingException e){
-            System.out.println("Error user");
-        }
-        return jsonData;
-    }*/
+    */
 }
 
