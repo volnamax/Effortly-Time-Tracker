@@ -1,10 +1,14 @@
 package com.EffortlyTimeTracker.service;
+
 import com.EffortlyTimeTracker.exception.project.InvalidProjectException;
 
 import com.EffortlyTimeTracker.DTO.ProjectDTO;
 import com.EffortlyTimeTracker.entity.*;
+import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
+import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
 import com.EffortlyTimeTracker.repository.ProjectRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +19,16 @@ import java.util.List;
 public class ProjectService {
     private final ProjectRepository projectRepository;
 
-    public Project addProject(ProjectDTO projectDTO) {
-        // Пример проверки для демонстрации выброса исключения
-        if (projectDTO.getName() == null || projectDTO.getName().isEmpty()) {
-            throw new InvalidProjectException("Имя проекта не может быть пустым");
-        }
+    @Autowired
+    public ProjectService(ProjectRepository projectRepository) {
+        this.projectRepository = projectRepository;
+    }
 
+
+    public Project addProject(@NotNull ProjectDTO projectDTO) {
+//        if (projectDTO.getName() == null || projectDTO.getName().isEmpty()) {
+//            throw new InvalidProjectException("Имя проекта не может быть пустым");
+//        }
         log.info("Добавление проекта: {}", projectDTO.getName());
         Project project = projectRepository.save(Project.builder()
                 .name(projectDTO.getName())
@@ -30,19 +38,30 @@ public class ProjectService {
                 .tags(projectDTO.getTags())
                 .groupP(projectDTO.getGroupP())
                 .build());
-                log.info("Проект успешно добавлен: {}", project.getProjectId());
+        log.info("Проект успешно добавлен: {}", project.getProjectId());
         return project;
-
     }
-    @Autowired
-    public ProjectService(ProjectRepository projectRepository) {
-        this.projectRepository = projectRepository;
-    }
-
-
-    public List<Project> findAll() {
-        return projectRepository.findAll();
+    public void delProjectById(Integer projectId) {
+        if (!projectRepository.existsById(projectId)) {
+            throw new ProjectNotFoundException(projectId);
+        }
+        projectRepository.deleteById(projectId);
+        log.info("Project with id {} deleted", projectId);
     }
 
-    // Добавьте другие методы, которые вам нужны
+
+    public Project getProjectsById(Integer id) {
+        Project proj  = projectRepository.findById(id)
+                .orElseThrow(() -> new ProjectNotFoundException(id));
+        log.info("Get = " + proj);
+
+        return proj;
+    }
+
+    public List<Project> getAllProject() {
+        List<Project> projects = projectRepository.findAll();
+        log.info("GetALL = " + projects);
+        return projects;
+    }
+
 }

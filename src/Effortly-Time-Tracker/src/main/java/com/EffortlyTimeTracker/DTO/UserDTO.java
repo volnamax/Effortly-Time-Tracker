@@ -19,10 +19,10 @@ import java.util.Set;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE) // по умолсанию
 public class UserDTO {
-    @NotBlank(message = "Error user second name is empty")
+    @NotBlank(message = "Error user name is empty")
     String userName;
 
-    @NotBlank(message = "Error user name is empty")
+    @NotBlank(message = "Error user second name is empty")
     String userSecondname;
 
     @NotBlank(message = "Error user email is empty")
