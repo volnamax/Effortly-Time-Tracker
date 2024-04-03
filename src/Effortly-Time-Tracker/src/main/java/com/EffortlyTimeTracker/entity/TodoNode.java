@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TodoList {
+public class TodoNode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer todoId;
@@ -24,7 +24,7 @@ public class TodoList {
 
 
     @Enumerated(EnumType.STRING)
-    private TodoList.Status status;
+    private TodoNode.Status status;
 
     public enum Status {
         NO_ACTIVE, ACTIVE
@@ -32,7 +32,7 @@ public class TodoList {
 
 
     @Enumerated(EnumType.STRING)
-    private TodoList.Priority priority;
+    private TodoNode.Priority priority;
 
     public enum Priority {
         IMPORTANT_URGENTLY, NO_IMPORTANT_URGENTLY, IMPORTANT_NO_URGENTLY, NO_IMPORTANT_NO_URGENTLY
@@ -46,4 +46,16 @@ public class TodoList {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     User userTodo;
+
+    @Override
+    public String toString() {
+        return "TodoNode{" +
+                "todoId=" + todoId +
+                ", content='" + content + '\'' +
+                ", status=" + status +
+                ", priority=" + priority +
+                ", dueData=" + dueData +
+                ", userTodo=" + userTodo +
+                '}';
+    }
 }

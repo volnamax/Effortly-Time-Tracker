@@ -1,8 +1,9 @@
 package com.EffortlyTimeTracker.service;
 
-import com.EffortlyTimeTracker.DTO.TodoListDTO;
-import com.EffortlyTimeTracker.entity.TodoList;
-import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
+import com.EffortlyTimeTracker.DTO.TodoNodeDTO;
+import com.EffortlyTimeTracker.entity.TodoNode;
+import com.EffortlyTimeTracker.exception.todo.InvalidTodoException;
+import com.EffortlyTimeTracker.exception.todo.TodoNotFoudException;
 import com.EffortlyTimeTracker.repository.TodoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +21,13 @@ public class TodoService {
         this.todoRepository = todoRepository;
     }
         // todo
-    public TodoList addTodo(TodoListDTO todoListDTO) {
-        TodoList todo = todoRepository.save(TodoList.builder()
-                        .content(todoListDTO.getContent())
-                        .userTodo(todoListDTO.getUserTodo())
-                        .dueData(todoListDTO.getDueData())
-                        .status(TodoList.Status.valueOf(todoListDTO.getStatus()))
-                        .priority(TodoList.Priority.valueOf(todoListDTO.getPriority()))
+    public TodoNode addTodo(TodoNodeDTO todoNodeDTO) {
+        TodoNode todo = todoRepository.save(TodoNode.builder()
+                        .content(todoNodeDTO.getContent())
+                        .userTodo(todoNodeDTO.getUserTodo())
+                        .dueData(todoNodeDTO.getDueData())
+                        .status(TodoNode.Status.valueOf(todoNodeDTO.getStatus()))
+                        .priority(TodoNode.Priority.valueOf(todoNodeDTO.getPriority()))
                 .build());
 
         log.info("New" + todo);
@@ -35,16 +36,15 @@ public class TodoService {
 
     public void delTodoById(Integer id) {
         if (!todoRepository.existsById(id)) {
-            throw new UserNotFoudException(id);
+            throw new TodoNotFoudException(id);
         }
         todoRepository.deleteById(id);
-        log.info("user with id {} delete", id);
+        log.info("todo with id {} delete", id);
     }
 
-
-    public List<TodoList> getAllTodo() {
-        List<TodoList> todoLists = todoRepository.findAll();
-        log.info("GetALL = " + todoLists);
-        return todoLists;
+    public List<TodoNode> getAllTodo() {
+        List<TodoNode> todoNodes = todoRepository.findAll();
+        log.info("GetALL = " + todoNodes);
+        return todoNodes;
     }
 }

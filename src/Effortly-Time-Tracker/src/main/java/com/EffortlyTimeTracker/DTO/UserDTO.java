@@ -2,9 +2,7 @@ package com.EffortlyTimeTracker.DTO;
 
 import com.EffortlyTimeTracker.entity.Group;
 import com.EffortlyTimeTracker.entity.Project;
-import com.EffortlyTimeTracker.entity.TodoList;
-import com.EffortlyTimeTracker.entity.User;
-import jakarta.persistence.*;
+import com.EffortlyTimeTracker.entity.TodoNode;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -12,7 +10,6 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,7 +32,7 @@ public class UserDTO {
     LocalDateTime dataSignIn;
     LocalDateTime dataLastLogin;
     List<Project> projects;
-    List<TodoList> todoLists;
+    List<TodoNode> todoNodes;
 
     Set<Group> groupsUsers;
 }

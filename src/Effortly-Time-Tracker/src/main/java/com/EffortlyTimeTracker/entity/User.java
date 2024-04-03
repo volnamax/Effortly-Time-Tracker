@@ -52,7 +52,7 @@ public class User {
     List<Project> projects;
 
     @OneToMany(mappedBy = "userTodo", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<TodoList> todoLists;
+    List<TodoNode> todoNodes;
 
     @ManyToMany(mappedBy = "usersGroup")
     private Set<Group> groupsUsers = new HashSet<>();
@@ -69,7 +69,7 @@ public class User {
                 ", dataLastLogin=" + dataLastLogin +
                 ", role=" + role +
                 ", projects=" + projects +
-                ", todoLists=" + todoLists +
+                ", todoLists=" + todoNodes +
                 ", groupsUsers=" + groupsUsers +
                 '}';
     }
