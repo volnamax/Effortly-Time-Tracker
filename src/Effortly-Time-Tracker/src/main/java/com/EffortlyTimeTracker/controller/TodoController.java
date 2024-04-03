@@ -1,10 +1,8 @@
 package com.EffortlyTimeTracker.controller;
 
 import com.EffortlyTimeTracker.DTO.TodoListDTO;
-import com.EffortlyTimeTracker.entity.Project;
 import com.EffortlyTimeTracker.entity.TodoList;
-import com.EffortlyTimeTracker.repository.TodoRepository;
-]import com.EffortlyTimeTracker.service.TodoService;
+import com.EffortlyTimeTracker.service.TodoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -38,16 +36,10 @@ public class TodoController {
     public void delTodo(@RequestParam(required = true) Integer TodoId) {
         todoService.delTodoById(TodoId);
     }
-    @Operation(summary = "Get proj by id",
-            description = "need id")
-    @GetMapping("/get")
-    public Project getProject(@RequestParam(required = true) Integer  projectId) {
-        return projectService.getProjectsById( projectId);
-    }
-    @Operation(summary = "Get all proj")
+    @Operation(summary = "Get all todo")
     @GetMapping("/get-all")
-    public List<Project> getProjects() {
-        return projectService.getAllProject();
+    public List<TodoList> getProjects() {
+        return todoService.getAllTodo();
     }
 
 }

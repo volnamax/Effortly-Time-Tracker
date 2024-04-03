@@ -1,12 +1,9 @@
 package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.DTO.TodoListDTO;
-import com.EffortlyTimeTracker.DTO.UserDTO;
 import com.EffortlyTimeTracker.entity.TodoList;
-import com.EffortlyTimeTracker.entity.User;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
 import com.EffortlyTimeTracker.repository.TodoRepository;
-import com.EffortlyTimeTracker.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,17 +41,10 @@ public class TodoService {
         log.info("user with id {} delete", id);
     }
 
-    public User getTodoById(Integer id) {
-        User user  = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoudException(id));
-        log.info("Get = " + user);
 
-        return user;
-    }
-
-    public List<User> getAllTodo() {
-        List<User> users = userRepository.findAll();
-        log.info("GetALL = " + users);
-        return users;
+    public List<TodoList> getAllTodo() {
+        List<TodoList> todoLists = todoRepository.findAll();
+        log.info("GetALL = " + todoLists);
+        return todoLists;
     }
 }
