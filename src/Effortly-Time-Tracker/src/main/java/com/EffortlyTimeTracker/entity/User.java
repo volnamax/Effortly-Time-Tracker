@@ -30,7 +30,7 @@ public class User {
 
     @Column(name = "email", nullable = false, unique = true)
     String email;
-//todo nullable false
+    //todo nullable false
     @Column(name = "description", nullable = true)
     String description;
 
@@ -42,6 +42,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
     public enum Role {
         ADMIN, USER, GUEST
     }

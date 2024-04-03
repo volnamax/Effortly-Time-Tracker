@@ -40,7 +40,6 @@ public class ProjectServiceTest {
     void addProject() {
         Project project = new Project();
         project.setName(projectDTO.getName());
-        // replicate other properties from DTO to entity as needed
 
         when(projectRepository.save(any(Project.class))).thenReturn(project);
 
@@ -77,7 +76,6 @@ public class ProjectServiceTest {
         Project expectedProject = new Project();
         expectedProject.setProjectId(projectId);
         expectedProject.setName("Test Project");
-        // Setup other expected project details...
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(expectedProject));
 

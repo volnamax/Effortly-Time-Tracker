@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@Tag(name = "User-controller") // documentation
+@Tag(name = "User-controller")
 @Slf4j //loginig
 @RestController
 @RequestMapping("api/user")

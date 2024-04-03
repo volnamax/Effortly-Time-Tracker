@@ -23,19 +23,20 @@ public class TodoController {
         this.todoService = todoService;
     }
 
-    @Operation(summary = "Add todo")
+    @Operation(summary = "Add todo", description = "need: user, content, status: (NO_ACTIVE, ACTIVE), " +
+            "priority(IMPORTANT_URGENTLY, NO_IMPORTANT_URGENTLY, IMPORTANT_NO_URGENTLY, NO_IMPORTANT_NO_URGENTLY)")
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public TodoNode addTodo(@Valid @RequestBody TodoNodeDTO todoNodeDTO) {
         return todoService.addTodo(todoNodeDTO);
     }
 
-    @Operation(summary = "Dell todo by id",
-            description = "need id")
+    @Operation(summary = "Dell todo by id", description = "need id")
     @DeleteMapping("/del")
     public void delTodo(@RequestParam(required = true) Integer TodoId) {
         todoService.delTodoById(TodoId);
     }
+
     @Operation(summary = "Get all todo")
     @GetMapping("/get-all")
     public List<TodoNode> getProjects() {

@@ -25,8 +25,13 @@ public class TableProject {
     @Column(name = "description", nullable = true)
     String description;
 
-    @Column(name = "status", nullable = false)
-    String status;
+    @Enumerated(EnumType.STRING)
+    private TableProject.Status status;
+
+    public enum Status {
+        NO_ACTIVE, ACTIVE
+    }
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "projectId")

@@ -4,6 +4,7 @@ import com.EffortlyTimeTracker.DTO.UserDTO;
 import com.EffortlyTimeTracker.entity.User;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
 import com.EffortlyTimeTracker.repository.UserRepository;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(@NonNull UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

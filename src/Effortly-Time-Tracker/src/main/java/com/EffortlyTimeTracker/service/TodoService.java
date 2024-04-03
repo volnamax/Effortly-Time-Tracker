@@ -2,7 +2,6 @@ package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.DTO.TodoNodeDTO;
 import com.EffortlyTimeTracker.entity.TodoNode;
-import com.EffortlyTimeTracker.exception.todo.InvalidTodoException;
 import com.EffortlyTimeTracker.exception.todo.TodoNotFoudException;
 import com.EffortlyTimeTracker.repository.TodoRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -20,14 +19,15 @@ public class TodoService {
     public TodoService(TodoRepository todoRepository) {
         this.todoRepository = todoRepository;
     }
-        // todo
+
+    // todo
     public TodoNode addTodo(TodoNodeDTO todoNodeDTO) {
         TodoNode todo = todoRepository.save(TodoNode.builder()
-                        .content(todoNodeDTO.getContent())
-                        .userTodo(todoNodeDTO.getUserTodo())
-                        .dueData(todoNodeDTO.getDueData())
-                        .status(TodoNode.Status.valueOf(todoNodeDTO.getStatus()))
-                        .priority(TodoNode.Priority.valueOf(todoNodeDTO.getPriority()))
+                .content(todoNodeDTO.getContent())
+                .userTodo(todoNodeDTO.getUserTodo())
+                .dueData(todoNodeDTO.getDueData())
+                .status(TodoNode.Status.valueOf(todoNodeDTO.getStatus()))
+                .priority(TodoNode.Priority.valueOf(todoNodeDTO.getPriority()))
                 .build());
 
         log.info("New" + todo);

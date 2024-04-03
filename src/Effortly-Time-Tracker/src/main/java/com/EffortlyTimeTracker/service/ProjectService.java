@@ -1,11 +1,8 @@
 package com.EffortlyTimeTracker.service;
 
-import com.EffortlyTimeTracker.exception.project.InvalidProjectException;
-
 import com.EffortlyTimeTracker.DTO.ProjectDTO;
-import com.EffortlyTimeTracker.entity.*;
+import com.EffortlyTimeTracker.entity.Project;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
-import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
 import com.EffortlyTimeTracker.repository.ProjectRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +38,7 @@ public class ProjectService {
         log.info("Проект успешно добавлен: {}", project.getProjectId());
         return project;
     }
+
     public void delProjectById(Integer projectId) {
         if (!projectRepository.existsById(projectId)) {
             throw new ProjectNotFoundException(projectId);
@@ -50,7 +48,7 @@ public class ProjectService {
     }
 
     public Project getProjectsById(Integer id) {
-        Project proj  = projectRepository.findById(id)
+        Project proj = projectRepository.findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException(id));
         log.info("Get = " + proj);
 

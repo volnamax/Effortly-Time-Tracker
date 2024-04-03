@@ -32,7 +32,7 @@ public class Project {
     User userProject;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-     List<TableProject> tables;
+    List<TableProject> tables;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     List<TagProject> tags;

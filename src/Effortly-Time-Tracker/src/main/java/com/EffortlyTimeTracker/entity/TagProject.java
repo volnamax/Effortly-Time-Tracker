@@ -29,7 +29,7 @@ public class TagProject {
 
     // Связь с проектом
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="projectId")
+    @JoinColumn(name = "projectId")
     Project project;
 
     @ManyToMany(mappedBy = "tags")

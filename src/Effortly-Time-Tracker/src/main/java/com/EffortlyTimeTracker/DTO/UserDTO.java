@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 @Data
-@FieldDefaults(level = AccessLevel.PRIVATE) // по умолсанию
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDTO {
     @NotBlank(message = "Error user name is empty")
     String userName;
