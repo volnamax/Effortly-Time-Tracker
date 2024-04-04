@@ -1,5 +1,6 @@
 package com.EffortlyTimeTracker.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -45,17 +46,20 @@ public class TodoNode {
     // Связь с пользователем
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
+    @JsonBackReference
     User userTodo;
 
-    @Override
-    public String toString() {
-        return "TodoNode{" +
-                "todoId=" + todoId +
-                ", content='" + content + '\'' +
-                ", status=" + status +
-                ", priority=" + priority +
-                ", dueData=" + dueData +
-                ", userTodo=" + userTodo +
-                '}';
-    }
+
+//    @Override
+//    public String toString() {
+//        return "TodoNode{" +
+//                "id=" + todoId +
+//                ", content='" + content + '\'' +
+//                ", status=" + status +
+//                ", priority=" + priority +
+//                ", dueDate=" + dueData +
+//                ", userTodoId=" + (userTodo != null ? userTodo.getUserId() : null) +
+//                '}';
+//    }
+
 }

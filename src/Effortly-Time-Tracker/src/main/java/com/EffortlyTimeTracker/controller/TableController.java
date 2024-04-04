@@ -4,6 +4,7 @@ import com.EffortlyTimeTracker.DTO.ProjectDTO;
 import com.EffortlyTimeTracker.DTO.TableDTO;
 import com.EffortlyTimeTracker.entity.Project;
 import com.EffortlyTimeTracker.entity.TableProject;
+import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.service.ProjectService;
 import com.EffortlyTimeTracker.service.TableService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "Table-controller")
 @RestController
@@ -37,5 +40,19 @@ public class TableController {
     public void deleteTable(@RequestParam(required = true) Integer id_table) {
         tableService.delTableById(id_table);
     }
+
+    @Operation(summary = "Get table by id",
+            description = "need id")
+    @GetMapping("/get")
+    public TableProject getTable(@RequestParam(required = true) Integer  tableId) {
+        return tableService.getTableById( tableId);
+    }
+
+    @Operation(summary = "Get all table")
+    @GetMapping("/get-all")
+    public List<TableProject> getProjects() {
+        return tableService.getAllTable();
+    }
+
 
 }

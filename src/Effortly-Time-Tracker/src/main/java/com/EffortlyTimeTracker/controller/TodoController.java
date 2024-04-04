@@ -39,7 +39,7 @@ public class TodoController {
 
     @Operation(summary = "Get all todo")
     @GetMapping("/get-all")
-    public List<TodoNode> getProjects() {
+    public List<TodoNode> getTodoAll() {
         return todoService.getAllTodo();
     }
 

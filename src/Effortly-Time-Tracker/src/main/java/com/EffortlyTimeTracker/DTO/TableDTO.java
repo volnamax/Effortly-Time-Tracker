@@ -3,6 +3,7 @@ package com.EffortlyTimeTracker.DTO;
 import com.EffortlyTimeTracker.entity.Project;
 import com.EffortlyTimeTracker.entity.TaskTable;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -19,7 +20,7 @@ public class TableDTO {
 
     String status;
 
-//    @NotBlank(message = "Error table not have project")
+ @NotNull(message = "Error table not have project")
     Project project;
 
     List<TaskTable> tasks;

@@ -1,5 +1,6 @@
 package com.EffortlyTimeTracker.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -49,30 +50,32 @@ public class User {
 
     //cascade = CascadeType.ALL указывает, что все операции, включая удаление, распространяются с пользователя на его проекты.
     // orphanRemoval = true означает, что любой проект, который больше не ассоциирован с пользователем, будет автоматически удален.
+    @JsonManagedReference
     @OneToMany(mappedBy = "userProject", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Project> projects;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "userTodo", cascade = CascadeType.ALL, orphanRemoval = true)
     List<TodoNode> todoNodes;
 
     @ManyToMany(mappedBy = "usersGroup")
     private Set<Group> groupsUsers = new HashSet<>();
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", userName='" + userName + '\'' +
-                ", userSecondname='" + userSecondname + '\'' +
-                ", email='" + email + '\'' +
-                ", description='" + description + '\'' +
-                ", dataSignIn=" + dataSignIn +
-                ", dataLastLogin=" + dataLastLogin +
-                ", role=" + role +
-                ", projects=" + projects +
-                ", todoLists=" + todoNodes +
-                ", groupsUsers=" + groupsUsers +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "userId=" + userId +
+//                ", userName='" + userName + '\'' +
+//                ", userSecondname='" + userSecondname + '\'' +
+//                ", email='" + email + '\'' +
+//                ", description='" + description + '\'' +
+//                ", dataSignIn=" + dataSignIn +
+//                ", dataLastLogin=" + dataLastLogin +
+//                ", role=" + role +
+//                ", projects=" + projects +
+//                ", todoLists=" + todoNodes +
+//                ", groupsUsers=" + groupsUsers +
+//                '}';
+//    }
 
 }

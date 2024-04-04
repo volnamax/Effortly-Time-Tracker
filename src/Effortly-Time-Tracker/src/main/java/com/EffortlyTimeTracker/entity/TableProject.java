@@ -1,5 +1,6 @@
 package com.EffortlyTimeTracker.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -35,8 +36,22 @@ public class TableProject {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "projectId")
+    @JsonBackReference
     Project project;
+
 
     @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, orphanRemoval = true)
     List<TaskTable> tasks;
+
+//    @Override
+//    public String toString() {
+//        return "TableProject{" +
+//                "tableId=" + tableId +
+//                ", name='" + name + '\'' +
+//                ", description='" + description + '\'' +
+//                ", status=" + status +
+//                ", project=" + project +
+//                ", tasks=" + tasks +
+//                '}';
+//    }
 }

@@ -43,8 +43,7 @@ public class TodoService {
     }
 
     public List<TodoNode> getAllTodo() {
-        List<TodoNode> todoNodes = todoRepository.findAll();
-        log.info("GetALL = " + todoNodes);
-        return todoNodes;
+        //        log.info("GetALL = " + todoNodes);
+        return todoRepository.findAll();
     }
 }
