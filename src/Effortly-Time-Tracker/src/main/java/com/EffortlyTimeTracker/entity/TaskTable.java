@@ -1,6 +1,7 @@
 package com.EffortlyTimeTracker.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -49,6 +50,7 @@ public class TaskTable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tableId")
+    @JsonBackReference
     TableProject table;
 
 

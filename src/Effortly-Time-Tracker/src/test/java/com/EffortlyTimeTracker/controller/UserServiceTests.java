@@ -93,7 +93,7 @@ public class UserServiceTests {
         Exception exception = assertThrows(UserNotFoudException.class, () -> {
             userService.getUserById(userId);
         });
-        assertTrue(exception.getMessage().contains("User with id "  + userId  + "not found"));
+        assertTrue(exception.getMessage().contains("User with id "  + userId  + " not found"));
     }
 
 

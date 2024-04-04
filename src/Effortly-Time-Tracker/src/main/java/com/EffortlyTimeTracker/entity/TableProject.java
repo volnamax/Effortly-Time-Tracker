@@ -1,6 +1,7 @@
 package com.EffortlyTimeTracker.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -41,6 +42,7 @@ public class TableProject {
 
 
     @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     List<TaskTable> tasks;
 
 //    @Override
