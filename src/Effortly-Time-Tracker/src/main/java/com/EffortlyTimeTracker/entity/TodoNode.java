@@ -50,16 +50,5 @@ public class TodoNode {
     User userTodo;
 
 
-//    @Override
-//    public String toString() {
-//        return "TodoNode{" +
-//                "id=" + todoId +
-//                ", content='" + content + '\'' +
-//                ", status=" + status +
-//                ", priority=" + priority +
-//                ", dueDate=" + dueData +
-//                ", userTodoId=" + (userTodo != null ? userTodo.getUserId() : null) +
-//                '}';
-//    }
 
 }

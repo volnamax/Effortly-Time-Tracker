@@ -61,21 +61,4 @@ public class User {
     @ManyToMany(mappedBy = "usersGroup")
     private Set<Group> groupsUsers = new HashSet<>();
 
-//    @Override
-//    public String toString() {
-//        return "User{" +
-//                "userId=" + userId +
-//                ", userName='" + userName + '\'' +
-//                ", userSecondname='" + userSecondname + '\'' +
-//                ", email='" + email + '\'' +
-//                ", description='" + description + '\'' +
-//                ", dataSignIn=" + dataSignIn +
-//                ", dataLastLogin=" + dataLastLogin +
-//                ", role=" + role +
-//                ", projects=" + projects +
-//                ", todoLists=" + todoNodes +
-//                ", groupsUsers=" + groupsUsers +
-//                '}';
-//    }
-
 }

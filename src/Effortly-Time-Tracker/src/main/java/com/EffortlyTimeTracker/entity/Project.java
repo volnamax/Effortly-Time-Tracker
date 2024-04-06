@@ -38,24 +38,12 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     List<TableProject> tables;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     List<TagProject> tags;
 
     @OneToOne(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     Group groupP;
-
-//    @Override
-//    public String toString() {
-//        return "Project{" +
-//                "projectId=" + projectId +
-//                ", name='" + name + '\'' +
-//                ", description='" + description + '\'' +
-//                ", userProject=" + userProject +
-//                ", tables=" + tables +
-//                ", tags=" + tags +
-//                ", groupP=" + groupP +
-//                '}';
-//    }
 }
 
 

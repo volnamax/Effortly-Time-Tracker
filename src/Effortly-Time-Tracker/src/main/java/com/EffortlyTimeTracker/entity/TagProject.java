@@ -1,6 +1,7 @@
 package com.EffortlyTimeTracker.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -30,10 +31,9 @@ public class TagProject {
     // Связь с проектом
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "projectId")
+    @JsonBackReference
     Project project;
 
     @ManyToMany(mappedBy = "tags")
     Set<TaskTable> tasks;
-
-
 }

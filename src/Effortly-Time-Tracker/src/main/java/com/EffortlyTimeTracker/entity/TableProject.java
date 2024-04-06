@@ -45,15 +45,5 @@ public class TableProject {
     @JsonManagedReference
     List<TaskTable> tasks;
 
-//    @Override
-//    public String toString() {
-//        return "TableProject{" +
-//                "tableId=" + tableId +
-//                ", name='" + name + '\'' +
-//                ", description='" + description + '\'' +
-//                ", status=" + status +
-//                ", project=" + project +
-//                ", tasks=" + tasks +
-//                '}';
-//    }
+
 }
