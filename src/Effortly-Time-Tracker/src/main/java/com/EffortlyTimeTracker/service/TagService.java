@@ -2,10 +2,8 @@ package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.DTO.TagDTO;
 import com.EffortlyTimeTracker.entity.TagProject;
-import com.EffortlyTimeTracker.entity.TaskTable;
 import com.EffortlyTimeTracker.exception.tag.TagNotFoundException;
-import com.EffortlyTimeTracker.exception.task.TaskNotFoundException;
-import com.EffortlyTimeTracker.repository.TagRepositoty;
+import com.EffortlyTimeTracker.repository.TagRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +15,16 @@ import java.util.List;
 @Service
 public class TagService {
 
-    private final TagRepositoty tagRepositoty;
+    private final TagRepository tagRepository;
 
     @Autowired
-    public TagService(TagRepositoty tagRepositoty) {
-        this.tagRepositoty = tagRepositoty;
+    public TagService(TagRepository tagRepository) {
+        this.tagRepository = tagRepository;
     }
 
     public TagProject addTag(@NonNull TagDTO tagDTO) {
         log.info("add new task: {}", tagDTO.getName());
-        TagProject tag = tagRepositoty.save(TagProject.builder()
+        TagProject tag = tagRepository.save(TagProject.builder()
                 .name(tagDTO.getName())
                 .project(tagDTO.getProject())
                 .color(tagDTO.getColor())
@@ -38,15 +36,15 @@ public class TagService {
     }
 
     public void delTagById(Integer tagId) {
-        if (!tagRepositoty.existsById(tagId)) {
+        if (!tagRepository.existsById(tagId)) {
             throw new TagNotFoundException(tagId);
         }
-        tagRepositoty.deleteById(tagId);
+        tagRepository.deleteById(tagId);
         log.info("Task with id {} deleted", tagId);
     }
 
     public TagProject getTagkById(Integer tagId) {
-        TagProject tag = tagRepositoty.findById(tagId)
+        TagProject tag = tagRepository.findById(tagId)
                 .orElseThrow(() -> new TagNotFoundException(tagId));
         log.info("Get = " + tag);
         return tag;
@@ -54,7 +52,7 @@ public class TagService {
 
 
     public List<TagProject> getAllTag() {
-        List<TagProject> tag = tagRepositoty.findAll();
+        List<TagProject> tag = tagRepository.findAll();
         log.info("GetALL = " + tag);
         return tag;
     }
