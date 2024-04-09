@@ -1,7 +1,7 @@
 package com.EffortlyTimeTracker.DTO;
 
-import com.EffortlyTimeTracker.entity.TableProject;
-import com.EffortlyTimeTracker.entity.TagProject;
+import com.EffortlyTimeTracker.entity.TableEntity;
+import com.EffortlyTimeTracker.entity.TagEntity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -30,9 +30,9 @@ public class TaskDTO {
     LocalDateTime timeEndTask;
 
     @NotNull
-    TableProject table;
+    TableEntity table;
 
-    Set<TagProject> tags;
+    Set<TagEntity> tags;
 
 
 }

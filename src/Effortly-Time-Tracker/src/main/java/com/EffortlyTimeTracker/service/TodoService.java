@@ -1,7 +1,7 @@
 package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.DTO.TodoNodeDTO;
-import com.EffortlyTimeTracker.entity.TodoNode;
+import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import com.EffortlyTimeTracker.exception.todo.TodoNotFoudException;
 import com.EffortlyTimeTracker.repository.TodoRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -21,13 +21,13 @@ public class TodoService {
     }
 
     // todo
-    public TodoNode addTodo(TodoNodeDTO todoNodeDTO) {
-        TodoNode todo = todoRepository.save(TodoNode.builder()
+    public TodoNodeEntity addTodo(TodoNodeDTO todoNodeDTO) {
+        TodoNodeEntity todo = todoRepository.save(TodoNodeEntity.builder()
                 .content(todoNodeDTO.getContent())
                 .userTodo(todoNodeDTO.getUserTodo())
                 .dueData(todoNodeDTO.getDueData())
-                .status(TodoNode.Status.valueOf(todoNodeDTO.getStatus()))
-                .priority(TodoNode.Priority.valueOf(todoNodeDTO.getPriority()))
+                .status(TodoNodeEntity.Status.valueOf(todoNodeDTO.getStatus()))
+                .priority(TodoNodeEntity.Priority.valueOf(todoNodeDTO.getPriority()))
                 .build());
 
         log.info("New" + todo);
@@ -42,7 +42,7 @@ public class TodoService {
         log.info("todo with id {} delete", id);
     }
 
-    public List<TodoNode> getAllTodo() {
+    public List<TodoNodeEntity> getAllTodo() {
         //        log.info("GetALL = " + todoNodes);
         return todoRepository.findAll();
     }

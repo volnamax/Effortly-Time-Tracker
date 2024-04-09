@@ -1,8 +1,7 @@
 package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.DTO.TableDTO;
-import com.EffortlyTimeTracker.entity.Project;
-import com.EffortlyTimeTracker.entity.TableProject;
+import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.table.TableNotFoundException;
 import com.EffortlyTimeTracker.repository.TableRepository;
@@ -23,13 +22,13 @@ public class TableService {
         this.tableRepository = tableRepository;
     }
 
-    public TableProject addTable(@NonNull TableDTO tableDTO) {
-        TableProject table = tableRepository.save(TableProject.builder()
+    public TableEntity addTable(@NonNull TableDTO tableDTO) {
+        TableEntity table = tableRepository.save(TableEntity.builder()
                 .name(tableDTO.getName())
                 .description(tableDTO.getDescription())
-                .status(TableProject.Status.valueOf(tableDTO.getStatus()))
+                .status(TableEntity.Status.valueOf(tableDTO.getStatus()))
                 .project(tableDTO.getProject())
-                .tasks(tableDTO.getTasks())
+//                .tasks(tableDTO.getTasks())
                 .build());
 
         return table;
@@ -42,16 +41,16 @@ public class TableService {
         tableRepository.deleteById(tableId);
         log.info("Table with id {} deleted", tableId);
     }
-    public TableProject getTableById(Integer id) {
-        TableProject table = tableRepository.findById(id)
+    public TableEntity getTableById(Integer id) {
+        TableEntity table = tableRepository.findById(id)
                 .orElseThrow(() -> new TableNotFoundException(id));
         log.info("Get = " + table);
 
         return table;
     }
 
-    public List<TableProject> getAllTable() {
-        List<TableProject> tableProjects = tableRepository.findAll();
+    public List<TableEntity> getAllTable() {
+        List<TableEntity> tableProjects = tableRepository.findAll();
         log.info("GetALL = " + tableProjects);
         return tableProjects;
     }

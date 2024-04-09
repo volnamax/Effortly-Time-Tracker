@@ -1,7 +1,8 @@
 package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.DTO.UserDTO;
-import com.EffortlyTimeTracker.entity.User;
+import com.EffortlyTimeTracker.entity.UserEntity;
+import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
 import com.EffortlyTimeTracker.repository.UserRepository;
 import lombok.NonNull;
@@ -21,15 +22,16 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User addUser(UserDTO userDTO) {
-        User user = userRepository.save(User.builder()
-                        .userName(userDTO.getUserName())
-                        .userSecondname(userDTO.getUserSecondname())
-                        .email(userDTO.getEmail())
-                        .description(userDTO.getDescription())
-                        .role(User.Role.valueOf(userDTO.getRole()))
-                        .dataLastLogin(userDTO.getDataLastLogin())
-                        .dataSignIn(userDTO.getDataSignIn())
+    public UserEntity addUser(UserDTO userDTO) {
+        Role role = Role.valueOf(userDTO.getRole().toUpperCase());
+
+        UserEntity user = userRepository.save(UserEntity.builder()
+                .userName(userDTO.getUserName())
+                .userSecondname(userDTO.getUserSecondname())
+                .email(userDTO.getEmail())
+                .role(role)
+                .dataLastLogin(userDTO.getDataLastLogin())
+                .dataSignIn(userDTO.getDataSignIn())
                 .build());
         log.info("New" + user);
         return user;
@@ -43,20 +45,18 @@ public class UserService {
         log.info("user with id {} delete", id);
     }
 
-    public User getUserById(Integer id) {
-        User user  = userRepository.findById(id)
+    public UserEntity getUserById(Integer id) {
+        UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoudException(id));
         log.info("Get = " + user);
 
         return user;
     }
 
-    public List<User> getAllUsers() {
-        List<User> users = userRepository.findAll();
+    public List<UserEntity> getAllUsers() {
+        List<UserEntity> users = userRepository.findAll();
         log.info("GetALL = " + users);
         return users;
     }
-
-
 
 }

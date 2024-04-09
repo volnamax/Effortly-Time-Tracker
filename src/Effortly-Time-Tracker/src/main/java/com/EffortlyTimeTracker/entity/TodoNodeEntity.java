@@ -8,16 +8,18 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Todolist")
+@Table(name = "todo_node")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TodoNode {
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "todoId")
+public class TodoNodeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_todo")
     Integer todoId;
 
     @Column(name = "content", nullable = true)
@@ -25,15 +27,14 @@ public class TodoNode {
 
 
     @Enumerated(EnumType.STRING)
-    private TodoNode.Status status;
-
+    private Status status;
     public enum Status {
         NO_ACTIVE, ACTIVE
     }
 
 
     @Enumerated(EnumType.STRING)
-    private TodoNode.Priority priority;
+    private TodoNodeEntity.Priority priority;
 
     public enum Priority {
         IMPORTANT_URGENTLY, NO_IMPORTANT_URGENTLY, IMPORTANT_NO_URGENTLY, NO_IMPORTANT_NO_URGENTLY
@@ -45,10 +46,8 @@ public class TodoNode {
 
     // Связь с пользователем
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "userId", referencedColumnName = "id_user")
     @JsonBackReference
-    User userTodo;
-
-
+    UserEntity userTodo;
 
 }

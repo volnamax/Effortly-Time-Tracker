@@ -1,7 +1,7 @@
 package com.EffortlyTimeTracker.DTO;
 
-import com.EffortlyTimeTracker.entity.Project;
-import com.EffortlyTimeTracker.entity.TaskTable;
+import com.EffortlyTimeTracker.entity.ProjectEntity;
+import com.EffortlyTimeTracker.entity.TaskEntity;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NonNull;
@@ -15,6 +15,6 @@ public class TagDTO {
     @NonNull String name;
     String color;
     @NonNull
-    Project project;
-    Set<TaskTable> tasks;
+    ProjectEntity project;
+    Set<TaskEntity> tasks;
 }

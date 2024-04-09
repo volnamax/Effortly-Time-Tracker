@@ -1,7 +1,7 @@
 package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.DTO.TagDTO;
-import com.EffortlyTimeTracker.entity.TagProject;
+import com.EffortlyTimeTracker.entity.TagEntity;
 import com.EffortlyTimeTracker.exception.tag.TagNotFoundException;
 import com.EffortlyTimeTracker.repository.TagRepository;
 import lombok.NonNull;
@@ -22,13 +22,13 @@ public class TagService {
         this.tagRepository = tagRepository;
     }
 
-    public TagProject addTag(@NonNull TagDTO tagDTO) {
+    public TagEntity addTag(@NonNull TagDTO tagDTO) {
         log.info("add new task: {}", tagDTO.getName());
-        TagProject tag = tagRepository.save(TagProject.builder()
+        TagEntity tag = tagRepository.save(TagEntity.builder()
                 .name(tagDTO.getName())
                 .project(tagDTO.getProject())
                 .color(tagDTO.getColor())
-                .tasks(tagDTO.getTasks())
+//                .tasks(tagDTO.getTasks())
                 .build()
         );
         log.info("task added : {}", tag.getTagId());
@@ -43,16 +43,16 @@ public class TagService {
         log.info("Task with id {} deleted", tagId);
     }
 
-    public TagProject getTagkById(Integer tagId) {
-        TagProject tag = tagRepository.findById(tagId)
+    public TagEntity getTagkById(Integer tagId) {
+        TagEntity tag = tagRepository.findById(tagId)
                 .orElseThrow(() -> new TagNotFoundException(tagId));
         log.info("Get = " + tag);
         return tag;
     }
 
 
-    public List<TagProject> getAllTag() {
-        List<TagProject> tag = tagRepository.findAll();
+    public List<TagEntity> getAllTag() {
+        List<TagEntity> tag = tagRepository.findAll();
         log.info("GetALL = " + tag);
         return tag;
     }

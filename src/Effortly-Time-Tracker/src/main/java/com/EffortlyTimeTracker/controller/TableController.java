@@ -1,11 +1,7 @@
 package com.EffortlyTimeTracker.controller;
 
-import com.EffortlyTimeTracker.DTO.ProjectDTO;
 import com.EffortlyTimeTracker.DTO.TableDTO;
-import com.EffortlyTimeTracker.entity.Project;
-import com.EffortlyTimeTracker.entity.TableProject;
-import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
-import com.EffortlyTimeTracker.service.ProjectService;
+import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.service.TableService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,7 +26,7 @@ public class TableController {
     @Operation(summary = "Add table")
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public TableProject addTable(@Valid @RequestBody TableDTO tableDTO) {
+    public TableEntity addTable(@Valid @RequestBody TableDTO tableDTO) {
         return tableService.addTable(tableDTO);
     }
 
@@ -44,13 +40,13 @@ public class TableController {
     @Operation(summary = "Get table by id",
             description = "need id")
     @GetMapping("/get")
-    public TableProject getTable(@RequestParam(required = true) Integer  tableId) {
+    public TableEntity getTable(@RequestParam(required = true) Integer  tableId) {
         return tableService.getTableById( tableId);
     }
 
     @Operation(summary = "Get all table")
     @GetMapping("/get-all")
-    public List<TableProject> getProjects() {
+    public List<TableEntity> getProjects() {
         return tableService.getAllTable();
     }
 

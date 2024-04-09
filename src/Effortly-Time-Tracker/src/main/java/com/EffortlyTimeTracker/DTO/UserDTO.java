@@ -1,8 +1,5 @@
 package com.EffortlyTimeTracker.DTO;
 
-import com.EffortlyTimeTracker.entity.Group;
-import com.EffortlyTimeTracker.entity.Project;
-import com.EffortlyTimeTracker.entity.TodoNode;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -10,8 +7,6 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -31,8 +26,8 @@ public class UserDTO {
 
     LocalDateTime dataSignIn;
     LocalDateTime dataLastLogin;
-    List<Project> projects;
-    List<TodoNode> todoNodes;
-
-    Set<Group> groupsUsers;
+//    List<Project> projects;
+//    List<TodoNode> todoNodes;
+//
+//    Set<Group> groupsUsers;
 }

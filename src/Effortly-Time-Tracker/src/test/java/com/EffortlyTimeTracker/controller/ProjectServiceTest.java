@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-import com.EffortlyTimeTracker.entity.Project;
+import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.repository.ProjectRepository;
 import com.EffortlyTimeTracker.DTO.ProjectDTO;
@@ -38,15 +38,15 @@ public class ProjectServiceTest {
 
     @Test
     void addProject() {
-        Project project = new Project();
+        ProjectEntity project = new ProjectEntity();
         project.setName(projectDTO.getName());
 
-        when(projectRepository.save(any(Project.class))).thenReturn(project);
+        when(projectRepository.save(any(ProjectEntity.class))).thenReturn(project);
 
-        Project savedProject = projectService.addProject(projectDTO);
+        ProjectEntity savedProject = projectService.addProject(projectDTO);
 
         assertEquals(project.getName(), savedProject.getName());
-        verify(projectRepository).save(any(Project.class));
+        verify(projectRepository).save(any(ProjectEntity.class));
     }
 
     @Test
@@ -73,13 +73,13 @@ public class ProjectServiceTest {
     @Test
     void getProjectById_whenProjectExists() {
         Integer projectId = 1;
-        Project expectedProject = new Project();
+        ProjectEntity expectedProject = new ProjectEntity();
         expectedProject.setProjectId(projectId);
         expectedProject.setName("Test Project");
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(expectedProject));
 
-        Project actualProject = projectService.getProjectsById(projectId);
+        ProjectEntity actualProject = projectService.getProjectsById(projectId);
 
         assertEquals(expectedProject, actualProject);
     }

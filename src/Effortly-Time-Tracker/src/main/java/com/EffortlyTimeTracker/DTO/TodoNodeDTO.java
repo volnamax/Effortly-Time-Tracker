@@ -1,6 +1,6 @@
 package com.EffortlyTimeTracker.DTO;
 
-import com.EffortlyTimeTracker.entity.User;
+import com.EffortlyTimeTracker.entity.UserEntity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -24,5 +24,5 @@ public class TodoNodeDTO {
     LocalDateTime dueData;
 
     @NotNull(message = "Error todo node user  is empty")
-    User userTodo;
+    UserEntity userTodo;
 }

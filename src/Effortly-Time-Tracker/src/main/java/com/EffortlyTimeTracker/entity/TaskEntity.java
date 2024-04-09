@@ -1,25 +1,25 @@
 package com.EffortlyTimeTracker.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
-@Table(name = "TaskTable")
+@Table(name = "task")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TaskTable {
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "taskId")
+public class TaskEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_task")
     Integer taskId;
 
     @Column(name = "name", nullable = false)
@@ -28,8 +28,15 @@ public class TaskTable {
     @Column(name = "description", nullable = true)
     String description;
 
+    // todo enums to one file
     @Column(name = "status", nullable = false)
-    String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    public enum Status {
+        NO_ACTIVE, ACTIVE
+    }
+
 
     @Column(name = "sum_timer", nullable = true)
     Long sumTimer;
@@ -48,20 +55,21 @@ public class TaskTable {
 //    private User createdBy;
 
 
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tableId")
-    @JsonBackReference
-    TableProject table;
+    @JoinColumn(name = "table_id")
+//    @JsonBackReference
+    TableEntity table;
 
 
-    // @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @ManyToMany
-    @JoinTable(
-            name = "task_tag", // Correct name of the join table
-            joinColumns = @JoinColumn(name = "taskId", referencedColumnName = "taskId"), // Link to TaskTable
-            inverseJoinColumns = @JoinColumn(name = "tagId", referencedColumnName = "tagId") // Link to TagProject
-    )
-    private Set<TagProject> tags;
+//    // @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+//    @ManyToMany
+//    @JoinTable(
+//            name = "task_tag", // Correct name of the join table
+//            joinColumns = @JoinColumn(name = "taskId", referencedColumnName = "taskId"), // Link to TaskTable
+//            inverseJoinColumns = @JoinColumn(name = "tagId", referencedColumnName = "tagId") // Link to TagProject
+//    )
+//    private Set<TagProject> tags;
 
 }
 

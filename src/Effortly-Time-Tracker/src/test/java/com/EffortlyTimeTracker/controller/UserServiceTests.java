@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import com.EffortlyTimeTracker.DTO.UserDTO;
-import com.EffortlyTimeTracker.entity.User;
+import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
 import com.EffortlyTimeTracker.repository.UserRepository;
 import com.EffortlyTimeTracker.service.UserService;
@@ -42,11 +42,11 @@ public class UserServiceTests {
 
     @Test
     void addUser() {
-        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(userRepository.save(any(UserEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         userService.addUser(userDTO);
 
-        verify(userRepository).save(any(User.class));
+        verify(userRepository).save(any(UserEntity.class));
     }
 
     @Test
@@ -75,11 +75,11 @@ public class UserServiceTests {
     @Test
     void getUserById_whenUserExists() {
         Integer userId = 1;
-        User mockUser = new User();
+        UserEntity mockUser = new UserEntity();
         mockUser.setUserId(userId);
         when(userRepository.findById(userId)).thenReturn(Optional.of(mockUser));
 
-        User foundUser = userService.getUserById(userId);
+        UserEntity foundUser = userService.getUserById(userId);
 
         assertNotNull(foundUser);
         assertEquals(userId, foundUser.getUserId());
@@ -99,12 +99,12 @@ public class UserServiceTests {
 
     @Test
     void getAllUsers_returnsListOfUsers() {
-        User user1 = new User(); // Assuming User class has appropriate setters or constructor
-        User user2 = new User();
-        List<User> mockUsers = Arrays.asList(user1, user2);
+        UserEntity user1 = new UserEntity(); // Assuming User class has appropriate setters or constructor
+        UserEntity user2 = new UserEntity();
+        List<UserEntity> mockUsers = Arrays.asList(user1, user2);
         when(userRepository.findAll()).thenReturn(mockUsers);
 
-        List<User> users = userService.getAllUsers();
+        List<UserEntity> users = userService.getAllUsers();
 
         assertNotNull(users);
         assertEquals(2, users.size());
@@ -115,7 +115,7 @@ public class UserServiceTests {
     void getAllUsers_returnsEmptyListWhenNoUsersExist() {
         when(userRepository.findAll()).thenReturn(Arrays.asList());
 
-        List<User> users = userService.getAllUsers();
+        List<UserEntity> users = userService.getAllUsers();
 
         assertNotNull(users);
         assertTrue(users.isEmpty());

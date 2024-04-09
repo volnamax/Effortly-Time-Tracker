@@ -1,7 +1,7 @@
 package com.EffortlyTimeTracker.controller;
 
 import com.EffortlyTimeTracker.DTO.UserDTO;
-import com.EffortlyTimeTracker.entity.User;
+import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,7 +30,7 @@ public class UserController {
             description = "need name , sname, email, role (ADMIN, USER, GUEST)")
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public User addUser(@Valid @RequestBody UserDTO userDTO) {
+    public UserEntity addUser(@Valid @RequestBody UserDTO userDTO) {
         return userService.addUser(userDTO);
     }
 
@@ -43,13 +43,13 @@ public class UserController {
     @Operation(summary = "Get user by id",
             description = "need id")
     @GetMapping("/get")
-    public User getUser(@RequestParam(required = true) Integer id_user) {
+    public UserEntity getUser(@RequestParam(required = true) Integer id_user) {
         return userService.getUserById(id_user);
     }
 
     @Operation(summary = "Get all user")
     @GetMapping("/get-all")
-    public List<User> getUser() {
+    public List<UserEntity> getUser() {
         return userService.getAllUsers();
     }
 /*

@@ -1,7 +1,7 @@
 package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.DTO.TaskDTO;
-import com.EffortlyTimeTracker.entity.TaskTable;
+import com.EffortlyTimeTracker.entity.TaskEntity;
 import com.EffortlyTimeTracker.exception.task.TaskNotFoundException;
 import com.EffortlyTimeTracker.repository.TaskRepository;
 import lombok.NonNull;
@@ -21,17 +21,17 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-    public TaskTable addTask(@NonNull TaskDTO taskDTO) {
+    public TaskEntity addTask(@NonNull TaskDTO taskDTO) {
         log.info("add new task: {}", taskDTO.getName());
-        TaskTable task = taskRepository.save(TaskTable.builder()
+        TaskEntity task = taskRepository.save(TaskEntity.builder()
                 .name(taskDTO.getName())
                 .description(taskDTO.getDescription())
-                .status(taskDTO.getStatus())
+//                .status(taskDTO.getStatus())
                 .sumTimer(taskDTO.getSumTimer())
                 .startTimer(taskDTO.getStartTimer())
                 .timeAddTask(taskDTO.getTimeAddTask())
                 .timeEndTask(taskDTO.getTimeEndTask())
-                .tags(taskDTO.getTags())
+//                .tags(taskDTO.getTags())
                 .table(taskDTO.getTable())
                 .build());
         log.info("task added : {}", task.getTaskId());
@@ -46,15 +46,15 @@ public class TaskService {
         log.info("Task with id {} deleted", taskId);
     }
 
-    public TaskTable getTaskById(Integer taskId) {
-        TaskTable task = taskRepository.findById(taskId)
+    public TaskEntity getTaskById(Integer taskId) {
+        TaskEntity task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
         log.info("Get = " + task);
         return task;
     }
 
-    public List<TaskTable> getAllTask() {
-        List<TaskTable> tasks = taskRepository.findAll();
+    public List<TaskEntity> getAllTask() {
+        List<TaskEntity> tasks = taskRepository.findAll();
         log.info("GetALL = " + tasks);
         return tasks;
     }

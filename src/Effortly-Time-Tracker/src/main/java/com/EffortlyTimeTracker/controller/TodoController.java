@@ -1,7 +1,7 @@
 package com.EffortlyTimeTracker.controller;
 
 import com.EffortlyTimeTracker.DTO.TodoNodeDTO;
-import com.EffortlyTimeTracker.entity.TodoNode;
+import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import com.EffortlyTimeTracker.service.TodoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +27,7 @@ public class TodoController {
             "priority(IMPORTANT_URGENTLY, NO_IMPORTANT_URGENTLY, IMPORTANT_NO_URGENTLY, NO_IMPORTANT_NO_URGENTLY)")
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public TodoNode addTodo(@Valid @RequestBody TodoNodeDTO todoNodeDTO) {
+    public TodoNodeEntity addTodo(@Valid @RequestBody TodoNodeDTO todoNodeDTO) {
         return todoService.addTodo(todoNodeDTO);
     }
 
@@ -39,7 +39,7 @@ public class TodoController {
 
     @Operation(summary = "Get all todo")
     @GetMapping("/get-all")
-    public List<TodoNode> getTodoAll() {
+    public List<TodoNodeEntity> getTodoAll() {
         return todoService.getAllTodo();
     }
 

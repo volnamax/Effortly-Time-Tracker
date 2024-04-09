@@ -1,7 +1,7 @@
 package com.EffortlyTimeTracker.controller;
 
 import com.EffortlyTimeTracker.DTO.TaskDTO;
-import com.EffortlyTimeTracker.entity.TaskTable;
+import com.EffortlyTimeTracker.entity.TaskEntity;
 import com.EffortlyTimeTracker.exception.task.TaskNotFoundException;
 import com.EffortlyTimeTracker.repository.TaskRepository;
 import com.EffortlyTimeTracker.service.TaskService;
@@ -29,7 +29,7 @@ public class TaskServiceTest {
     private TaskService taskService;
 
     private TaskDTO taskDTO;
-    private TaskTable task;
+    private TaskEntity task;
 
     @BeforeEach
     void setUp() {
@@ -43,11 +43,11 @@ public class TaskServiceTest {
         taskDTO.setTimeEndTask(LocalDateTime.now());
         // Assuming setTags and setTable are handled appropriately here
 
-        task = TaskTable.builder()
+        task = TaskEntity.builder()
                 .taskId(1)
                 .name(taskDTO.getName())
                 .description(taskDTO.getDescription())
-                .status(taskDTO.getStatus())
+//                .status(taskDTO.getStatus())
                 .sumTimer(taskDTO.getSumTimer())
                 .startTimer(taskDTO.getStartTimer())
                 .timeAddTask(taskDTO.getTimeAddTask())
@@ -58,13 +58,13 @@ public class TaskServiceTest {
 
     @Test
     void addTask_ShouldReturnNewTask() {
-        when(taskRepository.save(any(TaskTable.class))).thenReturn(task);
+        when(taskRepository.save(any(TaskEntity.class))).thenReturn(task);
 
-        TaskTable createdTask = taskService.addTask(taskDTO);
+        TaskEntity createdTask = taskService.addTask(taskDTO);
 
         assertNotNull(createdTask);
         assertEquals(taskDTO.getName(), createdTask.getName());
-        verify(taskRepository).save(any(TaskTable.class));
+        verify(taskRepository).save(any(TaskEntity.class));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class TaskServiceTest {
     void getTaskById_ShouldReturnTask() {
         when(taskRepository.findById(anyInt())).thenReturn(Optional.of(task));
 
-        TaskTable foundTask = taskService.getTaskById(task.getTaskId());
+        TaskEntity foundTask = taskService.getTaskById(task.getTaskId());
 
         assertNotNull(foundTask);
         assertEquals(task.getTaskId(), foundTask.getTaskId());
@@ -100,7 +100,7 @@ public class TaskServiceTest {
     void getAllTask_ShouldReturnListOfTasks() {
         when(taskRepository.findAll()).thenReturn(Arrays.asList(task));
 
-        List<TaskTable> tasks = taskService.getAllTask();
+        List<TaskEntity> tasks = taskService.getAllTask();
 
         assertNotNull(tasks);
         assertFalse(tasks.isEmpty());

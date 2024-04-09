@@ -1,24 +1,22 @@
 package com.EffortlyTimeTracker.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
 @Entity
-@Table(name = "TableProject")
+@Table(name = "table")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TableProject {
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "tableId")
+public class TableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_table")
     Integer tableId;
 
     @Column(name = "name", nullable = false)
@@ -28,8 +26,7 @@ public class TableProject {
     String description;
 
     @Enumerated(EnumType.STRING)
-    private TableProject.Status status;
-
+    private Status status;
     public enum Status {
         NO_ACTIVE, ACTIVE
     }
@@ -37,13 +34,13 @@ public class TableProject {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "projectId")
-    @JsonBackReference
-    Project project;
+//    @JsonBackReference
+    ProjectEntity project;
 
-
-    @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    List<TaskTable> tasks;
+//
+//    @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JsonManagedReference
+//    List<TaskTable> tasks;
 
 
 }

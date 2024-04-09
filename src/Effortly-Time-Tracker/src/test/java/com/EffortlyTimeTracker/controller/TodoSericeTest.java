@@ -1,7 +1,7 @@
 package com.EffortlyTimeTracker.controller;
 
 import com.EffortlyTimeTracker.DTO.TodoNodeDTO;
-import com.EffortlyTimeTracker.entity.TodoNode;
+import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import com.EffortlyTimeTracker.exception.todo.TodoNotFoudException;
 import com.EffortlyTimeTracker.repository.TodoRepository;
 import com.EffortlyTimeTracker.service.TodoService;
@@ -36,20 +36,20 @@ class TodoServiceTest {
         todoNodeDTO.setStatus("ACTIVE");
         todoNodeDTO.setPriority("IMPORTANT_URGENTLY");
 
-        TodoNode expectedTodoNode = new TodoNode();
+        TodoNodeEntity expectedTodoNode = new TodoNodeEntity();
         expectedTodoNode.setContent(todoNodeDTO.getContent());
-        expectedTodoNode.setStatus(TodoNode.Status.valueOf(todoNodeDTO.getStatus()));
-        expectedTodoNode.setPriority(TodoNode.Priority.valueOf(todoNodeDTO.getPriority()));
+        expectedTodoNode.setStatus(TodoNodeEntity.Status.valueOf(todoNodeDTO.getStatus()));
+        expectedTodoNode.setPriority(TodoNodeEntity.Priority.valueOf(todoNodeDTO.getPriority()));
 
-        when(todoRepository.save(any(TodoNode.class))).thenReturn(expectedTodoNode);
+        when(todoRepository.save(any(TodoNodeEntity.class))).thenReturn(expectedTodoNode);
 
-        TodoNode resultTodoNode = todoService.addTodo(todoNodeDTO);
+        TodoNodeEntity resultTodoNode = todoService.addTodo(todoNodeDTO);
 
         assertNotNull(resultTodoNode);
         assertEquals(expectedTodoNode.getContent(), resultTodoNode.getContent());
         assertEquals(expectedTodoNode.getStatus(), resultTodoNode.getStatus());
         assertEquals(expectedTodoNode.getPriority(), resultTodoNode.getPriority());
-        verify(todoRepository).save(any(TodoNode.class));
+        verify(todoRepository).save(any(TodoNodeEntity.class));
     }
 
     @Test
@@ -74,10 +74,10 @@ class TodoServiceTest {
 
     @Test
     void testGetAllTodo() {
-        List<TodoNode> expectedTodoNodes = Arrays.asList(new TodoNode(), new TodoNode());
+        List<TodoNodeEntity> expectedTodoNodes = Arrays.asList(new TodoNodeEntity(), new TodoNodeEntity());
         when(todoRepository.findAll()).thenReturn(expectedTodoNodes);
 
-        List<TodoNode> resultTodoNodes = todoService.getAllTodo();
+        List<TodoNodeEntity> resultTodoNodes = todoService.getAllTodo();
 
         assertNotNull(resultTodoNodes);
         assertEquals(2, resultTodoNodes.size());

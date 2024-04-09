@@ -1,7 +1,7 @@
 package com.EffortlyTimeTracker.controller;
 
 import com.EffortlyTimeTracker.DTO.ProjectDTO;
-import com.EffortlyTimeTracker.entity.Project;
+import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,7 +26,7 @@ public class ProjectController {
     @Operation(summary = "Add project")
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public Project addProject(@Valid @RequestBody ProjectDTO projectDTO) {
+    public ProjectEntity addProject(@Valid @RequestBody ProjectDTO projectDTO) {
         return projectService.addProject(projectDTO);
     }
 
@@ -39,12 +39,12 @@ public class ProjectController {
     @Operation(summary = "Get proj by id",
             description = "need id")
     @GetMapping("/get")
-    public Project getProject(@RequestParam(required = true) Integer  projectId) {
+    public ProjectEntity getProject(@RequestParam(required = true) Integer  projectId) {
         return projectService.getProjectsById( projectId);
     }
     @Operation(summary = "Get all proj")
     @GetMapping("/get-all")
-    public List<Project> getProjects() {
+    public List<ProjectDTO> getProjects() {
         return projectService.getAllProject();
     }
 

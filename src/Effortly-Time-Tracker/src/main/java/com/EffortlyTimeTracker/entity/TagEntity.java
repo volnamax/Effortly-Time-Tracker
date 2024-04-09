@@ -1,12 +1,9 @@
 package com.EffortlyTimeTracker.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Set;
 
 
 @Getter
@@ -16,10 +13,12 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "TagProject")
-public class TagProject {
+@Table(name = "tag")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "tagId")
+public class TagEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_tags")
     Integer tagId;
 
     @Column(name = "name", nullable = false)
@@ -30,10 +29,10 @@ public class TagProject {
 
     // Связь с проектом
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "projectId")
-    @JsonBackReference
-    Project project;
-
-    @ManyToMany(mappedBy = "tags")
-    Set<TaskTable> tasks;
+    @JoinColumn(name = "project_id")
+//    @JsonBackReference
+            ProjectEntity project;
+//
+//    @ManyToMany(mappedBy = "tags")
+//    Set<TaskTable> tasks;
 }
