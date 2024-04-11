@@ -1,7 +1,5 @@
 // todo del fatch = lazy
-
-// todo respond to dto format
-
+// todo del dto for service
 // todo check to all entity for controller and service
 
 
