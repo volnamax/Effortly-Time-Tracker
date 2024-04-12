@@ -39,15 +39,13 @@ public class TodoNodeEntity {
     public enum Priority {
         IMPORTANT_URGENTLY, NO_IMPORTANT_URGENTLY, IMPORTANT_NO_URGENTLY, NO_IMPORTANT_NO_URGENTLY
     }
-
-
-    @Column(name = "due_data", nullable = true)
-    LocalDateTime dueData;
-
-    // Связь с пользователем
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", referencedColumnName = "id_user")
-    @JsonBackReference
-    UserEntity userTodo;
+//
+//
+//    @Column(name = "due_data", nullable = true)
+//    LocalDateTime dueData;
+//
+//    // Связь с пользователем
+//    @JoinColumn(name = "user_id", referencedColumnName = "id_user")
+//    UserEntity userTodo;
 
 }

@@ -24,8 +24,8 @@ public class TodoService {
     public TodoNodeEntity addTodo(TodoNodeDTO todoNodeDTO) {
         TodoNodeEntity todo = todoRepository.save(TodoNodeEntity.builder()
                 .content(todoNodeDTO.getContent())
-                .userTodo(todoNodeDTO.getUserTodo())
-                .dueData(todoNodeDTO.getDueData())
+//                .userTodo(todoNodeDTO.getUserTodo())
+//                .dueData(todoNodeDTO.getDueData())
                 .status(TodoNodeEntity.Status.valueOf(todoNodeDTO.getStatus()))
                 .priority(TodoNodeEntity.Priority.valueOf(todoNodeDTO.getPriority()))
                 .build());

@@ -1,9 +1,9 @@
 package com.EffortlyTimeTracker.service;
 
-import com.EffortlyTimeTracker.DTO.UserDTO;
+import com.EffortlyTimeTracker.DTO.UserCreateDTO;
 import com.EffortlyTimeTracker.entity.UserEntity;
-import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
+import com.EffortlyTimeTracker.repository.RoleRepository;
 import com.EffortlyTimeTracker.repository.UserRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -22,20 +22,12 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserEntity addUser(UserDTO userDTO) {
-        Role role = Role.valueOf(userDTO.getRole().toUpperCase());
-
-        UserEntity user = userRepository.save(UserEntity.builder()
-                .userName(userDTO.getUserName())
-                .userSecondname(userDTO.getUserSecondname())
-                .email(userDTO.getEmail())
-                .role(role)
-                .dataLastLogin(userDTO.getDataLastLogin())
-                .dataSignIn(userDTO.getDataSignIn())
-                .build());
+    public UserEntity addUser(@NonNull  UserEntity userEntity) {
+        UserEntity user = userRepository.save(userEntity);
         log.info("New" + user);
         return user;
     }
+
 
     public void delUserById(Integer id) {
         if (!userRepository.existsById(id)) {

@@ -1,5 +1,6 @@
 package com.EffortlyTimeTracker.enums;
-
 public enum Role {
-    ADMIN, USER, GUEST;
+    ADMIN,    // Администратор
+    USER,     // Обычный пользователь
+    GUEST     // Гостевой пользователь
 }

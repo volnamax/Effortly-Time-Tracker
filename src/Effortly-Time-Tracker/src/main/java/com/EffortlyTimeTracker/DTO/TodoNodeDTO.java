@@ -18,11 +18,12 @@ public class TodoNodeDTO {
 
     @NotBlank(message = "Error todo node status  is empty")
     String status;
+
     @NotBlank(message = "Error todo node priority  is empty")
     String priority;
 
-    LocalDateTime dueData;
-
     @NotNull(message = "Error todo node user  is empty")
     UserEntity userTodo;
+
+    LocalDateTime dueData;
 }

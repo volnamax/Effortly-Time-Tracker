@@ -1,7 +1,7 @@
 package com.EffortlyTimeTracker.DTO;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import com.EffortlyTimeTracker.enums.Role;
+import jakarta.validation.constraints.*;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserDTO {
+public class UserCreateDTO {
     @NotBlank(message = "Error user name is empty")
     String userName;
 
@@ -21,13 +21,11 @@ public class UserDTO {
     @Email(message = "Error user email is invalid")
     String email;
 
-    String description;
+    @NotBlank(message = "Error user password is empty")
+    String passwordHash;
+
+//    @NotBlank(message = "Error user role is empty")
     String role;
 
     LocalDateTime dataSignIn;
-    LocalDateTime dataLastLogin;
-//    List<Project> projects;
-//    List<TodoNode> todoNodes;
-//
-//    Set<Group> groupsUsers;
 }

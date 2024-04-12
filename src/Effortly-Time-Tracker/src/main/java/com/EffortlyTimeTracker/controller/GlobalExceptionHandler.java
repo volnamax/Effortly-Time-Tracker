@@ -18,14 +18,27 @@ import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
     // Add handlers for user-related exceptions
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<?> handleTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        return new ResponseEntity<>("Error: The provided role must be an integer.", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<?> handleMessageNotReadableException(HttpMessageNotReadableException ex) {
+        return new ResponseEntity<>("Error: Invalid input data format.", HttpStatus.BAD_REQUEST);
+    }
+
+
     @ExceptionHandler(InvalidUserException.class)
     public ResponseEntity<?> handleInvalidUserException(InvalidUserException ex) {
         log.error("Invalid user exception", ex);
