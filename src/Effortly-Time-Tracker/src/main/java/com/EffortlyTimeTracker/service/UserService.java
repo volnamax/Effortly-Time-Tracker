@@ -1,7 +1,8 @@
 package com.EffortlyTimeTracker.service;
 
-import com.EffortlyTimeTracker.DTO.UserCreateDTO;
+import com.EffortlyTimeTracker.entity.RoleEntity;
 import com.EffortlyTimeTracker.entity.UserEntity;
+import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
 import com.EffortlyTimeTracker.repository.RoleRepository;
 import com.EffortlyTimeTracker.repository.UserRepository;
@@ -14,20 +15,27 @@ import java.util.List;
 
 @Service
 @Slf4j
+
 public class UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public UserService(@NonNull UserRepository userRepository) {
+    public UserService(@NonNull UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
-    public UserEntity addUser(@NonNull  UserEntity userEntity) {
+
+    public RoleEntity getRoleByName(String roleName) {
+        return roleRepository.findByName(Role.valueOf(roleName));
+    }
+
+    public UserEntity addUser(@NonNull UserEntity userEntity) {
         UserEntity user = userRepository.save(userEntity);
         log.info("New" + user);
         return user;
     }
-
 
     public void delUserById(Integer id) {
         if (!userRepository.existsById(id)) {
@@ -50,5 +58,4 @@ public class UserService {
         log.info("GetALL = " + users);
         return users;
     }
-
 }

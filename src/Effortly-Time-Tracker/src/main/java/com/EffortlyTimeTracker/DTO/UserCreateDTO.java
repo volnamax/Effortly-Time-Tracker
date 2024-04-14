@@ -24,7 +24,7 @@ public class UserCreateDTO {
     @NotBlank(message = "Error user password is empty")
     String passwordHash;
 
-//    @NotBlank(message = "Error user role is empty")
+    @NotBlank(message = "Error user role is empty")
     String role;
 
     LocalDateTime dataSignIn;

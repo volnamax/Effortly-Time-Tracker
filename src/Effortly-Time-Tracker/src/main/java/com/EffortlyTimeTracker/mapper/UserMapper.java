@@ -14,21 +14,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper {
 
-    @Autowired
-    private RoleRepository roleRepository;
-
-    public UserEntity dtoToEntityCreate(UserCreateDTO userCreateDTO) {
+    public UserEntity dtoToEntityCreate(UserCreateDTO userCreateDTO, RoleEntity roleEntity) {
         UserEntity userEntity = new UserEntity();
 
         userEntity.setUserName(userCreateDTO.getUserName());
         userEntity.setUserSecondname(userCreateDTO.getUserSecondname());
         userEntity.setEmail(userCreateDTO.getEmail());
         userEntity.setPasswordHash(userCreateDTO.getPasswordHash());
-
-        // Convert string to enum before querying
-
-        Role roleEnum = Role.valueOf(userCreateDTO.getRole());
-        RoleEntity roleEntity = roleRepository.findByName(roleEnum);
         userEntity.setRole(roleEntity);
 
 
@@ -47,7 +39,7 @@ public class UserMapper {
         if (userEntity.getRole() != null) {
             userDTO.setRole(userEntity.getRole().getName().toString());
         } else {
-            userDTO.setRole(null);
+            userDTO.setRole("GUEST");
         }
 
         userDTO.setDataSignIn(userEntity.getDataSignIn());

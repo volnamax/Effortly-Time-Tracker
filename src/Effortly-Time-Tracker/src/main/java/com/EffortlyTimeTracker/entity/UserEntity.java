@@ -51,9 +51,11 @@ public class UserEntity {
                 ", userName='" + userName + '\'' +
                 ", userSecondname='" + userSecondname + '\'' +
                 ", email='" + email + '\'' +
-                ", dataSignIn=" + dataSignIn +
-                ", dataLastLogin=" + dataLastLogin +
-                ", passwordHash='" + passwordHash + '\'';
+                ", passwordHash='" + passwordHash + '\''+
+                ", role ='" + role.getName() + '\''+
+                ", dataSignIn=" + dataSignIn + '\'' +
+                ", dataLastLogin=" + dataLastLogin +'\''
+                + "}";
     }
 }
 

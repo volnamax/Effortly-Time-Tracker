@@ -1,13 +1,9 @@
 CREATE SCHEMA public;
 SET search_path TO public, pg_catalog;
 
-
 CREATE TYPE public.role_t AS ENUM ('ADMIN', 'USER', 'GUEST');
-
 CREATE TYPE public.status_t AS ENUM ('NO_ACTIVE', 'ACTIVE');
 CREATE TYPE public.priority_t AS ENUM ('IMPORTANT_URGENTLY', 'NO_IMPORTANT_URGENTLY', 'IMPORTANT_NO_URGENTLY', 'NO_IMPORTANT_NO_URGENTLY');
-
-
 
 CREATE TABLE public.group_user
 
@@ -39,6 +35,14 @@ CREATE TABLE public.user_app
     UNIQUE (email),
     FOREIGN KEY (role_id) REFERENCES public.roles (id_role)
 );
+
+INSERT INTO public.roles ("name")
+VALUES ('ADMIN'),
+       ('USER'),
+       ('GUEST');
+
+ALTER TABLE public.user_app
+    ADD CONSTRAINT fk_role_id FOREIGN KEY ("role_id") REFERENCES "roles" ("id_role");
 
 CREATE TABLE public.group_member
 (
@@ -123,13 +127,6 @@ CREATE TABLE public.todo_node
     PRIMARY KEY (id_todo)
 );
 
-INSERT INTO public.roles ("name")
-VALUES ('ADMIN'),
-       ('USER'),
-       ('GUEST');
-
-ALTER TABLE public.user_app
-    ADD CONSTRAINT fk_role_id FOREIGN KEY ("role_id") REFERENCES "roles" ("id_role");
 
 ALTER TABLE public.tag
     ADD FOREIGN KEY ("project_id") REFERENCES public.project ("id_project");
