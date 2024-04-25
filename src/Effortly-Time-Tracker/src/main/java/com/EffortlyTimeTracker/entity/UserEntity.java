@@ -1,11 +1,13 @@
 package com.EffortlyTimeTracker.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "user_app")
@@ -38,6 +40,11 @@ public class UserEntity {
 
     @Column(name = "password", nullable = false)
     String passwordHash;
+
+
+    @OneToMany(mappedBy ="user",  cascade = CascadeType.ALL,  orphanRemoval = true)
+    @JsonManagedReference
+    List<TodoNodeEntity> todoNodeEntityList;
 
 
     @ManyToOne()

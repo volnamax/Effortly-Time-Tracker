@@ -16,7 +16,6 @@ public class RoleEntity {
     @Column(name = "name")
     private Role name;
 
-    // Геттеры и сеттеры
     public Integer getId() {
         return id;
     }

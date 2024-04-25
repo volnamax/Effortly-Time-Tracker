@@ -5,14 +5,7 @@ CREATE TYPE public.role_t AS ENUM ('ADMIN', 'USER', 'GUEST');
 CREATE TYPE public.status_t AS ENUM ('NO_ACTIVE', 'ACTIVE');
 CREATE TYPE public.priority_t AS ENUM ('IMPORTANT_URGENTLY', 'NO_IMPORTANT_URGENTLY', 'IMPORTANT_NO_URGENTLY', 'NO_IMPORTANT_NO_URGENTLY');
 
-CREATE TABLE public.group_user
 
-(
-    goup_id     SERIAL       NOT NULL,
-    description VARCHAR(255),
-    name        VARCHAR(255) NOT NULL,
-    PRIMARY KEY (goup_id)
-);
 CREATE TABLE public.roles
 (
     id_role SERIAL NOT NULL,
@@ -44,6 +37,35 @@ VALUES ('ADMIN'),
 ALTER TABLE public.user_app
     ADD CONSTRAINT fk_role_id FOREIGN KEY ("role_id") REFERENCES "roles" ("id_role");
 
+
+
+CREATE TABLE public.todo_node
+(
+    id_todo  SERIAL NOT NULL,
+    content  VARCHAR(255),
+    priority VARCHAR(255) CHECK (priority IN ('IMPORTANT_URGENTLY', 'NO_IMPORTANT_URGENTLY', 'IMPORTANT_NO_URGENTLY',
+                                              'NO_IMPORTANT_NO_URGENTLY')),
+    status   VARCHAR(255) CHECK (status IN ('NO_ACTIVE', 'ACTIVE')),
+    due_data TIMESTAMP(6),
+    PRIMARY KEY (id_todo),
+
+    user_id     INTEGER,
+    FOREIGN KEY (user_id) REFERENCES public.user_app (id_user)
+);
+
+
+
+
+
+CREATE TABLE public.group_user
+
+(
+    goup_id     SERIAL       NOT NULL,
+    description VARCHAR(255),
+    name        VARCHAR(255) NOT NULL,
+    PRIMARY KEY (goup_id)
+);
+
 CREATE TABLE public.group_member
 (
     id       SERIAL NOT NULL,
@@ -53,8 +75,6 @@ CREATE TABLE public.group_member
     FOREIGN KEY (group_id) REFERENCES public.group_user (goup_id),
     FOREIGN KEY (user_id) REFERENCES public.user_app (id_user)
 );
-
-
 
 CREATE TABLE public.project
 (
@@ -115,16 +135,6 @@ CREATE TABLE public.task_tag
     PRIMARY KEY (id),
     FOREIGN KEY (tag_id) REFERENCES public.tag (id_tags),
     FOREIGN KEY (task_id) REFERENCES public.task (id_task)
-);
-
-CREATE TABLE public.todo_node
-(
-    id_todo  SERIAL NOT NULL,
-    content  VARCHAR(255),
-    priority VARCHAR(255) CHECK (priority IN ('IMPORTANT_URGENTLY', 'NO_IMPORTANT_URGENTLY', 'IMPORTANT_NO_URGENTLY',
-                                              'NO_IMPORTANT_NO_URGENTLY')),
-    status   VARCHAR(255) CHECK (status IN ('NO_ACTIVE', 'ACTIVE')),
-    PRIMARY KEY (id_todo)
 );
 
 

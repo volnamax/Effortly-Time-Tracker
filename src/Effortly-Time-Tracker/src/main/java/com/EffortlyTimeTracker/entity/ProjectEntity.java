@@ -13,7 +13,6 @@ import lombok.experimental.FieldDefaults;
 @Table(name = "project")
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "projectId")
 public class ProjectEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +28,6 @@ public class ProjectEntity {
     // Связь с пользователем
     @ManyToOne
     @JoinColumn(name = "user_id")
-//    @JsonBackReference
     UserEntity userProject;
 
     @OneToOne

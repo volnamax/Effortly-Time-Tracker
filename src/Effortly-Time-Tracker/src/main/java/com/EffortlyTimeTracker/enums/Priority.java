@@ -1,0 +1,5 @@
+package com.EffortlyTimeTracker.enums;
+
+public enum Priority {
+    IMPORTANT_URGENTLY, NO_IMPORTANT_URGENTLY, IMPORTANT_NO_URGENTLY, NO_IMPORTANT_NO_URGENTLY
+}

@@ -1,6 +1,7 @@
 package com.EffortlyTimeTracker.entity;
 
 
+import com.EffortlyTimeTracker.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -32,11 +33,6 @@ public class TaskEntity {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
-
-    public enum Status {
-        NO_ACTIVE, ACTIVE
-    }
-
 
     @Column(name = "sum_timer", nullable = true)
     Long sumTimer;

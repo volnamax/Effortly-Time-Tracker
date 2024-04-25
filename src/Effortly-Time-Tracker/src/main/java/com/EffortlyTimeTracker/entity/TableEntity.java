@@ -12,7 +12,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "tableId")
 public class TableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
