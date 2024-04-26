@@ -1,8 +1,12 @@
 package com.EffortlyTimeTracker.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 
 @Entity
@@ -28,25 +32,37 @@ public class ProjectEntity {
     // Связь с пользователем
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     UserEntity userProject;
+
 
     @OneToOne
     @JoinColumn(name = "group_id", unique = true)
-    private GroupEntity group;
+    GroupEntity group;
 
 //    @JsonManagedReference
 //    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-//    List<TableProject> tables;
+//    List<TableEntity> tables;
 //
 //    @JsonManagedReference
 //    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-//    List<TagProject> tags;
+//    List<TableEntity> tags;
 
 
 //    @OneToOne(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 //    @JsonManagedReference
-//    private Group group;
+//    GroupEntity group;
 
+    @Override
+    public String toString() {
+        return "ProjectEntity{" +
+                "projectId=" + projectId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", userProject=" + userProject +
+                ", group=" + group +
+                '}';
+    }
 }
 
 

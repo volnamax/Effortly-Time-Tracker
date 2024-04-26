@@ -29,7 +29,7 @@ public class UserController {
 
 
     @Autowired
-    public UserController(UserService userService, UserMapper userMapper, RoleRepository roleRepository) {
+    public UserController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
     }

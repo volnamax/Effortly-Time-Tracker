@@ -13,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 public class ProjectDTO {
     @NotBlank(message = "Error proj name is empty")
     String name;
+
     String description;
     @NotNull(message = "Error proj not have user")
     UserEntity userProject;

@@ -24,19 +24,10 @@ public class ProjectService {
     }
 
 
-    public ProjectEntity addProject(@NotNull ProjectDTO projectDTO) {
-//        if (projectDTO.getName() == null || projectDTO.getName().isEmpty()) {
-//            throw new InvalidProjectException("Имя проекта не может быть пустым");
-//        }
-        log.info("Добавление проекта: {}", projectDTO.getName());
-        ProjectEntity project = projectRepository.save(ProjectEntity.builder()
-                .name(projectDTO.getName())
-                .description(projectDTO.getDescription())
-                .userProject(projectDTO.getUserProject())
-//                .tables(projectDTO.getTables())
-//                .tags(projectDTO.getTags())
-                .build());
-        log.info("Проект успешно добавлен: {}", project.getProjectId());
+    public ProjectEntity addProject(@NotNull ProjectEntity projectEntity) {
+        log.info("Добавление проекта: ");
+        ProjectEntity project = projectRepository.save(projectEntity);
+        log.info("Проект успешно добавлен: {}", projectEntity);
         return project;
     }
 

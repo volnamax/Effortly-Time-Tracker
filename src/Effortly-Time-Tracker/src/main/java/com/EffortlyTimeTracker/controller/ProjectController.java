@@ -1,13 +1,19 @@
 package com.EffortlyTimeTracker.controller;
 
 import com.EffortlyTimeTracker.DTO.ProjectDTO;
+import com.EffortlyTimeTracker.DTO.UserCreateDTO;
 import com.EffortlyTimeTracker.entity.ProjectEntity;
+import com.EffortlyTimeTracker.entity.RoleEntity;
+import com.EffortlyTimeTracker.entity.UserEntity;
+import com.EffortlyTimeTracker.mapper.ProjectMapper;
+import com.EffortlyTimeTracker.mapper.UserMapper;
 import com.EffortlyTimeTracker.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,17 +23,23 @@ import java.util.List;
 @RequestMapping("api/project")
 public class ProjectController {
     private final ProjectService projectService;
+    private final ProjectMapper projectMapper;
 
     @Autowired
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(ProjectService projectService, ProjectMapper projectMapper) {
         this.projectService = projectService;
+        this.projectMapper = projectMapper;
     }
 
     @Operation(summary = "Add project")
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProjectEntity addProject(@Valid @RequestBody ProjectDTO projectDTO) {
-        return projectService.addProject(projectDTO);
+    public  ResponseEntity<ProjectDTO> addProject(@Valid @RequestBody ProjectDTO projectDTO) {
+        ProjectEntity projectEntity =projectMapper.dtoToEntity(projectDTO);
+        ProjectEntity newProjctEntity = projectService.addProject(projectEntity);
+        ProjectDTO responsProjectDto = projectMapper.entityToDto(newProjctEntity);
+
+        return new ResponseEntity<>(responsProjectDto, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Dell proj by id",

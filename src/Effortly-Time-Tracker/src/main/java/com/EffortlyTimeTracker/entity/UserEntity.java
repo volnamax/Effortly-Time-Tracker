@@ -41,16 +41,18 @@ public class UserEntity {
     @Column(name = "password", nullable = false)
     String passwordHash;
 
+    @ManyToOne()
+    @JoinColumn(name = "role_id")
+    RoleEntity role;
+
 
     @OneToMany(mappedBy ="user",  cascade = CascadeType.ALL,  orphanRemoval = true)
     @JsonManagedReference
     List<TodoNodeEntity> todoNodeEntityList;
 
-
-    @ManyToOne()
-    @JoinColumn(name = "role_id")
-    RoleEntity role;
-
+    @OneToMany(mappedBy ="userProject",  cascade = CascadeType.ALL,  orphanRemoval = true)
+    @JsonManagedReference
+    List<ProjectEntity> projectEntities;
     @Override
     public String toString() {
         return "UserEntity{" +

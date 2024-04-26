@@ -27,10 +27,10 @@ public class TodoNodeEntity {
     String content;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    Status status;
 
     @Enumerated(EnumType.STRING)
-    private Priority priority;
+    Priority priority;
 
     @Column(name = "due_data", nullable = true)
     LocalDateTime dueData;
@@ -39,4 +39,16 @@ public class TodoNodeEntity {
     @JoinColumn(name = "user_id")
     @JsonBackReference
     UserEntity user;
+
+    @Override
+    public String toString() {
+        return "TodoNodeEntity{" +
+                "todoId=" + todoId +
+                ", content='" + content + '\'' +
+                ", status=" + status +
+                ", priority=" + priority +
+                ", dueData=" + dueData +
+                ", user=" + user +
+                '}';
+    }
 }
