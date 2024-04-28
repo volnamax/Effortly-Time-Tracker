@@ -2,8 +2,13 @@ package com.EffortlyTimeTracker.mapper;
 
 
 import com.EffortlyTimeTracker.DTO.ProjectDTO;
+import com.EffortlyTimeTracker.DTO.TodoNodeDTO;
 import com.EffortlyTimeTracker.entity.ProjectEntity;
+import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ProjectMapper {
@@ -24,5 +29,11 @@ public class ProjectMapper {
         projectDTO.setUserProject(projectEntity.getUserProject());
         projectDTO.setGroupProject(projectEntity.getGroup());
         return projectDTO;
+    }
+
+    public List<ProjectDTO> entityListToDtoList(List<ProjectEntity> entities) {
+        return entities.stream()
+                .map(this::entityToDto)
+                .collect(Collectors.toList());
     }
 }

@@ -4,6 +4,7 @@ import com.EffortlyTimeTracker.DTO.ProjectDTO;
 import com.EffortlyTimeTracker.DTO.UserCreateDTO;
 import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.RoleEntity;
+import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.mapper.ProjectMapper;
 import com.EffortlyTimeTracker.mapper.UserMapper;
@@ -57,7 +58,22 @@ public class ProjectController {
     @Operation(summary = "Get all proj")
     @GetMapping("/get-all")
     public List<ProjectDTO> getProjects() {
-        return projectService.getAllProject();
+        List<ProjectEntity> resProjectEntity = projectService.getAllProject();
+        return projectMapper.entityListToDtoList(resProjectEntity);
     }
+
+    @Operation(summary = "Dell all proj by user id", description = "need user id")
+    @DeleteMapping("/del-by-user-id")
+    public void delAllProjBuUserID(@RequestParam(required = true) Integer userId) {
+        projectService.delAllProjectByIdUser(userId);
+    }
+
+    @Operation(summary = "Get all todo by id user")
+    @GetMapping("/get-all-by-user-Id")
+    public List<ProjectDTO> getProjectAll(Integer id) {
+        List<ProjectEntity> resProjectEntity = projectService.getAllProjectByIdUser(id);
+        return projectMapper.entityListToDtoList(resProjectEntity);
+    }
+
 
 }

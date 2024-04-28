@@ -37,7 +37,7 @@ public class TodoController {
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<TodoNodeDTO> addTodo(@Valid @RequestBody TodoNodeDTO todoNodeDTO) {
-        TodoNodeEntity todoNodeEntity =todoNodeMapper.dtoToEntityCreate(todoNodeDTO);
+        TodoNodeEntity todoNodeEntity = todoNodeMapper.dtoToEntityCreate(todoNodeDTO);
         TodoNodeEntity newTodoNode = todoService.addTodo(todoNodeEntity);
         TodoNodeDTO resTodoNodeDTO = todoNodeMapper.entityToDto(newTodoNode);
         return new ResponseEntity<>(resTodoNodeDTO, HttpStatus.CREATED);
@@ -56,15 +56,17 @@ public class TodoController {
     }
 
     @Operation(summary = "Get all todo by id user")
-    @GetMapping("/get-all-by-User-Id")
-    public List<TodoNodeEntity> getTodoAll(Integer id) {
-        return todoService.getAllTodoByIdUser(id);
+    @GetMapping("/get-all-by-user-Id")
+    public List<TodoNodeDTO> getTodoAll(Integer id) {
+        List<TodoNodeEntity> resTodoNodeEntity = todoService.getAllTodoByIdUser(id);
+        return todoNodeMapper.entityListToDtoList(resTodoNodeEntity);
     }
 
     @Operation(summary = "Get all todo")
     @GetMapping("/get-all")
-    public List<TodoNodeEntity> getTodoAll() {
-        return todoService.getAllTodo();
+    public List<TodoNodeDTO> getTodoAll() {
+        List<TodoNodeEntity> resTodoNodeEntity = todoService.getAllTodo();
+        return todoNodeMapper.entityListToDtoList(resTodoNodeEntity);
     }
 
 }

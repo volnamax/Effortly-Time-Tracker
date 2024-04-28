@@ -6,6 +6,9 @@ import com.EffortlyTimeTracker.enums.Priority;
 import com.EffortlyTimeTracker.enums.Status;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Component
 public class TodoNodeMapper {
@@ -32,5 +35,11 @@ public class TodoNodeMapper {
         todoNodeDTO.setDueData(todoNodeDTO.getDueData());
 
         return todoNodeDTO;
+    }
+
+    public List<TodoNodeDTO> entityListToDtoList(List<TodoNodeEntity> entities) {
+        return entities.stream()
+                .map(this::entityToDto)
+                .collect(Collectors.toList());
     }
 }

@@ -48,7 +48,7 @@ public class TodoNodeEntity {
                 ", status=" + status +
                 ", priority=" + priority +
                 ", dueData=" + dueData +
-                ", user=" + user +
+                ", user=" + user.getUserId() +
                 '}';
     }
 }
