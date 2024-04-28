@@ -20,8 +20,8 @@ public class TableDTO {
 
     String status;
 
- @NotNull(message = "Error table not have project")
- ProjectEntity project;
+    @NotNull(message = "Error table not have project")
+    ProjectEntity project;
 
     List<TaskEntity> tasks;
 }

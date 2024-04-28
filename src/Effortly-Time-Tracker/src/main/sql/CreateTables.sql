@@ -37,8 +37,6 @@ VALUES ('ADMIN'),
 ALTER TABLE public.user_app
     ADD CONSTRAINT fk_role_id FOREIGN KEY ("role_id") REFERENCES "roles" ("id_role");
 
-
-
 CREATE TABLE public.todo_node
 (
     id_todo  SERIAL NOT NULL,
@@ -52,10 +50,6 @@ CREATE TABLE public.todo_node
     user_id     INTEGER,
     FOREIGN KEY (user_id) REFERENCES public.user_app (id_user)
 );
-
-
-
-
 
 CREATE TABLE public.group_user
 
@@ -99,7 +93,7 @@ CREATE TABLE public.tag
     FOREIGN KEY (project_id) REFERENCES project (id_project)
 );
 
-CREATE TABLE "public.table"
+CREATE TABLE public.table_app
 (
     id_table    SERIAL       NOT NULL,
     description VARCHAR(255),
@@ -123,7 +117,7 @@ CREATE TABLE public.task
     time_end_task TIMESTAMP(6),
     table_id      INTEGER,
     PRIMARY KEY (id_task),
-    FOREIGN KEY (table_id) REFERENCES "public.table" (id_table)
+    FOREIGN KEY (table_id) REFERENCES public.table_app (id_table)
 );
 
 

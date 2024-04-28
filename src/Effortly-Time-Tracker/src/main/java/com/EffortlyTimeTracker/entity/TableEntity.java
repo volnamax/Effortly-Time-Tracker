@@ -1,11 +1,13 @@
 package com.EffortlyTimeTracker.entity;
 
+import com.EffortlyTimeTracker.enums.Status;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "table")
+@Table(name = "table_app")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -25,15 +27,12 @@ public class TableEntity {
     String description;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
-    public enum Status {
-        NO_ACTIVE, ACTIVE
-    }
+    com.EffortlyTimeTracker.enums.Status status;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "projectId")
-//    @JsonBackReference
+    @ManyToOne()
+    @JoinColumn(name = "project_id")
+    @JsonBackReference
     ProjectEntity project;
 
 //

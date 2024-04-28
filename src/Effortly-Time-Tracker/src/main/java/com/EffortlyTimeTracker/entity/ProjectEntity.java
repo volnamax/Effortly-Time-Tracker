@@ -40,10 +40,11 @@ public class ProjectEntity {
     @JoinColumn(name = "group_id", unique = true)
     GroupEntity group;
 
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-//    List<TableEntity> tables;
-//
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    List<TableEntity> tables;
+
 //    @JsonManagedReference
 //    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
 //    List<TableEntity> tags;

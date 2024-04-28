@@ -1,6 +1,7 @@
 package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.DTO.TableDTO;
+import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.table.TableNotFoundException;
@@ -22,21 +23,17 @@ public class TableService {
         this.tableRepository = tableRepository;
     }
 
-    public TableEntity addTable(@NonNull TableDTO tableDTO) {
-        TableEntity table = tableRepository.save(TableEntity.builder()
-                .name(tableDTO.getName())
-                .description(tableDTO.getDescription())
-                .status(TableEntity.Status.valueOf(tableDTO.getStatus()))
-                .project(tableDTO.getProject())
-//                .tasks(tableDTO.getTasks())
-                .build());
-
+    public TableEntity addTable(@NonNull TableEntity tableEntity) {
+        log.info("Добавление table: ");
+        TableEntity table = tableRepository.save(tableEntity);
+        log.info("Table успешно добавлен: {}", table);
         return table;
     }
 
+
     public void delTableById(Integer tableId) {
         if (!tableRepository.existsById(tableId)) {
-            throw new ProjectNotFoundException(tableId);
+            throw new TableNotFoundException(tableId);
         }
         tableRepository.deleteById(tableId);
         log.info("Table with id {} deleted", tableId);

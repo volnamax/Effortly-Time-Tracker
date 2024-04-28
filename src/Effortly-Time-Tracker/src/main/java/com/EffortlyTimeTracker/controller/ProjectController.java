@@ -52,8 +52,9 @@ public class ProjectController {
     @Operation(summary = "Get proj by id",
             description = "need id")
     @GetMapping("/get")
-    public ProjectEntity getProject(@RequestParam(required = true) Integer  projectId) {
-        return projectService.getProjectsById( projectId);
+    public ProjectDTO getProject(@RequestParam(required = true) Integer  projectId) {
+        ProjectEntity projectEntity =  projectService.getProjectsById( projectId);
+        return projectMapper.entityToDto(projectEntity);
     }
     @Operation(summary = "Get all proj")
     @GetMapping("/get-all")
