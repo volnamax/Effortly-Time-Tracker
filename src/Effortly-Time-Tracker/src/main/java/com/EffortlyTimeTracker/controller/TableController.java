@@ -1,6 +1,8 @@
 package com.EffortlyTimeTracker.controller;
 
+import com.EffortlyTimeTracker.DTO.ProjectDTO;
 import com.EffortlyTimeTracker.DTO.TableDTO;
+import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.mapper.TableMapper;
 import com.EffortlyTimeTracker.service.TableService;
@@ -38,16 +40,13 @@ public class TableController {
         return new ResponseEntity<>(responsDto, HttpStatus.CREATED);
     }
 
-
-    @Operation(summary = "Dell table by id",
-            description = "need id")
+    @Operation(summary = "Dell table by id", description = "need id")
     @DeleteMapping("/del")
     public void deleteTable(@RequestParam(required = true) Integer id_table) {
         tableService.delTableById(id_table);
     }
 
-    @Operation(summary = "Get table by id",
-            description = "need id")
+    @Operation(summary = "Get table by id", description = "need id")
     @GetMapping("/get")
     public TableDTO getTable(@RequestParam(required = true) Integer tableId) {
         TableEntity tableEntity = tableService.getTableById(tableId);
@@ -56,11 +55,22 @@ public class TableController {
 
     @Operation(summary = "Get all table")
     @GetMapping("/get-all")
-    public List<TableDTO> getProjects() {
+    public List<TableDTO> getTable() {
         List<TableEntity> resEntity = tableService.getAllTable();
         return tableMapper.entityListToDtoList(resEntity);
 
     }
 
+    @Operation(summary = "Get all table by id user")
+    @GetMapping("/get-all-by-user-id")
+    public List<TableDTO> getTableAllByProjectId(Integer id) {
+        List<TableEntity> resEntity = tableService.getAllTableByIdProject(id);
+        return tableMapper.entityListToDtoList(resEntity);
+    }
 
+    @Operation(summary = "Dell all table by project id", description = "need proj id")
+    @DeleteMapping("/del-by-user-id")
+    public void delAllTableByProjectId(@RequestParam(required = true) Integer id) {
+        tableService.delAllTablleByIdProject(id);
+    }
 }

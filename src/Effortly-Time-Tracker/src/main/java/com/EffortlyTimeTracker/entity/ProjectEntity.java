@@ -60,7 +60,7 @@ public class ProjectEntity {
                 "projectId=" + projectId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", userProject=" + userProject.getUserId() +
+                ", userProject=" +(userProject != null ? userProject.getUserId() : "null") + '\''+
                 ", group=" + group +
                 '}';
     }

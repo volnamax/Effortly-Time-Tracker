@@ -10,5 +10,6 @@ import java.util.List;
 
 public interface TableRepository extends JpaRepository<TableEntity, Integer> {
     @Query("SELECT t FROM TableEntity t WHERE t.project.projectId = :projectId")
-    List<TableEntity> findByUserId(@Param("projectId") Integer projectId);
+    List<TableEntity> findByProjectId(@Param("projectId") Integer projectId);
 }
+

@@ -41,4 +41,14 @@ public class TableEntity {
 //    List<TaskTable> tasks;
 
 
+    @Override
+    public String toString() {
+        return "TableEntity{" +
+                "tableId=" + tableId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                ", project=" + (project != null ? project.getProjectId() : "null") + '\''+
+                '}';
+    }
 }

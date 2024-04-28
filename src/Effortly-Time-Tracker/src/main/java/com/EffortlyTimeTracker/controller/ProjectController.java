@@ -69,7 +69,7 @@ public class ProjectController {
         projectService.delAllProjectByIdUser(userId);
     }
 
-    @Operation(summary = "Get all todo by id user")
+    @Operation(summary = "Get all project by id user")
     @GetMapping("/get-all-by-user-Id")
     public List<ProjectDTO> getProjectAll(Integer id) {
         List<ProjectEntity> resProjectEntity = projectService.getAllProjectByIdUser(id);

@@ -3,8 +3,12 @@ package com.EffortlyTimeTracker.service;
 import com.EffortlyTimeTracker.DTO.TableDTO;
 import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TableEntity;
+import com.EffortlyTimeTracker.entity.UserEntity;
+import com.EffortlyTimeTracker.exception.project.ProjectIsEmpty;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.table.TableNotFoundException;
+import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
+import com.EffortlyTimeTracker.repository.ProjectRepository;
 import com.EffortlyTimeTracker.repository.TableRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +21,12 @@ import java.util.List;
 @Service
 public class TableService {
     private final TableRepository tableRepository;
+    private final ProjectRepository projectRepository;
 
     @Autowired
-    public TableService(TableRepository tableRepository) {
+    public TableService(TableRepository tableRepository, ProjectRepository projectRepository) {
         this.tableRepository = tableRepository;
+        this.projectRepository = projectRepository;
     }
 
     public TableEntity addTable(@NonNull TableEntity tableEntity) {
@@ -38,9 +44,9 @@ public class TableService {
         tableRepository.deleteById(tableId);
         log.info("Table with id {} deleted", tableId);
     }
+
     public TableEntity getTableById(Integer id) {
-        TableEntity table = tableRepository.findById(id)
-                .orElseThrow(() -> new TableNotFoundException(id));
+        TableEntity table = tableRepository.findById(id).orElseThrow(() -> new TableNotFoundException(id));
         log.info("Get = " + table);
 
         return table;
@@ -51,4 +57,29 @@ public class TableService {
         log.info("GetALL = " + tableProjects);
         return tableProjects;
     }
+
+    public List<TableEntity> getAllTableByIdProject(Integer projectId) {
+        ProjectEntity project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException(projectId));
+        List<TableEntity> tableEntities = tableRepository.findByProjectId(projectId);
+
+        if (tableEntities.isEmpty()) {
+            log.info("No todos found for project with id {}", project);
+            throw new ProjectIsEmpty();
+        }
+        return tableEntities;
+    }
+
+    public void delAllTablleByIdProject(Integer projectId) {
+        ProjectEntity project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException(projectId));
+        List<TableEntity> tableEntities = tableRepository.findByProjectId(projectId);
+
+        if (tableEntities.isEmpty()) {
+            log.info("No todos found for project with id {}", project);
+            return;
+        }
+        tableRepository.deleteAll(tableEntities);
+        log.info("All todos for project with id {} deleted", project);
+    }
+
+
 }
