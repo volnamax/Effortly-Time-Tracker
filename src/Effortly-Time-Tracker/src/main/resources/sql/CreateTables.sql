@@ -1,4 +1,4 @@
-CREATE SCHEMA public;
+CREATE SCHEMA IF NOT EXISTS public;
 SET search_path TO public, pg_catalog;
 
 CREATE TYPE public.role_t AS ENUM ('ADMIN', 'USER', 'GUEST');

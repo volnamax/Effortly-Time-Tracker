@@ -61,7 +61,7 @@ public class UserEntity {
                 ", userSecondname='" + userSecondname + '\'' +
                 ", email='" + email + '\'' +
                 ", passwordHash='" + passwordHash + '\''+
-                ", role ='" + role.getName() + '\''+
+                ", role ='" + (role != null ? role.getName() : "null") + '\''+
                 ", dataSignIn=" + dataSignIn + '\'' +
                 ", dataLastLogin=" + dataLastLogin +'\''
                 + "}";
