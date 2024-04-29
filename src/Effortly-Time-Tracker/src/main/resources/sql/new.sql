@@ -1,23 +1,21 @@
-CREATE SCHEMA public;
+CREATE SCHEMA IF NOT EXISTS public;
+SET search_path TO public, pg_catalog;
 
+-- Создание ENUM типов
+CREATE TYPE public.role_t AS ENUM ('ADMIN', 'USER', 'GUEST');
+CREATE TYPE public.status_t AS ENUM ('NO_ACTIVE', 'ACTIVE');
+CREATE TYPE public.priority_t AS ENUM ('IMPORTANT_URGENTLY', 'NO_IMPORTANT_URGENTLY', 'IMPORTANT_NO_URGENTLY', 'NO_IMPORTANT_NO_URGENTLY');
 
-CREATE TABLE group_user
-
-(
-    goup_id     SERIAL       NOT NULL,
-    description VARCHAR(255),
-    name        VARCHAR(255) NOT NULL,
-    PRIMARY KEY (goup_id)
-);
-CREATE TABLE roles
+-- Таблица ролей
+CREATE TABLE public.roles
 (
     id_role SERIAL NOT NULL,
-    name    VARCHAR(255) CHECK (name IN ('ADMIN', 'USER', 'GUEST')),
+    name    role_t,  -- Использование ENUM типа для определения ролей
     PRIMARY KEY (id_role)
 );
 
-
-CREATE TABLE user_app
+-- Таблица пользователей
+CREATE TABLE public.user_app
 (
     id_user          SERIAL       NOT NULL,
     data_last_log_in TIMESTAMP(6),
@@ -26,25 +24,46 @@ CREATE TABLE user_app
     password         VARCHAR(255) NOT NULL,
     user_name        VARCHAR(255) NOT NULL,
     user_secondname  VARCHAR(255) NOT NULL,
-    role_id          INTEGER,
+    role             role_t, -- Использование ENUM типа
     PRIMARY KEY (id_user),
-    UNIQUE (email),
-    FOREIGN KEY (role_id) REFERENCES roles (id_role)
+    UNIQUE (email)
 );
 
-CREATE TABLE group_member
+-- Таблица todo-записей
+CREATE TABLE public.todo_node
+(
+    id_todo  SERIAL NOT NULL,
+    content  VARCHAR(255),
+    priority priority_t, -- Использование ENUM типа
+    status   status_t,   -- Использование ENUM типа
+    due_data TIMESTAMP(6),
+    user_id  INTEGER,
+    PRIMARY KEY (id_todo),
+    FOREIGN KEY (user_id) REFERENCES public.user_app (id_user)
+);
+
+-- Таблица групп
+CREATE TABLE public.group_user
+(
+    goup_id     SERIAL       NOT NULL,
+    description VARCHAR(255),
+    name        VARCHAR(255) NOT NULL,
+    PRIMARY KEY (goup_id)
+);
+
+-- Таблица участников группы
+CREATE TABLE public.group_member
 (
     id       SERIAL NOT NULL,
     group_id INTEGER,
     user_id  INTEGER,
     PRIMARY KEY (id),
-    FOREIGN KEY (group_id) REFERENCES group_user (goup_id),
-    FOREIGN KEY (user_id) REFERENCES user_app (id_user)
+    FOREIGN KEY (group_id) REFERENCES public.group_user (goup_id),
+    FOREIGN KEY (user_id) REFERENCES public.user_app (id_user)
 );
 
-
-
-CREATE TABLE project
+-- Таблица проектов
+CREATE TABLE public.project
 (
     id_project  SERIAL       NOT NULL,
     description VARCHAR(255),
@@ -52,65 +71,70 @@ CREATE TABLE project
     group_id    INTEGER,
     user_id     INTEGER,
     PRIMARY KEY (id_project),
-    FOREIGN KEY (group_id) REFERENCES group_user (goup_id),
-    FOREIGN KEY (user_id) REFERENCES user_app (id_user),
-    UNIQUE (group_id)
+    FOREIGN KEY (group_id) REFERENCES public.group_user (goup_id),
+    FOREIGN KEY (user_id) REFERENCES public.user_app (id_user),
+    UNIQUE (name, group_id) -- Уникальность на комбинацию имени проекта и группы
 );
 
-CREATE TABLE tag
+-- Таблица тэгов
+CREATE TABLE public.tag
 (
     id_tags    SERIAL       NOT NULL,
     color      VARCHAR(255),
     name       VARCHAR(255) NOT NULL,
     project_id INTEGER,
     PRIMARY KEY (id_tags),
-    FOREIGN KEY (project_id) REFERENCES project (id_project)
+    FOREIGN KEY (project_id) REFERENCES public.project (id_project)
 );
 
-CREATE TABLE "table"
+-- Таблица задач
+CREATE TABLE public.table_app
 (
     id_table    SERIAL       NOT NULL,
     description VARCHAR(255),
     name        VARCHAR(255) NOT NULL,
-    status      VARCHAR(255) CHECK (status IN ('NO_ACTIVE', 'ACTIVE')),
+    status      status_t,    -- Использование ENUM типа
     project_id  INTEGER,
     PRIMARY KEY (id_table),
-    FOREIGN KEY (project_id) REFERENCES project (id_project)
+    FOREIGN KEY (project_id) REFERENCES public.project (id_project)
 );
 
-
-CREATE TABLE task
+-- Таблица задач
+CREATE TABLE public.task
 (
     id_task       SERIAL       NOT NULL,
     description   VARCHAR(255),
     name          VARCHAR(255) NOT NULL,
     start_timer   TIMESTAMP(6),
-    status        VARCHAR(255) NOT NULL CHECK (status IN ('NO_ACTIVE', 'ACTIVE')),
+    status        status_t,    -- Использование ENUM типа
     sum_timer     BIGINT,
     time_add_task TIMESTAMP(6),
     time_end_task TIMESTAMP(6),
     table_id      INTEGER,
     PRIMARY KEY (id_task),
-    FOREIGN KEY (table_id) REFERENCES "table" (id_table)
+    FOREIGN KEY (table_id) REFERENCES public.table_app (id_table)
 );
 
-
-CREATE TABLE task_tag
+-- Таблица связей между задачами и тэгами
+CREATE TABLE public.task_tag
 (
     id      BIGSERIAL NOT NULL,
     tag_id  INTEGER,
     task_id INTEGER,
     PRIMARY KEY (id),
-    FOREIGN KEY (tag_id) REFERENCES tag (id_tags),
-    FOREIGN KEY (task_id) REFERENCES task (id_task)
+    FOREIGN KEY (tag_id) REFERENCES public.tag (id_tags),
+    FOREIGN KEY (task_id) REFERENCES public.task (id_task)
+);
+-- Создание таблицы ролей и вставка начальных данных
+CREATE TABLE public.roles
+(
+    id_role SERIAL NOT NULL,
+    name    role_t,  -- Использование ENUM типа для определения ролей
+    PRIMARY KEY (id_role)
 );
 
-CREATE TABLE todo_node
-(
-    id_todo  SERIAL NOT NULL,
-    content  VARCHAR(255),
-    priority VARCHAR(255) CHECK (priority IN ('IMPORTANT_URGENTLY', 'NO_IMPORTANT_URGENTLY', 'IMPORTANT_NO_URGENTLY',
-                                              'NO_IMPORTANT_NO_URGENTLY')),
-    status   VARCHAR(255) CHECK (status IN ('NO_ACTIVE', 'ACTIVE')),
-    PRIMARY KEY (id_todo)
-);
+-- Вставка значений в таблицу ролей
+INSERT INTO public.roles (name)
+VALUES ('ADMIN'),
+       ('USER'),
+       ('GUEST');
