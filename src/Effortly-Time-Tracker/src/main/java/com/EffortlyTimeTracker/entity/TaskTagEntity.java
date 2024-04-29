@@ -1,5 +1,6 @@
 package com.EffortlyTimeTracker.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -17,8 +18,10 @@ public class TaskTagEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @ManyToOne
     @JoinColumn(name = "task_id")
+    @JsonBackReference
     private TaskEntity task;
 
     @ManyToOne

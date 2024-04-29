@@ -32,7 +32,7 @@ public class TaskDTO {
     @NotNull
     TableEntity table;
 
-    Set<TagEntity> tags;
+    //Set<TagEntity> tags;
 
 
 }

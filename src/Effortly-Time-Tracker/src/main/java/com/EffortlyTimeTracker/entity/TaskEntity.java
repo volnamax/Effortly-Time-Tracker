@@ -2,6 +2,7 @@ package com.EffortlyTimeTracker.entity;
 
 
 import com.EffortlyTimeTracker.enums.Status;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -16,7 +17,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "taskId")
 public class TaskEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,10 +29,8 @@ public class TaskEntity {
     @Column(name = "description", nullable = true)
     String description;
 
-    // todo enums to one file
-    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Status status;
+    com.EffortlyTimeTracker.enums.Status status;
 
     @Column(name = "sum_timer", nullable = true)
     Long sumTimer;
@@ -46,15 +44,9 @@ public class TaskEntity {
     @Column(name = "time_end_task", nullable = true)
     LocalDateTime timeEndTask;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "userId", nullable = false)
-//    private User createdBy;
-
-
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "table_id")
-//    @JsonBackReference
+    @JsonBackReference
     TableEntity table;
 
 
@@ -66,6 +58,12 @@ public class TaskEntity {
 //            inverseJoinColumns = @JoinColumn(name = "tagId", referencedColumnName = "tagId") // Link to TagProject
 //    )
 //    private Set<TagProject> tags;
+//
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "userId", nullable = false)
+//    private User createdBy;
+
 
 }
 

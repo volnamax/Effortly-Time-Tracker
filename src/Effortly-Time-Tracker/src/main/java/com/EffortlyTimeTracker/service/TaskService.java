@@ -1,8 +1,15 @@
 package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.DTO.TaskDTO;
+import com.EffortlyTimeTracker.entity.ProjectEntity;
+import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.entity.TaskEntity;
+import com.EffortlyTimeTracker.exception.project.ProjectIsEmpty;
+import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
+import com.EffortlyTimeTracker.exception.table.TableIsEmpty;
+import com.EffortlyTimeTracker.exception.table.TableNotFoundException;
 import com.EffortlyTimeTracker.exception.task.TaskNotFoundException;
+import com.EffortlyTimeTracker.repository.TableRepository;
 import com.EffortlyTimeTracker.repository.TaskRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -15,26 +22,19 @@ import java.util.List;
 @Service
 public class TaskService {
     private final TaskRepository taskRepository;
+    private  final TableRepository tableRepository;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, TableRepository tableRepository) {
         this.taskRepository = taskRepository;
+        this.tableRepository = tableRepository;
     }
 
-    public TaskEntity addTask(@NonNull TaskDTO taskDTO) {
-        log.info("add new task: {}", taskDTO.getName());
-        TaskEntity task = taskRepository.save(TaskEntity.builder()
-                .name(taskDTO.getName())
-                .description(taskDTO.getDescription())
-//                .status(taskDTO.getStatus())
-                .sumTimer(taskDTO.getSumTimer())
-                .startTimer(taskDTO.getStartTimer())
-                .timeAddTask(taskDTO.getTimeAddTask())
-                .timeEndTask(taskDTO.getTimeEndTask())
-//                .tags(taskDTO.getTags())
-                .table(taskDTO.getTable())
-                .build());
-        log.info("task added : {}", task.getTaskId());
+    public TaskEntity addTask(@NonNull TaskEntity task) {
+        log.info("add new task: {}", task.getName());
+
+        TaskEntity taskEntity = taskRepository.save(task);
+        log.info("Table успешно добавлен: {}", task);
         return task;
     }
 
@@ -58,4 +58,30 @@ public class TaskService {
         log.info("GetALL = " + tasks);
         return tasks;
     }
+
+
+    public List<TaskEntity> getAllTaskByIdTable(Integer tableId) {
+        TableEntity table =  tableRepository.findById(tableId).orElseThrow(()->new TableNotFoundException(tableId));
+        List<TaskEntity> taskEntities= taskRepository.findByTableId(tableId);
+        if (taskEntities.isEmpty())
+        {
+            log.info("No todos found for table  with id {}", table);
+            throw new TableIsEmpty();
+        }
+
+        return taskEntities;
+    }
+
+    public void delAllTaskByIdTable(Integer tableId) {
+        TableEntity table =  tableRepository.findById(tableId).orElseThrow(()->new TableNotFoundException(tableId));
+        List<TaskEntity> taskEntities= taskRepository.findByTableId(tableId);
+
+        if (taskEntities.isEmpty()) {
+            log.info("No todos found for table with id {}", table);
+            return;
+        }
+        taskRepository.deleteAll(taskEntities);
+        log.info("All todos for table with id {} deleted", table);
+    }
+
 }

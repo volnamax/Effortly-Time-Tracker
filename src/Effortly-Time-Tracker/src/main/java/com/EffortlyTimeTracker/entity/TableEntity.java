@@ -2,9 +2,12 @@ package com.EffortlyTimeTracker.entity;
 
 import com.EffortlyTimeTracker.enums.Status;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Entity
 @Table(name = "table_app")
@@ -35,10 +38,10 @@ public class TableEntity {
     @JsonBackReference
     ProjectEntity project;
 
-//
-//    @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JsonManagedReference
-//    List<TaskTable> tasks;
+
+    @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    List<TaskEntity> tasks;
 
 
     @Override

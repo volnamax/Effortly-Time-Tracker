@@ -61,15 +61,15 @@ public class TableController {
 
     }
 
-    @Operation(summary = "Get all table by id user")
-    @GetMapping("/get-all-by-user-id")
+    @Operation(summary = "Get all table by id project", description = "need proj id")
+    @GetMapping("/get-all-by-project-id")
     public List<TableDTO> getTableAllByProjectId(Integer id) {
         List<TableEntity> resEntity = tableService.getAllTableByIdProject(id);
         return tableMapper.entityListToDtoList(resEntity);
     }
 
     @Operation(summary = "Dell all table by project id", description = "need proj id")
-    @DeleteMapping("/del-by-user-id")
+    @DeleteMapping("/del-by-project-id")
     public void delAllTableByProjectId(@RequestParam(required = true) Integer id) {
         tableService.delAllTablleByIdProject(id);
     }
