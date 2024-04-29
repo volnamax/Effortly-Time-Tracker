@@ -8,6 +8,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "task")
@@ -50,15 +51,15 @@ public class TaskEntity {
     TableEntity table;
 
 
-//    // @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-//    @ManyToMany
-//    @JoinTable(
-//            name = "task_tag", // Correct name of the join table
-//            joinColumns = @JoinColumn(name = "taskId", referencedColumnName = "taskId"), // Link to TaskTable
-//            inverseJoinColumns = @JoinColumn(name = "tagId", referencedColumnName = "tagId") // Link to TagProject
-//    )
-//    private Set<TagProject> tags;
-//
+    // @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany
+    @JoinTable(
+            name = "task_tag", // Correct name of the join table
+            joinColumns = @JoinColumn(name = "task_id"), // Link to Task     TablereferencedColumnName = "taskId"
+            inverseJoinColumns = @JoinColumn(name = "tag_id") // Link to TagProject
+    )
+    private Set<TagEntity> tags;
+
 //
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "userId", nullable = false)

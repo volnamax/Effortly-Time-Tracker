@@ -45,9 +45,9 @@ public class ProjectEntity {
     @JsonManagedReference
     List<TableEntity> tables;
 
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-//    List<TableEntity> tags;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    List<TagEntity> tags;
 
 
 //    @OneToOne(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)

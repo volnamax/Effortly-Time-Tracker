@@ -1,6 +1,7 @@
 package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.DTO.TagDTO;
+import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.entity.TagEntity;
 import com.EffortlyTimeTracker.exception.tag.TagNotFoundException;
 import com.EffortlyTimeTracker.repository.TagRepository;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -22,15 +24,9 @@ public class TagService {
         this.tagRepository = tagRepository;
     }
 
-    public TagEntity addTag(@NonNull TagDTO tagDTO) {
-        log.info("add new task: {}", tagDTO.getName());
-        TagEntity tag = tagRepository.save(TagEntity.builder()
-                .name(tagDTO.getName())
-                .project(tagDTO.getProject())
-                .color(tagDTO.getColor())
-//                .tasks(tagDTO.getTasks())
-                .build()
-        );
+    public TagEntity addTag(@NonNull TagEntity tagEntity) {
+        log.info("add new task: {}", tagEntity.getName());
+        TagEntity tag  = tagRepository.save(tagEntity);
         log.info("task added : {}", tag.getTagId());
         return tag;
     }
@@ -52,8 +48,10 @@ public class TagService {
 
 
     public List<TagEntity> getAllTag() {
-        List<TagEntity> tag = tagRepository.findAll();
+        List<TagEntity> tag =  tagRepository.findAll();
         log.info("GetALL = " + tag);
         return tag;
     }
+
+
 }
