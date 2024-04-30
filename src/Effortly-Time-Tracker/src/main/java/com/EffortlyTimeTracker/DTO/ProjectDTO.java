@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
-
+//todo tag
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProjectDTO {
@@ -22,7 +22,7 @@ public class ProjectDTO {
     UserEntity userProject;
 
     List<TableEntity> tables;
-//    List<TagProject> tags;
+    List<Integer> tags;
 
     Integer groupId;
 }

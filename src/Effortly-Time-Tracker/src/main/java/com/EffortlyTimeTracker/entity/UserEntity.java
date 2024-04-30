@@ -47,7 +47,6 @@ public class UserEntity {
     @JoinColumn(name = "role_id")
     RoleEntity role;
 
-
     @OneToMany(mappedBy ="user",  cascade = CascadeType.ALL,  orphanRemoval = true)
     @JsonManagedReference
     List<TodoNodeEntity> todoNodeEntityList;

@@ -29,7 +29,7 @@ public class TaskDTO {
 
     LocalDateTime timeEndTask;
 
-    @NotNull
+    @NotNull(message = "table in task is empty")
     TableEntity table;
 
     //Set<TagEntity> tags;

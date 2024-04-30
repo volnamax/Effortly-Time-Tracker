@@ -6,7 +6,6 @@
 package com.EffortlyTimeTracker.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -36,15 +35,17 @@ public class GroupEntity {
     @OneToMany(mappedBy = "group")
     private Set<GroupMermberEntity> members = new HashSet<>();
 
-
-
-
-//    @OneToOne
-//    @JoinColumn(name = "project_id", unique = true, nullable = true)
-//    @JsonBackReference
-//    @JoinColumn(name = "project_id", unique = true, nullable = true)
-
     @OneToOne
-    @JoinColumn(name = "project_id")
+    @JoinColumn(name = "project_id", referencedColumnName = "id_project")
     private ProjectEntity project;
+
+    @Override
+    public String toString() {
+        return "GroupEntity{" +
+                "groupId=" + groupId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", project=" + project.getProjectId() +
+                '}';
+    }
 }

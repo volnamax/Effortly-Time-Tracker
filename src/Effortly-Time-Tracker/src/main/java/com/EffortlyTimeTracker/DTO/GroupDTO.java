@@ -1,7 +1,7 @@
 package com.EffortlyTimeTracker.DTO;
 
-import com.EffortlyTimeTracker.entity.UserEntity;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,23 +12,13 @@ import java.util.Set;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GroupDTO {
-    @NotBlank
+    @NotBlank(message = "Group name is empty")
     String name;
     String description;
 
-    @NonNull
-    Set<UserEntity> usersGroup;
-
+    Set<Integer> users;
+    @NotNull(message = "Group project is empty")
     Integer projectId;
-
-    @Override
-    public String toString() {
-        return "GroupDTO{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", projectId=" + projectId +
-                '}';
-    }
 }
 
 

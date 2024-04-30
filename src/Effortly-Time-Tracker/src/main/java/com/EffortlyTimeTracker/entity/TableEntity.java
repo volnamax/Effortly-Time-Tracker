@@ -1,6 +1,5 @@
 package com.EffortlyTimeTracker.entity;
 
-import com.EffortlyTimeTracker.enums.Status;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -51,7 +50,7 @@ public class TableEntity {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", status=" + status +
-                ", project=" + (project != null ? project.getProjectId() : "null") + '\''+
+                ", project=" + (project != null ? project.getProjectId() : "null") + '\'' +
                 '}';
     }
 }
