@@ -1,8 +1,8 @@
 package com.EffortlyTimeTracker.DTO;
 
-import com.EffortlyTimeTracker.entity.GroupEntity;
 import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.entity.UserEntity;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -23,5 +23,6 @@ public class ProjectDTO {
 
     List<TableEntity> tables;
 //    List<TagProject> tags;
-    GroupEntity groupProject;
+
+    Integer groupId;
 }

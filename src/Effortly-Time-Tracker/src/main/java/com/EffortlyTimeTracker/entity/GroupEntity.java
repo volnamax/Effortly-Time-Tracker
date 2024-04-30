@@ -6,9 +6,13 @@
 package com.EffortlyTimeTracker.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "group_user")
@@ -21,23 +25,26 @@ import lombok.experimental.FieldDefaults;
 public class GroupEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer goupId;
+    Integer groupId;
 
     @Column(name = "name", nullable = false)
     String name;
 
     @Column(name = "description", nullable = true)
     String description;
-//
-//    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true  )
-//    @JsonIgnoreProperties("group")
-//    private Set<GroupUser> userGroups = new HashSet<>();
-//
-//
-//
-//    @OneToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "projectId", referencedColumnName = "projectId")
-//    @JsonIgnore
-//    private Project project;
 
+    @OneToMany(mappedBy = "group")
+    private Set<GroupMermberEntity> members = new HashSet<>();
+
+
+
+
+//    @OneToOne
+//    @JoinColumn(name = "project_id", unique = true, nullable = true)
+//    @JsonBackReference
+//    @JoinColumn(name = "project_id", unique = true, nullable = true)
+
+    @OneToOne
+    @JoinColumn(name = "project_id")
+    private ProjectEntity project;
 }

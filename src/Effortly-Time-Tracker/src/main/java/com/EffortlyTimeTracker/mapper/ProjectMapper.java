@@ -2,9 +2,8 @@ package com.EffortlyTimeTracker.mapper;
 
 
 import com.EffortlyTimeTracker.DTO.ProjectDTO;
-import com.EffortlyTimeTracker.DTO.TodoNodeDTO;
+import com.EffortlyTimeTracker.entity.GroupEntity;
 import com.EffortlyTimeTracker.entity.ProjectEntity;
-import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -18,7 +17,12 @@ public class ProjectMapper {
         projectEntity.setName(projectDTO.getName());
         projectEntity.setDescription(projectDTO.getDescription());
         projectEntity.setUserProject(projectDTO.getUserProject());
-        projectEntity.setGroup(projectDTO.getGroupProject());
+//        if (projectDTO.getGroupId() != null) {
+//            GroupEntity groupEntity = new GroupEntity();
+//            groupEntity.setGroupId(projectDTO.getGroupId());
+//            projectEntity.setGroup(groupEntity);
+//        }
+
         return projectEntity;
     }
 
@@ -27,7 +31,9 @@ public class ProjectMapper {
         projectDTO.setName(projectEntity.getName());
         projectDTO.setDescription(projectEntity.getDescription());
         projectDTO.setUserProject(projectEntity.getUserProject());
-        projectDTO.setGroupProject(projectEntity.getGroup());
+
+//        if (projectEntity.getGroup() != null)
+//            projectDTO.setGroupId(projectEntity.getGroup().getGroupId());
         return projectDTO;
     }
 

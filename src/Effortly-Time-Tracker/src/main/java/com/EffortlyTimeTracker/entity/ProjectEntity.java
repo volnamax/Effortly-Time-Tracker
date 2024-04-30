@@ -35,9 +35,12 @@ public class ProjectEntity {
     @JsonBackReference
     UserEntity userProject;
 
+// cascade = CascadeType.ALL, orphanRemoval = true,
+//    @OneToOne
+//    @JsonManagedReference
+//@JoinColumn(name = "group_id", unique = true, nullable = true)
 
-    @OneToOne
-    @JoinColumn(name = "group_id", unique = true)
+    @OneToOne(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     GroupEntity group;
 
 
@@ -49,8 +52,8 @@ public class ProjectEntity {
     @JsonManagedReference
     List<TagEntity> tags;
 
-
-//    @OneToOne(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+// fetch = FetchType.EAGER,
+//    @OneToOne(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
 //    @JsonManagedReference
 //    GroupEntity group;
 
@@ -64,6 +67,7 @@ public class ProjectEntity {
                 ", group=" + group +
                 '}';
     }
+
 }
 
 

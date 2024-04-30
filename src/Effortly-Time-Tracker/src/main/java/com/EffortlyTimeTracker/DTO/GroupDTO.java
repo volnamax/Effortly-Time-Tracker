@@ -1,24 +1,34 @@
 package com.EffortlyTimeTracker.DTO;
 
-import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.UserEntity;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NonNull;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Set;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GroupDTO {
-    @NonNull
+    @NotBlank
     String name;
     String description;
+
     @NonNull
     Set<UserEntity> usersGroup;
-    @NonNull
-    ProjectEntity project;
+
+    Integer projectId;
+
+    @Override
+    public String toString() {
+        return "GroupDTO{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", projectId=" + projectId +
+                '}';
+    }
 }
 
 

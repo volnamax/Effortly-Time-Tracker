@@ -18,6 +18,8 @@ public class GroupMermberEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Enumerated(EnumType.STRING)
+    com.EffortlyTimeTracker.enums.Role role;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -26,7 +28,6 @@ public class GroupMermberEntity {
     @ManyToOne
     @JoinColumn(name = "group_id")
     private GroupEntity group;
-
 }
 
 

@@ -54,19 +54,22 @@ CREATE TABLE public.todo_node
 CREATE TABLE public.group_user
 
 (
-    goup_id     SERIAL       NOT NULL,
+    group_id     SERIAL       NOT NULL,
     description VARCHAR(255),
     name        VARCHAR(255) NOT NULL,
-    PRIMARY KEY (goup_id)
-);
 
+    PRIMARY KEY (group_id),
+    project_id    INTEGER
+);
+--todo
 CREATE TABLE public.group_member
 (
     id       SERIAL NOT NULL,
     group_id INTEGER,
     user_id  INTEGER,
+    role   VARCHAR(255) CHECK (role IN ('ADMIN', 'USER', 'GUEST')),
     PRIMARY KEY (id),
-    FOREIGN KEY (group_id) REFERENCES public.group_user (goup_id),
+    FOREIGN KEY (group_id) REFERENCES public.group_user (group_id),
     FOREIGN KEY (user_id) REFERENCES public.user_app (id_user)
 );
 
@@ -78,7 +81,7 @@ CREATE TABLE public.project
     group_id    INTEGER,
     user_id     INTEGER,
     PRIMARY KEY (id_project),
-    FOREIGN KEY (group_id) REFERENCES public.group_user (goup_id),
+    FOREIGN KEY (group_id) REFERENCES public.group_user (group_id),
     FOREIGN KEY (user_id) REFERENCES public.user_app (id_user),
     UNIQUE (group_id)
 );
@@ -144,3 +147,5 @@ ALTER TABLE public.task_tag
 ALTER TABLE public.group_member
     ADD FOREIGN KEY ("user_id") REFERENCES public.user_app ("id_user");
 
+ALTER TABLE public.group_user
+    ADD FOREIGN KEY ("project_id") REFERENCES public.project ("id_project");

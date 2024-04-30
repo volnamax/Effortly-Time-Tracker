@@ -6,9 +6,11 @@ import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.RoleEntity;
 import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import com.EffortlyTimeTracker.entity.UserEntity;
+import com.EffortlyTimeTracker.mapper.EntityMapper;
 import com.EffortlyTimeTracker.mapper.ProjectMapper;
 import com.EffortlyTimeTracker.mapper.UserMapper;
 import com.EffortlyTimeTracker.service.ProjectService;
+import com.EffortlyTimeTracker.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -25,20 +27,22 @@ import java.util.List;
 public class ProjectController {
     private final ProjectService projectService;
     private final ProjectMapper projectMapper;
+    private final EntityMapper mapper;
 
     @Autowired
-    public ProjectController(ProjectService projectService, ProjectMapper projectMapper) {
+    public ProjectController(ProjectService projectService, ProjectMapper projectMapper, EntityMapper mapper) {
         this.projectService = projectService;
         this.projectMapper = projectMapper;
+        this.mapper = mapper;
     }
 
     @Operation(summary = "Add project")
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public  ResponseEntity<ProjectDTO> addProject(@Valid @RequestBody ProjectDTO projectDTO) {
-        ProjectEntity projectEntity =projectMapper.dtoToEntity(projectDTO);
+        ProjectEntity projectEntity =mapper.projectDTOToProject(projectDTO);
         ProjectEntity newProjctEntity = projectService.addProject(projectEntity);
-        ProjectDTO responsProjectDto = projectMapper.entityToDto(newProjctEntity);
+        ProjectDTO responsProjectDto = mapper.projectToProjectDTO(newProjctEntity);
 
         return new ResponseEntity<>(responsProjectDto, HttpStatus.CREATED);
     }

@@ -7,7 +7,9 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user_app")
@@ -53,6 +55,10 @@ public class UserEntity {
     @OneToMany(mappedBy ="userProject",  cascade = CascadeType.ALL,  orphanRemoval = true)
     @JsonManagedReference
     List<ProjectEntity> projectEntities;
+
+    @OneToMany(mappedBy = "user")
+    Set<GroupMermberEntity> groups = new HashSet<>();
+
     @Override
     public String toString() {
         return "UserEntity{" +
