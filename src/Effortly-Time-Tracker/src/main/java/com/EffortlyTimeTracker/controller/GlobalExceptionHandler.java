@@ -1,5 +1,5 @@
 package com.EffortlyTimeTracker.controller;
-
+//todo add new handlers
 import com.EffortlyTimeTracker.exception.BaseException;
 import com.EffortlyTimeTracker.exception.group.GroupNotFoundException;
 import com.EffortlyTimeTracker.exception.group.InvalidGroupException;

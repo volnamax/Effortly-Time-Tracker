@@ -2,8 +2,11 @@ package com.EffortlyTimeTracker.mapper;
 
 import com.EffortlyTimeTracker.DTO.GroupDTO;
 import com.EffortlyTimeTracker.DTO.ProjectDTO;
+import com.EffortlyTimeTracker.DTO.TagCreateDTO;
+import com.EffortlyTimeTracker.DTO.TagDTO;
 import com.EffortlyTimeTracker.entity.GroupEntity;
 import com.EffortlyTimeTracker.entity.ProjectEntity;
+import com.EffortlyTimeTracker.entity.TagEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -37,5 +40,23 @@ public interface EntityMapper {
     // Использование кастомного маппинга в вашем методе
     @Mapping(target = "project", source = "projectId", qualifiedByName = "projectIdToProjectEntity")
         GroupEntity groupDTOToGroupWithProject(GroupDTO groupDTO);
+
+
+//    //tagDTO
+//    @Mapping(source = "project", target = "project")
+//    TagDTO TagEntityToTagDto(TagEntity entity);
+//
+//    @Mapping(target = "tasks", ignore = true)
+//    @Mapping(source = "project", target = "project")
+//    TagEntity TagDtoToTagEntity(TagDTO dto);
+//
+//
+//    //tagCREATEDTO
+//    @Mapping(source = "project", target = "project")
+//    TagCreateDTO TagEntityToTagCreateDto(TagEntity entity);
+//
+//    @Mapping(source = "project", target = "project")
+//    TagEntity TagCreateDtoToTagEntity(TagCreateDTO dto);
+
 
 }

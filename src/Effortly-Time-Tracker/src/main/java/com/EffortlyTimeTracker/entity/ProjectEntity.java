@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -44,7 +45,7 @@ public class ProjectEntity {
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    List<TagEntity> tags;
+    Set<TagEntity> tags;
 
     @Override
     public String toString() {

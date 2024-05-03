@@ -6,6 +6,7 @@ import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.exception.group.GroupNotFoundException;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
+import com.EffortlyTimeTracker.mapper.ProjectMapper;
 import com.EffortlyTimeTracker.repository.GroupMemberRepository;
 import com.EffortlyTimeTracker.repository.GroupRepository;
 import com.EffortlyTimeTracker.repository.ProjectRepository;
@@ -28,14 +29,16 @@ public class GroupService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final GroupMemberRepository groupMemberRepository;
+    private final ProjectMapper projectMapper;
 
 
     @Autowired
-    public GroupService(@NonNull GroupRepository groupRepository, ProjectRepository projectRepository, UserRepository userRepository, GroupMemberRepository groupMemberRepository) {
+    public GroupService(@NonNull GroupRepository groupRepository, ProjectRepository projectRepository, UserRepository userRepository, GroupMemberRepository groupMemberRepository, ProjectMapper projectMapper) {
         this.groupRepository = groupRepository;
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.groupMemberRepository = groupMemberRepository;
+        this.projectMapper = projectMapper;
     }
     @Transactional
     public GroupEntity addGroup(GroupEntity groupEntity) {
@@ -44,13 +47,18 @@ public class GroupService {
 
         // Устанавливаем связь с проектом
         groupEntity.setProject(project);
-
         // Сохраняем группу, которая теперь связана с проектом
         GroupEntity savedGroup = groupRepository.save(groupEntity);
-
         // Обязательно обновляем проект с новым group_id
         project.setGroup(savedGroup);
         projectRepository.save(project);
+
+        GroupMermberEntity groupMermberEntity = new GroupMermberEntity();
+        groupMermberEntity.setGroup(groupEntity);
+        groupMermberEntity.setRole(Role.USER);
+        groupMermberEntity.setUser(project.getUserProject());
+
+        groupMemberRepository.save(groupMermberEntity);
 
         return savedGroup;
     }
@@ -76,7 +84,6 @@ public class GroupService {
         List<GroupEntity> groups = groupRepository.findAll();
         return groups;
     }
-
 }
 
 

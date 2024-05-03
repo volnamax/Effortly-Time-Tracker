@@ -21,7 +21,6 @@ public class TaskTagEntity {
 
     @ManyToOne
     @JoinColumn(name = "task_id")
-    @JsonBackReference
     private TaskEntity task;
 
     @ManyToOne

@@ -12,12 +12,12 @@ import java.util.Set;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TagDTO {
+public class TagCreateDTO {
     @NotBlank
     String name;
     String color;
-    Set<TaskEntity> tasks;
+    Integer taskId;
 
-    @NotNull(message = "Project must be provided")
-    ProjectEntity project;
+    @NotNull(message = "Project id is null")
+    Integer projectId;
 }

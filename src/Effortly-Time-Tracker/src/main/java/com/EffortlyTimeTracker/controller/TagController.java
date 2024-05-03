@@ -1,9 +1,11 @@
 package com.EffortlyTimeTracker.controller;
 
 import com.EffortlyTimeTracker.DTO.TableDTO;
+import com.EffortlyTimeTracker.DTO.TagCreateDTO;
 import com.EffortlyTimeTracker.DTO.TagDTO;
 import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.entity.TagEntity;
+import com.EffortlyTimeTracker.mapper.EntityMapper;
 import com.EffortlyTimeTracker.mapper.TagMapper;
 import com.EffortlyTimeTracker.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Set;
 //todo add check then no project and task
+//todo
 @Tag(name = "Tag-controller")
 @RestController
 @RequestMapping("api/tag")
@@ -24,9 +27,8 @@ public class TagController {
     private final TagService tagService;
     private final TagMapper tagMapper;
 
-
     @Autowired
-    public TagController(TagService tagService, TagMapper tagMapper) {
+    public TagController(TagService tagService, TagMapper tagMapper, EntityMapper mapper) {
         this.tagService = tagService;
         this.tagMapper = tagMapper;
     }
@@ -34,10 +36,12 @@ public class TagController {
     @Operation(summary = "Add tag")
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<TagDTO> addTag(@Valid @RequestBody TagDTO tagDTO) {
+    public ResponseEntity<TagCreateDTO> addTag(@Valid @RequestBody TagCreateDTO tagDTO) {
         TagEntity tag = tagMapper.dtoToEntity(tagDTO);
-        TagEntity tagEntity = tagService.addTag(tag);
-        TagDTO res = tagMapper.entityToDto(tagEntity);
+        Integer taskId = tagMapper.getTaskIdFromTagDTO(tagDTO);
+
+        TagEntity tagEntity = tagService.addTag(tag, taskId);
+        TagCreateDTO res = tagMapper.entityToDto(tagEntity);
 
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
@@ -53,14 +57,15 @@ public class TagController {
             description = "need id")
     @GetMapping("/get")
     public TagDTO getTag(@RequestParam(required = true) Integer tagId) {
-        return tagMapper.entityToDto(tagService.getTagkById(tagId));
+        TagEntity tag = tagService.getTagkById(tagId);
+        return tagMapper.FullEntityToDto(tag);
     }
 
     @Operation(summary = "Get all tag")
     @GetMapping("/get-all")
-    public List<TagDTO> getTag() {
+    public List<TagDTO> getAllTag() {
         List<TagEntity> tagEntities = tagService.getAllTag();
-        return tagMapper.entitySetToDtoList(tagEntities);
+        return tagMapper.entityListToDtoList(tagEntities);
     }
 }
 

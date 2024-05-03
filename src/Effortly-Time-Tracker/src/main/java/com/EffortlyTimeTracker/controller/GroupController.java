@@ -22,7 +22,6 @@ import java.util.List;
 @Slf4j
 public class GroupController {
     private final GroupService groupService;
-//    private final GroupMapper groupMapper;
 
     @Autowired
     private EntityMapper mapper;
@@ -37,24 +36,12 @@ public class GroupController {
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<GroupDTO> addTask(@Valid @RequestBody GroupDTO groupDTO) {
-
-        // Использование маппера с кастомным маппингом projectId -> ProjectEntity
         GroupEntity groupEntity = mapper.groupDTOToGroupWithProject(groupDTO);
         log.info("id proj is = {} ", groupEntity.getProject().getProjectId() );
         GroupEntity savedGroupEntity = groupService.addGroup(groupEntity);
 
         GroupDTO resultDTO = mapper.groupEntityToGroupDTO(savedGroupEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(resultDTO);
-//
-//        log.info("id proj is = {} group {}", groupDTO.getProjectId(), groupDTO);
-//
-//        GroupEntity groupEntity = mapper.groupDTOToGroup(groupDTO);
-//        log.info("id proj is = {} ", groupEntity.getProject().getProjectId() );
-//
-//        GroupEntity groupEntityNew =  groupService.addGroup(groupEntity);
-//        GroupDTO res = mapper.groupEntityToGroupDTO(groupEntityNew);
-//        return new ResponseEntity<>(res, HttpStatus.CREATED);
-
     }
 
     @Operation(summary = "Dell group by id",

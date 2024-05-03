@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -35,6 +36,10 @@ public class TagEntity {
     @JsonBackReference
     ProjectEntity project;
 
-    @ManyToMany(mappedBy = "tags")
-    Set<TaskEntity> tasks;
+
+//    @ManyToMany(mappedBy = "tag")
+//    Set<TaskEntity> tasks;
+
+    @OneToMany(mappedBy = "tag")
+    private Set<TaskTagEntity> tasks = new HashSet<>();
 }

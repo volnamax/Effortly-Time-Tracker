@@ -33,6 +33,4 @@ public class TaskDTO {
     TableEntity table;
 
     //Set<TagEntity> tags;
-
-
 }
