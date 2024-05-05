@@ -1,5 +1,32 @@
+
+package com.EffortlyTimeTracker.mapper;
+
+import com.EffortlyTimeTracker.DTO.userDTO.UserCreateDTO;
+import com.EffortlyTimeTracker.DTO.userDTO.UserResponseDTO;
+import com.EffortlyTimeTracker.entity.UserEntity;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+import java.util.List;
+
+@Mapper(componentModel = "spring")
+public interface UserMapper {
+    @Mapping(target = "userId", ignore = true) // Игнорируем ID, так как он генерируется базой данных
+    @Mapping(source = "role", target = "role.name") // Особое внимание к маппингу поля role
+    UserEntity toEntity(UserCreateDTO dto);
+
+    @Mapping(source = "role.name", target = "role") // Обратное преобразование для role
+    UserCreateDTO toDTO(UserEntity entity);
+
+    @Mapping(source = "role.name", target = "role") // Обратное преобразование для role
+    UserResponseDTO toDTOResponse(UserEntity entity);
+
+    List<UserResponseDTO> toDtoListResponse(List<UserEntity> entities);
+
+}
+
+
 //package com.EffortlyTimeTracker.mapper;
-//
 //import com.EffortlyTimeTracker.DTO.userDTO.UserCreateDTO;
 //import com.EffortlyTimeTracker.entity.RoleEntity;
 //import com.EffortlyTimeTracker.entity.UserEntity;
@@ -46,31 +73,3 @@
 //    }
 //}
 
-
-package com.EffortlyTimeTracker.mapper;
-
-import com.EffortlyTimeTracker.DTO.TagDTO;
-import com.EffortlyTimeTracker.DTO.userDTO.UserCreateDTO;
-import com.EffortlyTimeTracker.DTO.userDTO.UserResponseDTO;
-import com.EffortlyTimeTracker.entity.TagEntity;
-import com.EffortlyTimeTracker.entity.UserEntity;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
-import java.util.List;
-
-@Mapper(componentModel = "spring")
-public interface UserMapper {
-    @Mapping(target = "userId", ignore = true) // Игнорируем ID, так как он генерируется базой данных
-    @Mapping(source = "role", target = "role.name") // Особое внимание к маппингу поля role
-    UserEntity toEntity(UserCreateDTO dto);
-
-    @Mapping(source = "role.name", target = "role") // Обратное преобразование для role
-    UserCreateDTO toDTO(UserEntity entity);
-
-    @Mapping(source = "role.name", target = "role") // Обратное преобразование для role
-    UserResponseDTO toDTOResponse(UserEntity entity);
-
-    List<UserResponseDTO> toDtoListResponse(List<UserEntity> entities);
-
-}

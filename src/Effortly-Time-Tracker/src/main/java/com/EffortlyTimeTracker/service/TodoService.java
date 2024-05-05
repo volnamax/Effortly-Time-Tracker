@@ -1,6 +1,5 @@
 package com.EffortlyTimeTracker.service;
 
-import com.EffortlyTimeTracker.DTO.TodoNodeDTO;
 import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.exception.todo.TodoNodeIsEmpty;
@@ -8,7 +7,6 @@ import com.EffortlyTimeTracker.exception.todo.TodoNotFoudException;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
 import com.EffortlyTimeTracker.repository.TodoRepository;
 import com.EffortlyTimeTracker.repository.UserRepository;
-import jakarta.validation.constraints.Null;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,9 +26,7 @@ public class TodoService {
     }
 
     public TodoNodeEntity addTodo(TodoNodeEntity todoNodeEntity) {
-        TodoNodeEntity todoNode = todoRepository.save(todoNodeEntity);
-        log.info("New" + todoNode);
-        return todoNode;
+          return todoRepository.save(todoNodeEntity);
     }
 
     public void delTodoById(Integer id) {
@@ -38,7 +34,6 @@ public class TodoService {
             throw new TodoNotFoudException(id);
         }
         todoRepository.deleteById(id);
-        log.info("todo with id {} delete", id);
     }
 
     public void delAllTodoByIdUser(Integer userId) {
@@ -51,9 +46,7 @@ public class TodoService {
             log.info("No todos found for user with id {}", userId);
             return;
         }
-
         todoRepository.deleteAll(userTodos);
-        log.info("All todos for user with id {} deleted", userId);
     }
 
 

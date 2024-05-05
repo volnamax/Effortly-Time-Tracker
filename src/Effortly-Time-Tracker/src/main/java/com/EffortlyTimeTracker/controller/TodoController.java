@@ -1,12 +1,15 @@
 package com.EffortlyTimeTracker.controller;
 
 import com.EffortlyTimeTracker.DTO.TodoNodeDTO;
+import com.EffortlyTimeTracker.DTO.TodoNodeResponseDTO;
 import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import com.EffortlyTimeTracker.mapper.TodoNodeMapper;
 import com.EffortlyTimeTracker.service.TodoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,7 @@ import java.util.List;
 @RequestMapping("api/todo")
 public class TodoController {
 
+    private static final Logger log = LoggerFactory.getLogger(TodoController.class);
     private final TodoService todoService;
     private final TodoNodeMapper todoNodeMapper;
 
@@ -32,37 +36,56 @@ public class TodoController {
             "priority(IMPORTANT_URGENTLY, NO_IMPORTANT_URGENTLY, IMPORTANT_NO_URGENTLY, NO_IMPORTANT_NO_URGENTLY)")
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<TodoNodeDTO> addTodo(@Valid @RequestBody TodoNodeDTO todoNodeDTO) {
-        TodoNodeEntity todoNodeEntity = todoNodeMapper.dtoToEntityCreate(todoNodeDTO);
+    public ResponseEntity<TodoNodeResponseDTO> addTodo(@Valid @RequestBody TodoNodeDTO todoNodeDTO) {
+        TodoNodeEntity todoNodeEntity = todoNodeMapper.toEntity(todoNodeDTO);
+        log.info("Add todo: {}", todoNodeEntity);
+
         TodoNodeEntity newTodoNode = todoService.addTodo(todoNodeEntity);
-        TodoNodeDTO resTodoNodeDTO = todoNodeMapper.entityToDto(newTodoNode);
+        log.info("New todo: {}", newTodoNode);
+        TodoNodeResponseDTO resTodoNodeDTO = todoNodeMapper.toDtoResponse(newTodoNode);
+        log.info("Response: {}", resTodoNodeDTO);
+
         return new ResponseEntity<>(resTodoNodeDTO, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Dell todo by id", description = "need id")
     @DeleteMapping("/del")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delTodo(@RequestParam(required = true) Integer TodoId) {
+        log.info("Del todo: {}", TodoId);
         todoService.delTodoById(TodoId);
     }
 
     @Operation(summary = "Dell all todo by user id", description = "need user id")
     @DeleteMapping("/del-by-user-id")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delAllTodoBuUserID(@RequestParam(required = true) Integer userId) {
+        log.info("Del all todo by user: {}", userId);
         todoService.delAllTodoByIdUser(userId);
     }
 
     @Operation(summary = "Get all todo by id user")
-    @GetMapping("/get-all-by-user-Id")
-    public List<TodoNodeDTO> getTodoAll(Integer id) {
+    @GetMapping("/get-all-by-user-id")
+    @ResponseStatus(HttpStatus.OK)
+    public List<TodoNodeResponseDTO> getTodoAll(Integer id) {
+        log.info("Get todo by id: {}", id);
         List<TodoNodeEntity> resTodoNodeEntity = todoService.getAllTodoByIdUser(id);
-        return todoNodeMapper.entityListToDtoList(resTodoNodeEntity);
+        log.info("Response: {}", resTodoNodeEntity);
+        List<TodoNodeResponseDTO> todoNodeResponseDTOS = todoNodeMapper.toDtoResponse(resTodoNodeEntity);
+        log.info("Response: {}", todoNodeResponseDTOS);
+        return todoNodeResponseDTOS;
     }
 
     @Operation(summary = "Get all todo")
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/get-all")
-    public List<TodoNodeDTO> getTodoAll() {
+    public List<TodoNodeResponseDTO> getTodoAll() {
         List<TodoNodeEntity> resTodoNodeEntity = todoService.getAllTodo();
-        return todoNodeMapper.entityListToDtoList(resTodoNodeEntity);
+        log.info("Response: {}", resTodoNodeEntity);
+        List<TodoNodeResponseDTO> todoNodeResponseDTOS = todoNodeMapper.toDtoResponse(resTodoNodeEntity);
+        log.info("Response: {}", todoNodeResponseDTOS);
+        return todoNodeResponseDTOS;
+
     }
 
 }
