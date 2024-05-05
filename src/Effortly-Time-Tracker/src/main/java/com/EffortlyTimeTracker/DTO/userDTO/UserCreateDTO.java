@@ -1,6 +1,5 @@
-package com.EffortlyTimeTracker.DTO;
+package com.EffortlyTimeTracker.DTO.userDTO;
 
-import com.EffortlyTimeTracker.enums.Role;
 import jakarta.validation.constraints.*;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -8,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
+//todo add email check uniq
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreateDTO {

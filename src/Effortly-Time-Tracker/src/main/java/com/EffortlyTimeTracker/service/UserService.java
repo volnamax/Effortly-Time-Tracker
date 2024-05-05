@@ -4,6 +4,7 @@ import com.EffortlyTimeTracker.entity.RoleEntity;
 import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
+import com.EffortlyTimeTracker.exception.user.UserNotRoleException;
 import com.EffortlyTimeTracker.repository.RoleRepository;
 import com.EffortlyTimeTracker.repository.UserRepository;
 import lombok.NonNull;
@@ -32,9 +33,13 @@ public class UserService {
     }
 
     public UserEntity addUser(@NonNull UserEntity userEntity) {
-        UserEntity user = userRepository.save(userEntity);
-        log.info("New" + user);
-        return user;
+        RoleEntity role = getRoleByName(userEntity.getRole().getName().name());
+        if (role == null) {
+            throw new UserNotRoleException();
+        }
+        userEntity.setRole(role);
+        return userRepository.save(userEntity);
+
     }
 
     public void delUserById(Integer id) {
@@ -42,20 +47,14 @@ public class UserService {
             throw new UserNotFoudException(id);
         }
         userRepository.deleteById(id);
-        log.info("user with id {} delete", id);
     }
 
     public UserEntity getUserById(Integer id) {
-        UserEntity user = userRepository.findById(id)
+        return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoudException(id));
-        log.info("Get = " + user);
-
-        return user;
     }
 
     public List<UserEntity> getAllUsers() {
-        List<UserEntity> users = userRepository.findAll();
-        log.info("GetALL = " + users);
-        return users;
+        return userRepository.findAll();
     }
 }

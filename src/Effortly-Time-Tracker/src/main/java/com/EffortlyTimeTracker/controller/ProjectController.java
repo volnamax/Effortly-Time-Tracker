@@ -1,16 +1,10 @@
 package com.EffortlyTimeTracker.controller;
 
 import com.EffortlyTimeTracker.DTO.ProjectDTO;
-import com.EffortlyTimeTracker.DTO.UserCreateDTO;
 import com.EffortlyTimeTracker.entity.ProjectEntity;
-import com.EffortlyTimeTracker.entity.RoleEntity;
-import com.EffortlyTimeTracker.entity.TodoNodeEntity;
-import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.mapper.EntityMapper;
 import com.EffortlyTimeTracker.mapper.ProjectMapper;
-import com.EffortlyTimeTracker.mapper.UserMapper;
 import com.EffortlyTimeTracker.service.ProjectService;
-import com.EffortlyTimeTracker.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

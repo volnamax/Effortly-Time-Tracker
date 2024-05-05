@@ -1,11 +1,7 @@
 package com.EffortlyTimeTracker.controller;
 
 import com.EffortlyTimeTracker.DTO.TodoNodeDTO;
-import com.EffortlyTimeTracker.DTO.UserCreateDTO;
-import com.EffortlyTimeTracker.entity.RoleEntity;
 import com.EffortlyTimeTracker.entity.TodoNodeEntity;
-import com.EffortlyTimeTracker.entity.UserEntity;
-import com.EffortlyTimeTracker.exception.todo.TodoNotFoudException;
 import com.EffortlyTimeTracker.mapper.TodoNodeMapper;
 import com.EffortlyTimeTracker.service.TodoService;
 import io.swagger.v3.oas.annotations.Operation;

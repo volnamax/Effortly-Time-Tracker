@@ -31,4 +31,5 @@ public class RoleEntity {
     public void setName(Role name) {
         this.name = name;
     }
+
 }

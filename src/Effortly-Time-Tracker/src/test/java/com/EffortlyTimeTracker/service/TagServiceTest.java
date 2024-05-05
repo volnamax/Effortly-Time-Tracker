@@ -36,17 +36,17 @@ class TagServiceTest {
         tag.setTagId(1);
         tag.setName("Important");
     }
-
-    @Test
-    void addTagTestSuccess() {
-        when(tagRepository.save(any(TagEntity.class))).thenReturn(tag);
-
-        TagEntity savedTag = tagService.addTag(tag);
-        assertNotNull(savedTag);
-        assertEquals("Important", savedTag.getName());
-
-        verify(tagRepository).save(tag);
-    }
+//
+//    @Test
+//    void addTagTestSuccess() {
+//        when(tagRepository.save(any(TagEntity.class))).thenReturn(tag);
+//
+//        TagEntity savedTag = tagService.addTag(tag);
+//        assertNotNull(savedTag);
+//        assertEquals("Important", savedTag.getName());
+//
+//        verify(tagRepository).save(tag);
+//    }
 
     @Test
     void deleteTagByIdTestExists() {

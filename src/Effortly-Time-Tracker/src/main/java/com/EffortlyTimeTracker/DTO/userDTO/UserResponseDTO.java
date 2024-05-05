@@ -1,4 +1,4 @@
-package com.EffortlyTimeTracker.DTO;
+package com.EffortlyTimeTracker.DTO.userDTO;
 
 
 import lombok.AccessLevel;
@@ -14,7 +14,7 @@ public class UserResponseDTO {
     String userName;
     String userSecondname;
     String email;
-    private String role;
+    String role;
     LocalDateTime dataSignIn;
     LocalDateTime dataLastLogin;
 }

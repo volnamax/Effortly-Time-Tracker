@@ -1,11 +1,9 @@
 package com.EffortlyTimeTracker.controller;
 
-import com.EffortlyTimeTracker.DTO.UserCreateDTO;
-import com.EffortlyTimeTracker.entity.RoleEntity;
+import com.EffortlyTimeTracker.DTO.userDTO.UserCreateDTO;
+import com.EffortlyTimeTracker.DTO.userDTO.UserResponseDTO;
 import com.EffortlyTimeTracker.entity.UserEntity;
-import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.mapper.UserMapper;
-import com.EffortlyTimeTracker.repository.RoleRepository;
 import com.EffortlyTimeTracker.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,12 +36,15 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Add user for dto obj",
             description = "need name , sname, email, password, role (ADMIN, USER, GUEST)")
-    public ResponseEntity<UserCreateDTO> addUser(@Valid @RequestBody UserCreateDTO userCreateDTO) {
-        RoleEntity roleEntity = userService.getRoleByName(userCreateDTO.getRole());
-        UserEntity userEntity = userMapper.dtoToEntityCreate(userCreateDTO, roleEntity);
-        UserEntity newUser = userService.addUser(userEntity);
-        UserCreateDTO responsUserDto = userMapper.entityToCreateDto(newUser);
+    public ResponseEntity<UserResponseDTO> addUser(@Valid @RequestBody UserCreateDTO userCreateDTO) {
+        log.info("Add user: {}", userCreateDTO);
 
+        UserEntity userEntity = userMapper.toEntity(userCreateDTO);
+        log.info("UserEntity: {}", userEntity);
+
+        UserEntity newUser = userService.addUser(userEntity);
+        UserResponseDTO responsUserDto = userMapper.toDTOResponse(newUser);
+        log.info("Respons: {}", responsUserDto);
         return new ResponseEntity<>(responsUserDto, HttpStatus.CREATED);
     }
 
@@ -53,6 +54,7 @@ public class UserController {
     @Operation(summary = "Dell user by id",
             description = "need id")
     public void deleteUser(@RequestParam(required = true) Integer id) {
+        log.info("Delete user by id: {}", id);
         userService.delUserById(id);
     }
 
@@ -60,34 +62,24 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get user by id",
             description = "need id")
-    public UserEntity getUser(@RequestParam(required = true) Integer id) {
-        return userService.getUserById(id);
+    public UserResponseDTO getUser(@RequestParam(required = true) Integer id) {
+        log.info("Get user by id: {}", id);
+
+        UserResponseDTO userResponseDTO = userMapper.toDTOResponse(userService.getUserById(id));
+        log.info("UserResponseDTO: {}", userResponseDTO);
+        return userResponseDTO;
     }
 
 
     @GetMapping("/get-all")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get all user")
-    public List<UserEntity> getUser() {
-        return userService.getAllUsers();
+    public List<UserResponseDTO> getUser() {
+        log.info("Get all user");
+        List<UserResponseDTO> userResponseDTOS = userMapper.toDtoListResponse(userService.getAllUsers());
+        log.info("UserResponseDTOS: {}", userResponseDTOS);
+        return userResponseDTOS;
     }
 
 }
-
-
-///*
-//   @GetMapping("/api/get/user")
-//    public User getUser(@RequestParam(required = true) Integer id_user) {
-//        return userRep.findById(id_user).orElseThrow(() -> new RuntimeException("User not found with id: " + id_user));
-//
-//    //изменение знаяения
-//    @PutMapping("/api/change/user")
-//    // @RequestBody - запросить какой то обхект  автомачическая сереализация (получили как json oбъект )
-//    public String changeUser(@RequestBody User user) {
-//        if (!userRep.existsById(user.getUserId())) {
-//            return "not user id ";
-//        }
-//        return userRep.save(user).toString();}
-//    */
-
 

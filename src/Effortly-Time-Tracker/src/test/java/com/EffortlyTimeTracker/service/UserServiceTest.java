@@ -4,6 +4,7 @@ import com.EffortlyTimeTracker.entity.RoleEntity;
 import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
+import com.EffortlyTimeTracker.repository.RoleRepository;
 import com.EffortlyTimeTracker.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,9 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private RoleRepository roleRepository;
+
     @InjectMocks
     private UserService userService;
 
@@ -38,6 +42,8 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
+        userService = new UserService(userRepository, roleRepository);
+
         userEntity = new UserEntity();
         roleEntity = new RoleEntity();
         roleEntity.setName(Role.USER);
@@ -48,19 +54,21 @@ class UserServiceTest {
         userEntity.setEmail("teweft@example.com");
         userEntity.setPasswordHash("password");
         userEntity.setRole(roleEntity);
-
     }
+
 
     @Test
     public void addUserTestSuccess() {
-        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
+        when(roleRepository.findByName(Role.USER)).thenReturn(roleEntity);  // Mock the behavior of roleRepository
+        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);  // Mock the behavior of userRepository
 
         UserEntity savedUser = userService.addUser(userEntity);
         assertNotNull(savedUser);
         assertEquals("TestUser", savedUser.getUserName());
 
-        verify(userRepository).save(userEntity);
+        verify(userRepository).save(any(UserEntity.class));  // Verify userRepository.save() was called
     }
+
 
     @Test
     public void addUserTestNullUser() {
@@ -76,14 +84,21 @@ class UserServiceTest {
 
     @Test
     public void AddUserTestRepositoryThrowsException() {
+        // Mock the roleRepository to return a valid role
+        when(roleRepository.findByName(any())).thenReturn(roleEntity);
+
+        // Now setup the userRepository to throw an exception as intended
         when(userRepository.save(any(UserEntity.class))).thenThrow(new RuntimeException("Failed to save"));
 
+        // Execute the test
         Exception exception = assertThrows(RuntimeException.class, () -> {
             userService.addUser(userEntity);
         });
 
+        // Check the exception message to see if it's the one we expect from userRepository
         assertEquals("Failed to save", exception.getMessage());
     }
+
 
     @Test
     public void deleteUserByIdTestExists() {
