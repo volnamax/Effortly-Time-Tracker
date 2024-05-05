@@ -1,7 +1,7 @@
 package com.EffortlyTimeTracker.mapper;
 
-import com.EffortlyTimeTracker.DTO.TodoNodeDTO;
-import com.EffortlyTimeTracker.DTO.TodoNodeResponseDTO;
+import com.EffortlyTimeTracker.DTO.todDTO.TodoNodeDTO;
+import com.EffortlyTimeTracker.DTO.todDTO.TodoNodeResponseDTO;
 import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
