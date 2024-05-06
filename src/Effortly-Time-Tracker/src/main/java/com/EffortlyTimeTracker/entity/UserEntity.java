@@ -71,5 +71,8 @@ public class UserEntity {
                 ", dataLastLogin=" + dataLastLogin +'\''
                 + "}";
     }
+    public UserEntity(Integer userId) {
+        this.userId = userId;
+    }
 }
 

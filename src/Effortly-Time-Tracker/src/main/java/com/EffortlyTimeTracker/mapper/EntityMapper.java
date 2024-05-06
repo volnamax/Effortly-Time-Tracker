@@ -1,12 +1,9 @@
 package com.EffortlyTimeTracker.mapper;
 
 import com.EffortlyTimeTracker.DTO.GroupDTO;
-import com.EffortlyTimeTracker.DTO.ProjectDTO;
-import com.EffortlyTimeTracker.DTO.TagCreateDTO;
-import com.EffortlyTimeTracker.DTO.TagDTO;
+import com.EffortlyTimeTracker.DTO.project.ProjectDTO;
 import com.EffortlyTimeTracker.entity.GroupEntity;
 import com.EffortlyTimeTracker.entity.ProjectEntity;
-import com.EffortlyTimeTracker.entity.TagEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

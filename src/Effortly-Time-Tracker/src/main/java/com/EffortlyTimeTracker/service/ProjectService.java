@@ -1,12 +1,9 @@
 package com.EffortlyTimeTracker.service;
 
-import com.EffortlyTimeTracker.DTO.ProjectDTO;
 import com.EffortlyTimeTracker.entity.ProjectEntity;
-import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.exception.project.ProjectIsEmpty;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
-import com.EffortlyTimeTracker.exception.todo.TodoNodeIsEmpty;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
 import com.EffortlyTimeTracker.repository.ProjectRepository;
 import com.EffortlyTimeTracker.repository.UserRepository;
@@ -14,10 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -33,10 +28,7 @@ public class ProjectService {
 
 
     public ProjectEntity addProject(@NotNull ProjectEntity projectEntity) {
-        log.info("Добавление проекта: ");
-        ProjectEntity project = projectRepository.save(projectEntity);
-        log.info("Проект успешно добавлен: {}", projectEntity);
-        return project;
+        return projectRepository.save(projectEntity);
     }
 
     public void delProjectById(Integer id) {

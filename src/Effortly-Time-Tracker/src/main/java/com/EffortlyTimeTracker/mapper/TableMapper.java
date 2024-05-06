@@ -1,9 +1,7 @@
 package com.EffortlyTimeTracker.mapper;
 
 
-import com.EffortlyTimeTracker.DTO.ProjectDTO;
 import com.EffortlyTimeTracker.DTO.TableDTO;
-import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.enums.Status;
 import org.springframework.stereotype.Component;

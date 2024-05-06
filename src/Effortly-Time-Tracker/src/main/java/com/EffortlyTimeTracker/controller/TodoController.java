@@ -1,7 +1,7 @@
 package com.EffortlyTimeTracker.controller;
 
-import com.EffortlyTimeTracker.DTO.todDTO.TodoNodeDTO;
-import com.EffortlyTimeTracker.DTO.todDTO.TodoNodeResponseDTO;
+import com.EffortlyTimeTracker.DTO.todoDTO.TodoNodeDTO;
+import com.EffortlyTimeTracker.DTO.todoDTO.TodoNodeResponseDTO;
 import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import com.EffortlyTimeTracker.mapper.TodoNodeMapper;
 import com.EffortlyTimeTracker.service.TodoService;

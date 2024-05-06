@@ -1,4 +1,4 @@
-package com.EffortlyTimeTracker.DTO.todDTO;
+package com.EffortlyTimeTracker.DTO.todoDTO;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,8 +1,6 @@
 package com.EffortlyTimeTracker.controller;
 
-import com.EffortlyTimeTracker.DTO.ProjectDTO;
 import com.EffortlyTimeTracker.DTO.TableDTO;
-import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.mapper.TableMapper;
 import com.EffortlyTimeTracker.service.TableService;

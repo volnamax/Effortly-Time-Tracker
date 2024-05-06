@@ -1,4 +1,4 @@
-package com.EffortlyTimeTracker.DTO;
+package com.EffortlyTimeTracker.DTO.project;
 
 import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.entity.UserEntity;
@@ -12,19 +12,19 @@ import lombok.experimental.FieldDefaults;
 import java.util.List;
 import java.util.Set;
 
-//todo tag
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProjectDTO {
+public class ProjectResponseDTO {
+    Integer id;
     @NotBlank(message = "Error proj name is empty")
     String name;
 
     String description;
     @NotNull(message = "Error proj not have user")
-    UserEntity userProject;
+    Integer userProject;
 
-    List<TableEntity> tables;
-     Set<TableEntity> tags;
+    List<Integer> tablesId;
+    Set<Integer> tagsId;
 
     Integer groupId;
 }
