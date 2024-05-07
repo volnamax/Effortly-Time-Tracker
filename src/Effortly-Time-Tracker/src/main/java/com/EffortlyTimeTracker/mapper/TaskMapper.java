@@ -1,14 +1,10 @@
 package com.EffortlyTimeTracker.mapper;
 
-import com.EffortlyTimeTracker.DTO.TableDTO;
 import com.EffortlyTimeTracker.DTO.TaskDTO;
-import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.entity.TaskEntity;
-import com.EffortlyTimeTracker.enums.Status;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component

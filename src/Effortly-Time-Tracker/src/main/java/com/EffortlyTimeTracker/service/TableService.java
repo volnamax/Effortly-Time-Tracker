@@ -1,13 +1,11 @@
 package com.EffortlyTimeTracker.service;
 
-import com.EffortlyTimeTracker.DTO.TableDTO;
 import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TableEntity;
-import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.exception.project.ProjectIsEmpty;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
+import com.EffortlyTimeTracker.exception.table.TableIsEmpty;
 import com.EffortlyTimeTracker.exception.table.TableNotFoundException;
-import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
 import com.EffortlyTimeTracker.repository.ProjectRepository;
 import com.EffortlyTimeTracker.repository.TableRepository;
 import lombok.NonNull;
@@ -30,10 +28,7 @@ public class TableService {
     }
 
     public TableEntity addTable(@NonNull TableEntity tableEntity) {
-        log.info("Добавление table: ");
-        TableEntity table = tableRepository.save(tableEntity);
-        log.info("Table успешно добавлен: {}", table);
-        return table;
+        return tableRepository.save(tableEntity);
     }
 
 
@@ -46,16 +41,11 @@ public class TableService {
     }
 
     public TableEntity getTableById(Integer id) {
-        TableEntity table = tableRepository.findById(id).orElseThrow(() -> new TableNotFoundException(id));
-        log.info("Get = " + table);
-
-        return table;
+        return tableRepository.findById(id).orElseThrow(() -> new TableNotFoundException(id));
     }
 
     public List<TableEntity> getAllTable() {
-        List<TableEntity> tableProjects = tableRepository.findAll();
-        log.info("GetALL = " + tableProjects);
-        return tableProjects;
+        return tableRepository.findAll();
     }
 
     public List<TableEntity> getAllTableByIdProject(Integer projectId) {
@@ -64,7 +54,7 @@ public class TableService {
 
         if (tableEntities.isEmpty()) {
             log.info("No todos found for project with id {}", project);
-            throw new ProjectIsEmpty();
+            throw new TableIsEmpty();
         }
         return tableEntities;
     }

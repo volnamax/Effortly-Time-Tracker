@@ -1,4 +1,4 @@
-package com.EffortlyTimeTracker.DTO;
+package com.EffortlyTimeTracker.DTO.table;
 //todo del entity in dto
 import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TaskEntity;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TableDTO {
+public class TableResponseDTO {
     @NotBlank(message = "Error table name is empty")
     String name;
 
@@ -21,7 +21,7 @@ public class TableDTO {
     String status;
 
     @NotNull(message = "Error table not have project")
-    ProjectEntity project;
+    Integer projectId;
 
-    List<TaskEntity> tasks;
+    List<Integer> tasks;
 }

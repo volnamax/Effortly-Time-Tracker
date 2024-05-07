@@ -54,7 +54,7 @@ public interface TagMapper {
 
 
 //
-//import com.EffortlyTimeTracker.DTO.TableDTO;
+//import com.EffortlyTimeTracker.DTO.table.TableDTO;
 //import com.EffortlyTimeTracker.DTO.TagDTO;
 //import com.EffortlyTimeTracker.entity.ProjectEntity;
 //import com.EffortlyTimeTracker.entity.TagEntity;

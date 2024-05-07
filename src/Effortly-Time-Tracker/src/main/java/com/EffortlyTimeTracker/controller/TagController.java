@@ -1,9 +1,7 @@
 package com.EffortlyTimeTracker.controller;
 
-import com.EffortlyTimeTracker.DTO.TableDTO;
 import com.EffortlyTimeTracker.DTO.TagCreateDTO;
 import com.EffortlyTimeTracker.DTO.TagDTO;
-import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.entity.TagEntity;
 import com.EffortlyTimeTracker.mapper.EntityMapper;
 import com.EffortlyTimeTracker.mapper.TagMapper;
@@ -17,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
+
 //todo add check then no project and task
 //todo
 @Tag(name = "Tag-controller")
