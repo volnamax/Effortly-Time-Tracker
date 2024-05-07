@@ -30,12 +30,23 @@ public interface ProjectMapper {
     @Mapping(target = "tags", ignore = true) // Assume not setting tags on creation
     ProjectEntity toEntity(ProjectCreateDTO dto);
 
+
+
+
     // Mapping from Entity to ResponseDTO
     @Mapping(source = "projectId", target = "id")
     @Mapping(source = "userProject.userId", target = "userProject") // Flatten user entity to user ID
     @Mapping(source = "tables", target = "tablesId") // Assume you have method to extract IDs from tables
     @Mapping(source = "tags", target = "tagsId") // Assume you have method to extract IDs from tags
     ProjectResponseDTO toResponseDTO(ProjectEntity entity);
+
+
+    @Mapping(source = "projectId", target = "id")
+    @Mapping(source = "userProject.userId", target = "userProject") // Flatten user entity to user ID
+    @Mapping(source = "tables", target = "tablesId") // Assume you have method to extract IDs from tables
+    @Mapping(source = "tags", target = "tagsId") // Assume you have method to extract IDs from tags
+    List<ProjectResponseDTO> toResponseDTO(List<ProjectEntity> entity);
+
 
     // Helper methods to extract IDs from collections
     default Integer tableToTableId(TableEntity table) {

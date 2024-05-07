@@ -36,36 +36,16 @@ public class ProjectService {
             throw new ProjectNotFoundException(id);
         }
         projectRepository.deleteById(id);
-        log.info("Project with id {} deleted", id);
     }
 
     public ProjectEntity getProjectsById(Integer id) {
-        ProjectEntity proj = projectRepository.findById(id)
+        return  projectRepository.findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException(id));
-        log.info("Get = " + proj);
-
-        return proj;
     }
     public List<ProjectEntity>getAllProject () {
         return projectRepository.findAll();
     }
 
-
-//    @Transactional(readOnly = true)
-//    public List<ProjectDTO> getAllProject() {
-//        return projectRepository.findAll().stream()
-//                .map(this::convertToDto)
-//                .collect(Collectors.toList());
-//    }
-////
-//    private ProjectDTO convertToDto(ProjectEntity projectEntity) {
-//        ProjectDTO projectDTO = new ProjectDTO();
-//        projectDTO.setName(projectEntity.getName());
-//        projectDTO.setDescription(projectEntity.getDescription());
-//        projectDTO.setUserProject(projectEntity.getUserProject());
-//        projectDTO.setGroupProject(projectEntity.getGroup());
-//        return projectDTO;
-//    }
 
     public List<ProjectEntity> getAllProjectByIdUser(Integer userId) {
         UserEntity user = userRepository.findById(userId)
@@ -97,3 +77,19 @@ public class ProjectService {
 
 
 }
+
+//    @Transactional(readOnly = true)
+//    public List<ProjectDTO> getAllProject() {
+//        return projectRepository.findAll().stream()
+//                .map(this::convertToDto)
+//                .collect(Collectors.toList());
+//    }
+////
+//    private ProjectDTO convertToDto(ProjectEntity projectEntity) {
+//        ProjectDTO projectDTO = new ProjectDTO();
+//        projectDTO.setName(projectEntity.getName());
+//        projectDTO.setDescription(projectEntity.getDescription());
+//        projectDTO.setUserProject(projectEntity.getUserProject());
+//        projectDTO.setGroupProject(projectEntity.getGroup());
+//        return projectDTO;
+//    }

@@ -10,6 +10,7 @@ import com.EffortlyTimeTracker.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Slf4j
 @Tag(name = "Project-controller")
 @RestController
 @RequestMapping("api/project")
 public class ProjectController {
-    private static final Logger log = LoggerFactory.getLogger(ProjectController.class);
     private final ProjectService projectService;
     private final ProjectMapper projectMapper;
     private final EntityMapper mapper;
@@ -39,6 +39,8 @@ public class ProjectController {
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ProjectResponseDTO> addProject(@Valid @RequestBody ProjectCreateDTO projectDTO) {
+        log.info("api/project/add");
+
         log.info("in projectDTO = {}", projectDTO);
         ProjectEntity projectEntity = projectMapper.toEntity(projectDTO);
         log.info("projectEntity = {}", projectEntity);
@@ -57,40 +59,62 @@ public class ProjectController {
     @DeleteMapping("/del")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delProject(@RequestParam(required = true) Integer projectId) {
+        log.info("api/project/del");
+
+        log.info("in projectId = {}", projectId);
         projectService.delProjectById(projectId);
+        log.info("del project ok");
     }
 
 
     @Operation(summary = "Get proj by id",
             description = "need id")
     @GetMapping("/get")
+    @ResponseStatus(HttpStatus.OK)
     public ProjectResponseDTO getProject(@RequestParam(required = true) Integer projectId) {
+        log.info("api/project/get");
+
+        log.info("in projectId = {}", projectId);
         ProjectEntity projectEntity = projectService.getProjectsById(projectId);
-        return projectMapper.toResponseDTO(projectEntity);
+        log.info("projectEntity = {}", projectEntity);
+
+        ProjectResponseDTO responsProjectDto = projectMapper.toResponseDTO(projectEntity);
+        log.info("responsProjectDto = {}", responsProjectDto);
+        return responsProjectDto;
+    }
+
+
+    @Operation(summary = "Get all proj")
+    @GetMapping("/get-all")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProjectResponseDTO> getProjects() {
+        log.info("api/project/get-all");
+        List<ProjectEntity> resProjectEntity = projectService.getAllProject();
+        log.info("resProjectEntity = {}", resProjectEntity);
+        return projectMapper.toResponseDTO(resProjectEntity);
+    }
+
+    @Operation(summary = "Dell all proj by user id", description = "need user id")
+    @DeleteMapping("/del-by-user-id")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delAllProjBuUserID(@RequestParam(required = true) Integer userId) {
+        log.info("api/project/del-by-user-id");
+        log.info("in projectId = {}", userId);
+        projectService.delAllProjectByIdUser(userId);
+    }
+
+    @Operation(summary = "Get all project by id user", description = "need id user")
+    @GetMapping("/get-all-by-user-id")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProjectResponseDTO> getProjectAll(Integer id) {
+        log.info("api/project/get-all-by-user-id");
+        log.info("in projectId = {}", id);
+
+        List<ProjectEntity> resProjectEntity = projectService.getAllProjectByIdUser(id);
+        log.info("resProjectEntity = {}", resProjectEntity);
+
+        return projectMapper.toResponseDTO(resProjectEntity);
     }
 }
-
-//    @Operation(summary = "Get all proj")
-//    @GetMapping("/get-all")
-//    public List<ProjectDTO> getProjects() {
-//        List<ProjectEntity> resProjectEntity = projectService.getAllProject();
-//        return projectMapper.entityListToDtoList(resProjectEntity);
-//    }
-//
-//    @Operation(summary = "Dell all proj by user id", description = "need user id")
-//    @DeleteMapping("/del-by-user-id")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void delAllProjBuUserID(@RequestParam(required = true) Integer userId) {
-//        projectService.delAllProjectByIdUser(userId);
-//    }
-//
-//    @Operation(summary = "Get all project by id user", description = "need id user")
-//    @GetMapping("/get-all-by-user-id")
-//    @ResponseStatus(HttpStatus.OK)
-//    public List<ProjectDTO> getProjectAll(Integer id) {
-//        List<ProjectEntity> resProjectEntity = projectService.getAllProjectByIdUser(id);
-//        return projectMapper.entityListToDtoList(resProjectEntity);
-//    }
-
 
 
