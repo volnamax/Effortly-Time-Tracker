@@ -1,11 +1,7 @@
 package com.EffortlyTimeTracker.service;
 
-import com.EffortlyTimeTracker.DTO.TaskDTO;
-import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.entity.TaskEntity;
-import com.EffortlyTimeTracker.exception.project.ProjectIsEmpty;
-import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.table.TableIsEmpty;
 import com.EffortlyTimeTracker.exception.table.TableNotFoundException;
 import com.EffortlyTimeTracker.exception.task.TaskNotFoundException;
@@ -18,11 +14,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+//todo think about empty table (is exception ?)
+
 @Slf4j
 @Service
 public class TaskService {
     private final TaskRepository taskRepository;
-    private  final TableRepository tableRepository;
+    private final TableRepository tableRepository;
 
     @Autowired
     public TaskService(TaskRepository taskRepository, TableRepository tableRepository) {
@@ -31,11 +29,7 @@ public class TaskService {
     }
 
     public TaskEntity addTask(@NonNull TaskEntity task) {
-        log.info("add new task: {}", task.getName());
-
-        TaskEntity taskEntity = taskRepository.save(task);
-        log.info("Table успешно добавлен: {}", task);
-        return task;
+        return taskRepository.save(task);
     }
 
     public void delTaskById(Integer taskId) {
@@ -47,24 +41,19 @@ public class TaskService {
     }
 
     public TaskEntity getTaskById(Integer taskId) {
-        TaskEntity task = taskRepository.findById(taskId)
+        return taskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
-        log.info("Get = " + task);
-        return task;
     }
 
     public List<TaskEntity> getAllTask() {
-        List<TaskEntity> tasks = taskRepository.findAll();
-        log.info("GetALL = " + tasks);
-        return tasks;
+        return  taskRepository.findAll();
     }
 
 
     public List<TaskEntity> getAllTaskByIdTable(Integer tableId) {
-        TableEntity table =  tableRepository.findById(tableId).orElseThrow(()->new TableNotFoundException(tableId));
-        List<TaskEntity> taskEntities= taskRepository.findByTableId(tableId);
-        if (taskEntities.isEmpty())
-        {
+        TableEntity table = tableRepository.findById(tableId).orElseThrow(() -> new TableNotFoundException(tableId));
+        List<TaskEntity> taskEntities = taskRepository.findByTableId(tableId);
+        if (taskEntities.isEmpty()) {
             log.info("No todos found for table  with id {}", table);
             throw new TableIsEmpty();
         }
@@ -73,8 +62,8 @@ public class TaskService {
     }
 
     public void delAllTaskByIdTable(Integer tableId) {
-        TableEntity table =  tableRepository.findById(tableId).orElseThrow(()->new TableNotFoundException(tableId));
-        List<TaskEntity> taskEntities= taskRepository.findByTableId(tableId);
+        TableEntity table = tableRepository.findById(tableId).orElseThrow(() -> new TableNotFoundException(tableId));
+        List<TaskEntity> taskEntities = taskRepository.findByTableId(tableId);
 
         if (taskEntities.isEmpty()) {
             log.info("No todos found for table with id {}", table);
