@@ -4,6 +4,6 @@ import com.EffortlyTimeTracker.exception.BaseException;
 
 public class GroupNotFoundException extends BaseException {
     public GroupNotFoundException(Integer id) {
-        super("Project with ID " + id + " not found");
+        super("Group with id " + id + " not found");
     }
 }

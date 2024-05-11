@@ -1,5 +1,4 @@
 package com.EffortlyTimeTracker.DTO.table;
-//todo del entity in dto
 import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TaskEntity;
 import jakarta.validation.constraints.NotBlank;

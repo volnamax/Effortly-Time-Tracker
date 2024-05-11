@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
-//todo check add whihout table (no table)
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TaskDTO {

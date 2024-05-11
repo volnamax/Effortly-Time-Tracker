@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 //todo add check then no project and task
-//todo add get requests
+//todo add get operations
 @Slf4j
 @Tag(name = "Tag-controller")
 @RestController

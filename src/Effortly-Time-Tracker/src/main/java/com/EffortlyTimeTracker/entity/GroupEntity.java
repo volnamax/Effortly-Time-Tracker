@@ -1,5 +1,4 @@
-// todo del fatch = lazy
-// todo del dto for service
+
 // todo check to all entity for controller and service
 
 

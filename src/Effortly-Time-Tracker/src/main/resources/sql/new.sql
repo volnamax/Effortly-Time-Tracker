@@ -29,7 +29,7 @@ CREATE TABLE public.user_app
     UNIQUE (email)
 );
 
--- Таблица todo-записей
+-- Таблица ltodo-записей
 CREATE TABLE public.todo_node
 (
     id_todo  SERIAL NOT NULL,
