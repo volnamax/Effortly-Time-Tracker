@@ -14,6 +14,7 @@ import java.util.Set;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TagResponseDTO {
+    Integer tagId;
     @NotBlank(message = "no name in tag")
     String name;
     String color;

@@ -13,6 +13,7 @@ import java.util.Set;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TaskResponseDTO {
+    Integer taskId;
     @NotBlank(message = "name task is empty")
     String name;
 

@@ -33,6 +33,7 @@ public interface TagMapper {
         project.setProjectId(projectId);
         return project;
     }
+
     default Integer getTaskIdFromTagDTO(TagCreateDTO tagDTO) {
         if (tagDTO == null) {
             return null;
@@ -52,11 +53,17 @@ public interface TagMapper {
     List<TagDTO> FullEntityToDto(List<TagEntity> entities);
 
 
-///response dto
+    ///response dto
 // Response DTO mapping
-@Mapping(source = "tagId", target = "projectID")
-@Mapping(source = "tasks", target = "tasks", qualifiedByName = "mapTaskIds")
-TagResponseDTO tagToTagResponseDTO(TagEntity tag);
+    @Mapping(source = "tagId", target = "projectID")
+    @Mapping(source = "tasks", target = "tasks", qualifiedByName = "mapTaskIds")
+    @Mapping(source = "tagId", target = "tagId")
+    TagResponseDTO tagToTagResponseDTO(TagEntity tag);
+
+    @Mapping(source = "tagId", target = "projectID")
+    @Mapping(source = "tasks", target = "tasks", qualifiedByName = "mapTaskIds")
+    @Mapping(source = "tagId", target = "tagId")
+    List<TagResponseDTO> tagToTagResponseDTO(List<TagEntity> tag);
 
     @Named("mapTaskIds")
     default Set<Integer> mapTaskIds(Set<TaskTagEntity> tasks) {
@@ -65,8 +72,6 @@ TagResponseDTO tagToTagResponseDTO(TagEntity tag);
                 .collect(Collectors.toSet()) : null;
     }
 }
-
-
 
 
 //

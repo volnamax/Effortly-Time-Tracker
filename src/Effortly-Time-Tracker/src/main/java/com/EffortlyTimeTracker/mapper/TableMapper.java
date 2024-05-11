@@ -32,12 +32,14 @@ public interface TableMapper {
     @Mapping(source = "project.projectId", target = "projectId")
     @Mapping(source = "status", target = "status")
     @Mapping(source = "tasks", target = "tasks")
+    @Mapping(source = "tableId", target = "tableId")
     TableResponseDTO toResponseDTO(TableEntity entity);
 
     // Mapping from Entity to ResponseDTO
     @Mapping(source = "project.projectId", target = "projectId")
     @Mapping(source = "status", target = "status")
     @Mapping(source = "tasks", target = "tasks")
+    @Mapping(source = "tableId", target = "tableId")
     List<TableResponseDTO> toResponseDTO(List<TableEntity> entity);
 
     // Helper method to map Status enum from string

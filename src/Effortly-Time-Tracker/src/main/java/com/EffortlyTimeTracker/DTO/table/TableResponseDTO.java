@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TableResponseDTO {
+    Integer tableId;
     @NotBlank(message = "Error table name is empty")
     String name;
 

@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //todo add check then no project and task
@@ -81,9 +82,12 @@ public class TagController {
     @Operation(summary = "Get all tag")
     @GetMapping("/get-all")
     @ResponseStatus(HttpStatus.OK)
-    public List<TagDTO> getAllTag() {
+    public List<TagResponseDTO> getAllTag() {
+        log.info("api/tag/get-all");
         List<TagEntity> tagEntities = tagService.getAllTag();
-        return tagMapper.FullEntityToDto(tagEntities);
+        log.info(" tag Entity: {}", tagEntities);
+        List<TagResponseDTO> tagResponseDTOS = tagMapper.tagToTagResponseDTO(tagEntities);
+        return tagResponseDTOS;
     }
 }
 
