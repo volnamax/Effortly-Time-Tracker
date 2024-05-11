@@ -40,6 +40,17 @@ public class TagEntity {
 //    @ManyToMany(mappedBy = "tag")
 //    Set<TaskEntity> tasks;
 
-    @OneToMany(mappedBy = "tag")
+    @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TaskTagEntity> tasks = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return "TagEntity{" +
+                "tagId=" + tagId +
+                ", name='" + name + '\'' +
+                ", color='" + color + '\'' +
+                ", project=" + project +
+                ", tasks=" + tasks +
+                '}';
+    }
 }

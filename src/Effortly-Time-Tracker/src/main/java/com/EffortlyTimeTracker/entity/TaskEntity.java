@@ -51,7 +51,7 @@ public class TaskEntity {
     @JsonBackReference
     TableEntity table;
 
-    @OneToMany(mappedBy = "task")
+    @OneToMany(mappedBy = "task",  cascade = CascadeType.ALL, orphanRemoval = true)
     Set<TaskTagEntity> tasks = new HashSet<>();
 
     // @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

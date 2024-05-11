@@ -1,7 +1,9 @@
 package com.EffortlyTimeTracker.service;
 
-import com.EffortlyTimeTracker.DTO.TagDTO;
-import com.EffortlyTimeTracker.entity.*;
+import com.EffortlyTimeTracker.entity.ProjectEntity;
+import com.EffortlyTimeTracker.entity.TagEntity;
+import com.EffortlyTimeTracker.entity.TaskEntity;
+import com.EffortlyTimeTracker.entity.TaskTagEntity;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.tag.TagNotFoundException;
 import com.EffortlyTimeTracker.exception.task.TaskNotFoundException;
@@ -15,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -38,7 +39,8 @@ public class TagService {
         log.info("add new task: {}", tagEntity.getName());
 
         // Находим проект по ID
-        ProjectEntity project = projectRepository.findById(tagEntity.getProject().getProjectId()).orElseThrow(() -> new ProjectNotFoundException(tagEntity.getProject().getProjectId()));
+        ProjectEntity project = projectRepository.findById(tagEntity.getProject().getProjectId()).orElseThrow(()
+                -> new ProjectNotFoundException(tagEntity.getProject().getProjectId()));
 
         TagEntity tag = tagRepository.save(tagEntity);
 
@@ -66,17 +68,12 @@ public class TagService {
     }
 
     public TagEntity getTagkById(Integer tagId) {
-        TagEntity tag = tagRepository.findById(tagId).orElseThrow(() -> new TagNotFoundException(tagId));
-        log.info("Get = " + tag);
-        return tag;
+        return tagRepository.findById(tagId).orElseThrow(() -> new TagNotFoundException(tagId));
     }
 
 
     public List<TagEntity> getAllTag() {
-        List<TagEntity> tag = tagRepository.findAll();
-        log.info("GetALL = " + tag);
-        return tag;
+        return tagRepository.findAll();
     }
-
 
 }

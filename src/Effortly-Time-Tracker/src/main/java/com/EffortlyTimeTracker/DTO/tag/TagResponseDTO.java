@@ -1,4 +1,5 @@
-package com.EffortlyTimeTracker.DTO;
+
+package com.EffortlyTimeTracker.DTO.tag;
 
 import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TaskEntity;
@@ -12,12 +13,12 @@ import java.util.Set;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TagCreateDTO {
-    @NotBlank
+public class TagResponseDTO {
+    @NotBlank(message = "no name in tag")
     String name;
     String color;
-    Integer taskId;
+    Set<Integer> tasks;
 
-    @NotNull(message = "Project id is null")
-    Integer projectId;
+    @NotNull(message = "Project must be provided")
+    Integer projectID;
 }

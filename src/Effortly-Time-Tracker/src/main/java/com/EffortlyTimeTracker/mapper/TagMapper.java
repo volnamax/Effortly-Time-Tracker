@@ -1,27 +1,29 @@
 package com.EffortlyTimeTracker.mapper;
 
 
-import com.EffortlyTimeTracker.DTO.TagCreateDTO;
+import com.EffortlyTimeTracker.DTO.tag.TagCreateDTO;
 
 
-
-import com.EffortlyTimeTracker.DTO.TagCreateDTO;
-import com.EffortlyTimeTracker.DTO.TagDTO;
+import com.EffortlyTimeTracker.DTO.tag.TagDTO;
+import com.EffortlyTimeTracker.DTO.tag.TagResponseDTO;
 import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TagEntity;
+import com.EffortlyTimeTracker.entity.TaskTagEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.Named;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface TagMapper {
     @Mapping(source = "projectId", target = "project")
-    TagEntity dtoToEntity(TagCreateDTO dto);
+    TagEntity toEntity(TagCreateDTO dto);
 
     @Mapping(source = "project.projectId", target = "projectId")
-    TagCreateDTO entityToDto(TagEntity entity);
+    TagCreateDTO toDto(TagEntity entity);
 
     default ProjectEntity map(Integer projectId) {
         if (projectId == null) {
@@ -47,15 +49,29 @@ public interface TagMapper {
     @Mapping(target = "tasks", ignore = true)
     TagEntity FullDtoToEntity(TagDTO dto);
 
-    List<TagDTO> entityListToDtoList(List<TagEntity> entities);
+    List<TagDTO> FullEntityToDto(List<TagEntity> entities);
 
+
+///response dto
+// Response DTO mapping
+@Mapping(source = "tagId", target = "projectID")
+@Mapping(source = "tasks", target = "tasks", qualifiedByName = "mapTaskIds")
+TagResponseDTO tagToTagResponseDTO(TagEntity tag);
+
+    @Named("mapTaskIds")
+    default Set<Integer> mapTaskIds(Set<TaskTagEntity> tasks) {
+        return tasks != null ? tasks.stream()
+                .map(taskTagEntity -> taskTagEntity.getTask().getTaskId())
+                .collect(Collectors.toSet()) : null;
+    }
 }
+
 
 
 
 //
 //import com.EffortlyTimeTracker.DTO.table.TableDTO;
-//import com.EffortlyTimeTracker.DTO.TagDTO;
+//import com.EffortlyTimeTracker.DTO.tag.TagDTO;
 //import com.EffortlyTimeTracker.entity.ProjectEntity;
 //import com.EffortlyTimeTracker.entity.TagEntity;
 //import jdk.dynalink.linker.LinkerServices;
