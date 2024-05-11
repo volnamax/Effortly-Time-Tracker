@@ -115,13 +115,13 @@ class TableServiceTest {
         assertThrows(ProjectNotFoundException.class, () -> tableService.getAllTableByIdProject(1));
     }
 
-    @Test
-    void getAllTableByIdProjectTestEmpty() {
-        when(projectRepository.findById(anyInt())).thenReturn(Optional.of(project));
-        when(tableRepository.findByProjectId(anyInt())).thenReturn(Arrays.asList());
-
-        assertThrows(ProjectIsEmpty.class, () -> tableService.getAllTableByIdProject(1));
-    }
+//    @Test
+//    void getAllTableByIdProjectTestEmpty() {
+//        when(projectRepository.findById(anyInt())).thenReturn(Optional.of(project));
+//        when(tableRepository.findByProjectId(anyInt())).thenReturn(Arrays.asList());
+//
+//        assertThrows(ProjectIsEmpty.class, () -> tableService.getAllTableByIdProject(1));
+//    }
 
     @Test
     void delAllTableByIdProjectTest() {

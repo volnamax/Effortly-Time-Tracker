@@ -36,9 +36,6 @@ class UserServiceTest {
     private RoleEntity roleEntity;
 
 
-    @Test
-    void getRoleByName() {
-    }
 
     @BeforeEach
     void setUp() {
