@@ -32,7 +32,7 @@ public class GroupEntity {
     @Column(name = "description", nullable = true)
     String description;
 
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<GroupMermberEntity> members = new HashSet<>();
 
     @OneToOne

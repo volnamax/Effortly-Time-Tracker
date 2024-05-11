@@ -4,7 +4,7 @@ import com.EffortlyTimeTracker.DTO.project.ProjectCreateDTO;
 import com.EffortlyTimeTracker.DTO.project.ProjectDTO;
 import com.EffortlyTimeTracker.DTO.project.ProjectResponseDTO;
 import com.EffortlyTimeTracker.entity.ProjectEntity;
-import com.EffortlyTimeTracker.mapper.EntityMapper;
+
 import com.EffortlyTimeTracker.mapper.ProjectMapper;
 import com.EffortlyTimeTracker.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,13 +26,11 @@ import java.util.List;
 public class ProjectController {
     private final ProjectService projectService;
     private final ProjectMapper projectMapper;
-    private final EntityMapper mapper;
 
     @Autowired
-    public ProjectController(ProjectService projectService, ProjectMapper projectMapper, EntityMapper mapper) {
+    public ProjectController(ProjectService projectService, ProjectMapper projectMapper) {
         this.projectService = projectService;
         this.projectMapper = projectMapper;
-        this.mapper = mapper;
     }
 
     @Operation(summary = "Add project", description = "need user id and name")

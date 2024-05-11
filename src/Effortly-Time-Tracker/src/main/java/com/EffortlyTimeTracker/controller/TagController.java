@@ -4,7 +4,6 @@ import com.EffortlyTimeTracker.DTO.tag.TagCreateDTO;
 import com.EffortlyTimeTracker.DTO.tag.TagDTO;
 import com.EffortlyTimeTracker.DTO.tag.TagResponseDTO;
 import com.EffortlyTimeTracker.entity.TagEntity;
-import com.EffortlyTimeTracker.mapper.EntityMapper;
 import com.EffortlyTimeTracker.mapper.TagMapper;
 import com.EffortlyTimeTracker.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;

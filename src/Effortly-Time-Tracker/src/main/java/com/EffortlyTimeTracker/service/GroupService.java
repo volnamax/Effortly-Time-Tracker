@@ -55,7 +55,7 @@ public class GroupService {
 
         GroupMermberEntity groupMermberEntity = new GroupMermberEntity();
         groupMermberEntity.setGroup(groupEntity);
-        groupMermberEntity.setRole(Role.USER);
+        groupMermberEntity.setRole(Role.ADMIN);
         groupMermberEntity.setUser(project.getUserProject());
 
         groupMemberRepository.save(groupMermberEntity);
@@ -73,16 +73,12 @@ public class GroupService {
     }
 
     public GroupEntity getGroupById(Integer id) {
-        GroupEntity group = groupRepository.findById(id)
+        return groupRepository.findById(id)
                 .orElseThrow(() -> new GroupNotFoundException(id));
-        log.info("Get = " + group);
-
-        return group;
     }
 
     public List<GroupEntity> getAllGroup() {
-        List<GroupEntity> groups = groupRepository.findAll();
-        return groups;
+        return groupRepository.findAll();
     }
 }
 
