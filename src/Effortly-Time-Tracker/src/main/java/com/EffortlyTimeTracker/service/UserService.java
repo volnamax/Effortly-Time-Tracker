@@ -1,9 +1,13 @@
 package com.EffortlyTimeTracker.service;
 
-import com.EffortlyTimeTracker.DTO.UserDTO;
-import com.EffortlyTimeTracker.entity.User;
+import com.EffortlyTimeTracker.entity.RoleEntity;
+import com.EffortlyTimeTracker.entity.UserEntity;
+import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
+import com.EffortlyTimeTracker.exception.user.UserNotRoleException;
+import com.EffortlyTimeTracker.repository.RoleRepository;
 import com.EffortlyTimeTracker.repository.UserRepository;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,26 +16,30 @@ import java.util.List;
 
 @Service
 @Slf4j
+
 public class UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(@NonNull UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
-    public User addUser(UserDTO userDTO) {
-        User user = userRepository.save(User.builder()
-                        .userName(userDTO.getUserName())
-                        .userSecondname(userDTO.getUserSecondname())
-                        .email(userDTO.getEmail())
-                        .description(userDTO.getDescription())
-                        .role(User.Role.valueOf(userDTO.getRole()))
-                        .dataLastLogin(userDTO.getDataLastLogin())
-                        .dataSignIn(userDTO.getDataSignIn())
-                .build());
-        log.info("New" + user);
-        return user;
+
+    public RoleEntity getRoleByName(String roleName) {
+        return roleRepository.findByName(Role.valueOf(roleName));
+    }
+
+    public UserEntity addUser(@NonNull UserEntity userEntity) {
+        RoleEntity role = getRoleByName(userEntity.getRole().getName().name());
+        if (role == null) {
+            throw new UserNotRoleException();
+        }
+        userEntity.setRole(role);
+        return userRepository.save(userEntity);
+
     }
 
     public void delUserById(Integer id) {
@@ -39,23 +47,14 @@ public class UserService {
             throw new UserNotFoudException(id);
         }
         userRepository.deleteById(id);
-        log.info("user with id {} delete", id);
     }
 
-    public User getUserById(Integer id) {
-        User user  = userRepository.findById(id)
+    public UserEntity getUserById(Integer id) {
+        return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoudException(id));
-        log.info("Get = " + user);
-
-        return user;
     }
 
-    public List<User> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        log.info("GetALL = " + users);
-        return users;
+    public List<UserEntity> getAllUsers() {
+        return userRepository.findAll();
     }
-
-
-
 }
