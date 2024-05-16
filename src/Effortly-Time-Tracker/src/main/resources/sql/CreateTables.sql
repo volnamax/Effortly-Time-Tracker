@@ -35,7 +35,7 @@ CREATE TABLE public.user_app
     user_name        VARCHAR(255) NOT NULL,
     user_secondname  VARCHAR(255) NOT NULL,
 
-    role_id          INTEGER,
+    role_id          INTEGER NOT NULL,
     FOREIGN KEY (role_id) REFERENCES public.roles (id_role)
 );
 
@@ -65,7 +65,7 @@ CREATE TABLE public.todo_node
     status   VARCHAR(255),
     due_data TIMESTAMP(6),
 
-    user_id  INTEGER,
+    user_id  INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES public.user_app (id_user)
 );
 
@@ -88,7 +88,7 @@ CREATE TABLE public.project
     name        VARCHAR(255) NOT NULL,
     description VARCHAR(255),
 
-    user_id     INTEGER,
+    user_id     INTEGER NOT NULL ,
     FOREIGN KEY (user_id) REFERENCES public.user_app (id_user)
 );
 
@@ -107,7 +107,7 @@ CREATE TABLE public.group_user
     name        VARCHAR(255) NOT NULL,
     description VARCHAR(255),
 
-    project_id  INTEGER UNIQUE,
+    project_id  INTEGER UNIQUE NOT NULL,
     FOREIGN KEY (project_id) REFERENCES public.project (id_project)
 );
 
@@ -125,7 +125,7 @@ CREATE TABLE public.group_member
 
     group_id INTEGER NOT NULL,
     user_id  INTEGER NOT NULL,
-    role     VARCHAR(255),
+    role     VARCHAR(255) NOT NULL,
 
     FOREIGN KEY (group_id) REFERENCES public.group_user (id_group),
     FOREIGN KEY (user_id) REFERENCES public.user_app (id_user)
@@ -143,9 +143,9 @@ CREATE TABLE public.table_app
 
     description VARCHAR(255),
     name        VARCHAR(255) NOT NULL,
-    status      VARCHAR(255),
+    status      VARCHAR(255) NOT NULL,
 
-    project_id  INTEGER,
+    project_id  INTEGER NOT NULL,
     FOREIGN KEY (project_id) REFERENCES project (id_project)
 );
 
@@ -173,7 +173,7 @@ CREATE TABLE public.task
     time_add_task TIMESTAMP(6),
     time_end_task TIMESTAMP(6),
 
-    table_id      INTEGER,
+    table_id      INTEGER NOT NULL ,
     FOREIGN KEY (table_id) REFERENCES public.table_app (id_table)
 );
 
@@ -196,7 +196,7 @@ CREATE TABLE public.tag
     color      VARCHAR(255),
     name       VARCHAR(255) NOT NULL,
 
-    project_id INTEGER,
+    project_id INTEGER NOT NULL ,
     FOREIGN KEY (project_id) REFERENCES project (id_project)
 );
 
