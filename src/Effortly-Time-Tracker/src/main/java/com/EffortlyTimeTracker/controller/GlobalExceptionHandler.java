@@ -1,5 +1,5 @@
 package com.EffortlyTimeTracker.controller;
-//todo add new handlers
+
 import com.EffortlyTimeTracker.exception.BaseException;
 import com.EffortlyTimeTracker.exception.group.GroupNotFoundException;
 import com.EffortlyTimeTracker.exception.group.InvalidGroupException;
@@ -13,8 +13,10 @@ import com.EffortlyTimeTracker.exception.task.InvalidTaskException;
 import com.EffortlyTimeTracker.exception.task.TaskNotFoundException;
 import com.EffortlyTimeTracker.exception.todo.InvalidTodoException;
 import com.EffortlyTimeTracker.exception.todo.TodoNotFoudException;
+import com.EffortlyTimeTracker.exception.todo.TodoNodeIsEmpty;
 import com.EffortlyTimeTracker.exception.user.InvalidUserException;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
+import com.EffortlyTimeTracker.exception.user.UserNotRoleException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -117,6 +119,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
+    // Add handlers for уtodo-related exceptions
     @ExceptionHandler(InvalidTodoException.class)
     public ResponseEntity<?> handleInvalidTodoException(InvalidTodoException ex) {
         log.error("Invalid todo exception", ex);
@@ -127,6 +130,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleTodoNotFoundException(TodoNotFoudException ex) {
         log.error("Todo not found exception", ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(TodoNodeIsEmpty.class)
+    public ResponseEntity<?> handleTodoNodeIsEmpty(TodoNodeIsEmpty ex) {
+        log.error("Todo node is empty exception", ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
     // Add handlers for group-related exceptions
@@ -142,5 +151,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
+    // Add handlers for user role-related exceptions
+    @ExceptionHandler(UserNotRoleException.class)
+    public ResponseEntity<?> handleUserNotRoleException(UserNotRoleException ex) {
+        log.error("User not role exception", ex);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    }
 }
-
