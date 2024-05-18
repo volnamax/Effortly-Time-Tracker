@@ -250,6 +250,8 @@ public class IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
     }
+
+
     @Test
     @Order(20)
     public void testAddTag() throws Exception {
@@ -277,6 +279,7 @@ public class IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
     }
+
 
     @Test
     @Order(23)
@@ -321,6 +324,35 @@ public class IntegrationTest {
         mockMvc.perform(delete("/api/group/del")
                         .param("id", "1"))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @Order(28)
+    public void testStartTaskTimer() throws Exception {
+        mockMvc.perform(post("/api/task/start-timer")
+                        .param("taskId", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.startTimer").isNotEmpty());
+    }
+
+    @Test
+    @Order(29)
+    public void testStopTaskTimer() throws Exception {
+        mockMvc.perform(post("/api/task/stop-timer")
+                        .param("taskId", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.startTimer").isEmpty())
+                .andExpect(jsonPath("$.sumTimer").isNotEmpty());
+    }
+
+    @Test
+    @Order(30)
+    public void testCompleteTask() throws Exception {
+        mockMvc.perform(post("/api/task/complete")
+                        .param("taskId", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("NO_ACTIVE"))
+                .andExpect(jsonPath("$.timeEndTask").isNotEmpty());
     }
 
 

@@ -114,5 +114,48 @@ public class TaskController {
 
         taskService.delAllTaskByIdTable(id);
     }
+    @Operation(summary = "Start timer", description = "need task id")
+    @PostMapping("/start-timer")
+    @ResponseStatus(HttpStatus.OK)
+    public TaskResponseDTO startTaskTimer(@RequestParam Integer taskId) {
+        log.info("api/task/start-timer");
+        log.info("taskId: {}", taskId);
 
+        TaskEntity task = taskService.startTaskTimer(taskId);
+        log.info("task: {}", task);
+
+        TaskResponseDTO taskResponseDTO =  taskMapper.toResponseDTO(task);
+        log.info("taskResponseDTO: {}", taskResponseDTO);
+        return taskResponseDTO;
+    }
+
+    @Operation(summary = "stop timer", description = "need task id")
+    @PostMapping("/stop-timer")
+    @ResponseStatus(HttpStatus.OK)
+    public TaskResponseDTO stopTaskTimer(@RequestParam Integer taskId) {
+        log.info("api/task/stop-timer");
+        log.info("taskId: {}", taskId);
+
+        TaskEntity task = taskService.stopTaskTimer(taskId);
+        log.info("task: {}", task);
+
+        TaskResponseDTO taskResponseDTO =  taskMapper.toResponseDTO(task);
+        log.info("taskResponseDTO: {}", taskResponseDTO);
+        return taskResponseDTO;
+    }
+
+    @Operation(summary = "Complete timer", description = "need task id")
+    @PostMapping("/complete")
+    @ResponseStatus(HttpStatus.OK)
+    public TaskResponseDTO completeTask(@RequestParam Integer taskId) {
+        log.info("api/task/complete");
+        log.info("taskId: {}", taskId);
+
+        TaskEntity task = taskService.completeTask(taskId);
+        log.info("task: {}", task);
+
+        TaskResponseDTO taskResponseDTO =  taskMapper.toResponseDTO(task);
+        log.info("taskResponseDTO: {}", taskResponseDTO);
+        return taskResponseDTO;
+    }
 }

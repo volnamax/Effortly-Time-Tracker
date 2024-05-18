@@ -69,5 +69,20 @@ public class TaskEntity {
 //    private User createdBy;
 
 
+    @Override
+    public String toString() {
+        return "TaskEntity{" +
+                "taskId=" + taskId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                ", sumTimer=" + sumTimer +
+                ", startTimer=" + startTimer +
+                ", timeAddTask=" + timeAddTask +
+                ", timeEndTask=" + timeEndTask +
+                ", table=" + table +
+                ", tasks=" + tasks +
+                '}';
+    }
 }
 
