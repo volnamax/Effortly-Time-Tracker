@@ -38,6 +38,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Add user for dto obj",
             description = "need name , sname, email, password, role (ADMIN, USER, GUEST)")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserResponseDTO> addUser(@Valid @RequestBody UserCreateDTO userCreateDTO) {
         log.info("Add user: {}", userCreateDTO);
 
@@ -55,6 +56,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Dell user by id",
             description = "need id")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteUser(@RequestParam(required = true) Integer id) {
         log.info("Delete user by id: {}", id);
         userService.delUserById(id);
@@ -64,6 +66,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get user by id",
             description = "need id")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public UserResponseDTO getUser(@RequestParam(required = true) Integer id) {
         log.info("Get user by id: {}", id);
 
@@ -87,6 +90,7 @@ public class UserController {
 
     //todo
     @GetMapping("/api/user")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserEntity> getUserByEmail(@RequestParam String email) {
         Optional<UserEntity> user = userService.getUserByEmail(email);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());

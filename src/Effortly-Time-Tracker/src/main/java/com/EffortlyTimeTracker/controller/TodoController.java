@@ -1,5 +1,7 @@
 package com.EffortlyTimeTracker.controller;
 
+//todo role check
+
 import com.EffortlyTimeTracker.DTO.todo.TodoNodeDTO;
 import com.EffortlyTimeTracker.DTO.todo.TodoNodeResponseDTO;
 import com.EffortlyTimeTracker.entity.TodoNodeEntity;
@@ -12,10 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @Slf4j
 @Tag(name = "TODO-controller")
 @RestController
@@ -34,6 +36,7 @@ public class TodoController {
             "priority(IMPORTANT_URGENTLY, NO_IMPORTANT_URGENTLY, IMPORTANT_NO_URGENTLY, NO_IMPORTANT_NO_URGENTLY)")
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
     public ResponseEntity<TodoNodeResponseDTO> addTodo(@Valid @RequestBody TodoNodeDTO todoNodeDTO) {
         TodoNodeEntity todoNodeEntity = todoNodeMapper.toEntity(todoNodeDTO);
         log.info("Add todo: {}", todoNodeEntity);
@@ -49,6 +52,7 @@ public class TodoController {
     @Operation(summary = "Dell todo by id", description = "need id")
     @DeleteMapping("/del")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
     public void delTodo(@RequestParam(required = true) Integer TodoId) {
         log.info("Del todo: {}", TodoId);
         todoService.delTodoById(TodoId);
@@ -57,6 +61,7 @@ public class TodoController {
     @Operation(summary = "Dell all todo by user id", description = "need user id")
     @DeleteMapping("/del-by-user-id")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
     public void delAllTodoBuUserID(@RequestParam(required = true) Integer userId) {
         log.info("Del all todo by user: {}", userId);
         todoService.delAllTodoByIdUser(userId);
@@ -65,6 +70,7 @@ public class TodoController {
     @Operation(summary = "Get all todo by id user")
     @GetMapping("/get-all-by-user-id")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST', 'ROLE_ADMIN')")
     public List<TodoNodeResponseDTO> getTodoAll(Integer id) {
         log.info("Get todo by id: {}", id);
         List<TodoNodeEntity> resTodoNodeEntity = todoService.getAllTodoByIdUser(id);
@@ -77,6 +83,7 @@ public class TodoController {
     @Operation(summary = "Get all todo")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/get-all")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<TodoNodeResponseDTO> getTodoAll() {
         List<TodoNodeEntity> resTodoNodeEntity = todoService.getAllTodo();
         log.info("Response: {}", resTodoNodeEntity);

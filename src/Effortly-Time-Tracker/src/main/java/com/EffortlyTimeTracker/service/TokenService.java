@@ -54,6 +54,7 @@ public class TokenService {
         return generateToken(auth);
     }
 
+    //todo refresh in the futer
     public String refreshToken(Authentication authentication, Role role) {
         Instant now = Instant.now();
         return jwtEncoder.encode(JwtEncoderParameters.from(JwtClaimsSet.builder()
@@ -62,6 +63,8 @@ public class TokenService {
                         .expiresAt(now.plus(1, ChronoUnit.DAYS))
                         .subject(authentication.getName())
                         .claim("scope", role.toString())
+                        .claim("role", role.toString()) // Добавляем роль в токен
+
                         .build()))
                 .getTokenValue();
     }
