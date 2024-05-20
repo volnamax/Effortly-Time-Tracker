@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
-
+//Класс TokenService обрабатывает генерацию токена JWT и извлечение пользователем данных из токена.
 @Service
 @RequiredArgsConstructor
 public class TokenService {

@@ -1,14 +1,13 @@
 
 package com.EffortlyTimeTracker.mapper;
 
-import com.EffortlyTimeTracker.DTO.userDTO.UserCreateDTO;
-import com.EffortlyTimeTracker.DTO.userDTO.UserResponseDTO;
+import com.EffortlyTimeTracker.DTO.user.UserCreateDTO;
+import com.EffortlyTimeTracker.DTO.user.UserResponseDTO;
 import com.EffortlyTimeTracker.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.List;
-import java.util.Optional;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {

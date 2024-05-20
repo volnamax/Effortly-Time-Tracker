@@ -1,4 +1,4 @@
-package com.EffortlyTimeTracker.DTO.userDTO;
+package com.EffortlyTimeTracker.DTO.user;
 
 
 import lombok.AccessLevel;

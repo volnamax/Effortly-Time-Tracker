@@ -25,7 +25,7 @@ public class SwagerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-//                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .servers(List.of(new Server().url("http://localhost:8080")))
                 .info(new io.swagger.v3.oas.models.info.Info()
                         .title("Effortly API")
