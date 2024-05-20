@@ -43,11 +43,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                //todo del /api/**
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/login", "/api/register", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                        .requestMatchers("/api/user/**").hasRole("ADMIN")
-                        .requestMatchers("/api/todo/**").hasAnyRole("USER", "GUEST", "ADMIN")
+                        .requestMatchers("/api/login", "/api/register", "/v3/api-docs/**", "/swagger-ui/**", "/api/**").permitAll()
+//                        .requestMatchers("/api/user/**").hasRole("ADMIN")
+//                        todo auth
+//                        .requestMatchers("/api/todo/**").hasAnyRole("USER", "GUEST", "ADMIN")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

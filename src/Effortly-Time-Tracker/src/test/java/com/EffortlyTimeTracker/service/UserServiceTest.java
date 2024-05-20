@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -35,11 +36,14 @@ class UserServiceTest {
     private UserEntity userEntity;
     private RoleEntity roleEntity;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
 
 
     @BeforeEach
     void setUp() {
-        userService = new UserService(userRepository, roleRepository);
+        userService = new UserService(userRepository, roleRepository, passwordEncoder);
 
         userEntity = new UserEntity();
         roleEntity = new RoleEntity();

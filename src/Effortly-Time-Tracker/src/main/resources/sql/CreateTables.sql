@@ -217,4 +217,3 @@ CREATE TABLE public.task_tag
     FOREIGN KEY (tag_id) REFERENCES public.tag (id_tags),
     FOREIGN KEY (task_id) REFERENCES public.task (id_task)
 );
-

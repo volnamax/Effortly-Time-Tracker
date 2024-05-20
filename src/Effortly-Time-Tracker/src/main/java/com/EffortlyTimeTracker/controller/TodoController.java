@@ -36,7 +36,6 @@ public class TodoController {
             "priority(IMPORTANT_URGENTLY, NO_IMPORTANT_URGENTLY, IMPORTANT_NO_URGENTLY, NO_IMPORTANT_NO_URGENTLY)")
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
     public ResponseEntity<TodoNodeResponseDTO> addTodo(@Valid @RequestBody TodoNodeDTO todoNodeDTO) {
         TodoNodeEntity todoNodeEntity = todoNodeMapper.toEntity(todoNodeDTO);
         log.info("Add todo: {}", todoNodeEntity);
@@ -52,7 +51,6 @@ public class TodoController {
     @Operation(summary = "Dell todo by id", description = "need id")
     @DeleteMapping("/del")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
     public void delTodo(@RequestParam(required = true) Integer TodoId) {
         log.info("Del todo: {}", TodoId);
         todoService.delTodoById(TodoId);
@@ -61,7 +59,6 @@ public class TodoController {
     @Operation(summary = "Dell all todo by user id", description = "need user id")
     @DeleteMapping("/del-by-user-id")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
     public void delAllTodoBuUserID(@RequestParam(required = true) Integer userId) {
         log.info("Del all todo by user: {}", userId);
         todoService.delAllTodoByIdUser(userId);
@@ -70,7 +67,7 @@ public class TodoController {
     @Operation(summary = "Get all todo by id user")
     @GetMapping("/get-all-by-user-id")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST', 'ROLE_ADMIN')")
+//    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST', 'ROLE_ADMIN')")
     public List<TodoNodeResponseDTO> getTodoAll(Integer id) {
         log.info("Get todo by id: {}", id);
         List<TodoNodeEntity> resTodoNodeEntity = todoService.getAllTodoByIdUser(id);
@@ -83,7 +80,8 @@ public class TodoController {
     @Operation(summary = "Get all todo")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/get-all")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //todo auth
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<TodoNodeResponseDTO> getTodoAll() {
         List<TodoNodeEntity> resTodoNodeEntity = todoService.getAllTodo();
         log.info("Response: {}", resTodoNodeEntity);
