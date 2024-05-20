@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -75,7 +76,7 @@ public class UserController {
     @GetMapping("/get-all")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get all user")
-//    @PreAuthorize("hasRole('ADMIN')") // Убедитесь, что у пользователя есть нужная роль
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<UserResponseDTO> getUser() {
         log.info("Get all user");
         List<UserResponseDTO> userResponseDTOS = userMapper.toDtoListResponse(userService.getAllUsers());

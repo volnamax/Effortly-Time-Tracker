@@ -42,6 +42,7 @@ public class TokenService {
                 .expiresAt(now.plus(1, ChronoUnit.DAYS))
                 .subject(authentication.getName())
                 .claim("scope", scope)
+                .claim("role", scope) // Добавляем роль в токен
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
