@@ -1,38 +1,76 @@
 package com.EffortlyTimeTracker.config;
 
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 
 @Configuration
 public class SecurityConfig {
-    @Bean // Определяет метод как источник бина, который управляется контейнером Spring
+
+    private final UserDetailsService userDetailsService;
+    private final RsaKeyProperties rsaKeyProperties;
+
+    public SecurityConfig(UserDetailsService userDetailsService, RsaKeyProperties rsaKeyProperties) {
+        this.userDetailsService = userDetailsService;
+        this.rsaKeyProperties = rsaKeyProperties;
+    }
+    //Компонент SecurityFilterChain: Настраивает цепочку фильтров безопасности для отключения CSRF, авторизации запросов и настройки управления сеансами без состояния.
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .authorizeHttpRequests(
-                        auth -> auth.requestMatchers("/api/auth").permitAll()   // Разрешает доступ к пути /api/auth без аутентификации
-                                .requestMatchers("/api/user/get-all").hasRole("ADMIN") // Доступ к /api/user/get-all только для пользователей с ролью ADMIN
-                                .anyRequest().authenticated()
-
-                ).sessionManagement(
-                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Устанавливает политику управления сессиями как STATELESS, что означает отсутствие хранения состояния сессий на сервере.
-                ).oauth2ResourceServer(
-                        resourceServer -> resourceServer.jwt(
-                                jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(
-                                        keycloalAuthConvertre() // Использование пользовательского конвертера для преобразования JWT в объект аутентификации
-                                )
-                        )
-                )
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/login", "/api/register", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers("/api/**").authenticated())
+                .userDetailsService(userDetailsService)
+                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
-
-    private Converter<Jwt, ? extends AbstractAuthenticationToken> keycloalAuthConvertre() {
-        return null;
+    //Компонент JwtDecoder: Настраивает декодирование JWT с использованием открытого ключа RSA.
+    @Bean
+    public JwtDecoder jwtDecoder() throws Exception {
+        return NimbusJwtDecoder.withPublicKey(rsaKeyProperties.getPublicKey()).build();
+    }
+    //Компонент JwtEncoder: Настраивает кодировку JWT с использованием открытого и закрытого ключей RSA.
+    @Bean
+    public JwtEncoder jwtEncoder() throws Exception {
+        RSAPublicKey publicKey = rsaKeyProperties.getPublicKey();
+        RSAPrivateKey privateKey = rsaKeyProperties.getPrivateKey();
+        RSAKey rsaKey = new RSAKey.Builder(publicKey).privateKey(privateKey).build();
+        JWKSet jwkSet = new JWKSet(rsaKey);
+        JWKSource<SecurityContext> jwkSource = new ImmutableJWKSet<>(jwkSet);
+        return new NimbusJwtEncoder(jwkSource);
+    }
+    //Компонент AuthenticationManager: Настраивает диспетчер аутентификации, который будет использоваться для аутентификации.
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+//    Компонент PasswordEncoder: Настраивает кодировщик паролей с помощью BCrypt.
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

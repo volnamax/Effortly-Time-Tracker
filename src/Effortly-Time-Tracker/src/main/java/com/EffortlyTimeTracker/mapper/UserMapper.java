@@ -8,6 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -20,6 +21,7 @@ public interface UserMapper {
 
     @Mapping(source = "role.name", target = "role") // Обратное преобразование для role
     UserResponseDTO toDTOResponse(UserEntity entity);
+
 
     List<UserResponseDTO> toDtoListResponse(List<UserEntity> entities);
 
