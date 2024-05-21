@@ -47,6 +47,7 @@ public class IntegrationTest {
     public MockMvc mockMvc;
 
     @Autowired
+
     private JdbcTemplate jdbcTemplate;
 
     private String authToken;
