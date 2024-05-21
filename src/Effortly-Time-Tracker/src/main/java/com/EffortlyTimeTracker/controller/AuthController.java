@@ -3,6 +3,8 @@ package com.EffortlyTimeTracker.controller;
 import com.EffortlyTimeTracker.DTO.auth.LoginRequestDto;
 import com.EffortlyTimeTracker.DTO.auth.RegisterRequestDto;
 import com.EffortlyTimeTracker.DTO.auth.TokenResponse;
+import com.EffortlyTimeTracker.DTO.user.UserCreateDTO;
+import com.EffortlyTimeTracker.DTO.user.UserResponseDTO;
 import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.mapper.UserMapper;
 import com.EffortlyTimeTracker.service.TokenService;
@@ -10,8 +12,11 @@ import com.EffortlyTimeTracker.service.TokenService;
 import com.EffortlyTimeTracker.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,7 +37,7 @@ public class AuthController {
 
     @Operation(summary = "Получение токена авторизации")
     @PostMapping("/login")
-        public TokenResponse loginHandler(@RequestBody LoginRequestDto request) {
+    public TokenResponse loginHandler(@RequestBody LoginRequestDto request) {
         log.info("Got request on /api/v1/login");
         log.info("Got login request for '{}'", request.login());
         log.info("Request body: {}", request);
@@ -52,16 +57,26 @@ public class AuthController {
         }
     }
 
-    @Operation(summary = "Регистрация нового пользователя")
+    @Operation(summary = "registration new user", description = "need name , sname, email, password, role (ADMIN, USER, GUEST)")
     @PostMapping("/register")
-    public TokenResponse registrationHandler(@RequestBody RegisterRequestDto request) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<TokenResponse> registrationHandler(@Valid @RequestBody UserCreateDTO request) {
         log.info("Got request on /api/v1/register");
-        log.info("Got registration request for '{}'", request.login());
+        log.info("Got registration request for '{}'", request.getEmail());
         log.info("Request body: {}", request);
-        var user = userService.addUser(userMapper.toEntity(request.user()));
-        var token = getTokenByLoginAndPassword(request.login(), request.password());
+        UserEntity userEntity  = userMapper.toEntity(request);
+        log.info("Userentity = {}", userEntity);
+
+        UserEntity user = userService.addUser(userEntity);
+        log.info("added user in  db = {}", user);
+
+        var token = getTokenByLoginAndPassword(request.getEmail(), request.getPasswordHash());
         log.info("Generated token: {}", token);
-        return new TokenResponse(token, userMapper.toDTOResponse(user));
+
+        UserResponseDTO responseDTO= userMapper.toDTOResponse(user);
+        log.info("Generated responseDTO = {}", responseDTO);
+
+        return new ResponseEntity<>(new TokenResponse(token, responseDTO), HttpStatus.CREATED);
     }
 
     //todo
