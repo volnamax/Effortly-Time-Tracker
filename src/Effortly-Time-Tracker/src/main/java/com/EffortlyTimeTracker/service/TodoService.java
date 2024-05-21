@@ -9,6 +9,9 @@ import com.EffortlyTimeTracker.repository.TodoRepository;
 import com.EffortlyTimeTracker.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,6 +38,13 @@ public class TodoService {
         }
         todoRepository.deleteById(id);
     }
+    public TodoNodeEntity getTodoById(Integer id) {
+        if (!todoRepository.existsById(id)) {
+            throw new TodoNotFoudException(id);
+        }
+        return todoRepository.findById(id).orElseThrow(() -> new TodoNotFoudException(id));
+    }
+
 
     public void delAllTodoByIdUser(Integer userId) {
         UserEntity user = userRepository.findById(userId)
@@ -66,4 +76,5 @@ public class TodoService {
         }
         return userTodos;
     }
+
 }

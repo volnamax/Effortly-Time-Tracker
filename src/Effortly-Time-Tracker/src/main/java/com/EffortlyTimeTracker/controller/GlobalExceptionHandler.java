@@ -28,6 +28,12 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    // middleware err
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
     // Add handlers for user-related exceptions
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)

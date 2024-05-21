@@ -7,6 +7,7 @@ import com.EffortlyTimeTracker.DTO.todo.TodoNodeResponseDTO;
 import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import com.EffortlyTimeTracker.mapper.TodoNodeMapper;
 import com.EffortlyTimeTracker.service.TodoService;
+import com.EffortlyTimeTracker.service.middlewareOwn.CheckOwner;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -53,24 +54,25 @@ public class TodoController {
     @DeleteMapping("/del")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
-    public void delTodo(@RequestParam(required = true) Integer TodoId) {
-        log.info("Del todo: {}", TodoId);
-        todoService.delTodoById(TodoId);
+    public void delTodo(@RequestParam(required = true) Integer id) {
+        log.info("Del todo: {}", id);
+        todoService.delTodoById(id);
     }
 
     @Operation(summary = "Dell all todo by user id", description = "need user id")
     @DeleteMapping("/del-by-user-id")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
-    public void delAllTodoBuUserID(@RequestParam(required = true) Integer userId) {
-        log.info("Del all todo by user: {}", userId);
-        todoService.delAllTodoByIdUser(userId);
+    public void delAllTodoBuUserID(@RequestParam(required = true) Integer id) {
+        log.info("Del all todo by user: {}", id);
+        todoService.delAllTodoByIdUser(id);
     }
 
     @Operation(summary = "Get all todo by id user")
     @GetMapping("/get-all-by-user-id")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
+    @CheckOwner
     public List<TodoNodeResponseDTO> getTodoAll(Integer id) {
         log.info("Get todo by id: {}", id);
         List<TodoNodeEntity> resTodoNodeEntity = todoService.getAllTodoByIdUser(id);
@@ -78,20 +80,6 @@ public class TodoController {
         List<TodoNodeResponseDTO> todoNodeResponseDTOS = todoNodeMapper.toDtoResponse(resTodoNodeEntity);
         log.info("Response: {}", todoNodeResponseDTOS);
         return todoNodeResponseDTOS;
-    }
-
-    @Operation(summary = "Get all todo")
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/get-all")
-    //todo auth
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public List<TodoNodeResponseDTO> getTodoAll() {
-        List<TodoNodeEntity> resTodoNodeEntity = todoService.getAllTodo();
-        log.info("Response: {}", resTodoNodeEntity);
-        List<TodoNodeResponseDTO> todoNodeResponseDTOS = todoNodeMapper.toDtoResponse(resTodoNodeEntity);
-        log.info("Response: {}", todoNodeResponseDTOS);
-        return todoNodeResponseDTOS;
-
     }
 
 }
