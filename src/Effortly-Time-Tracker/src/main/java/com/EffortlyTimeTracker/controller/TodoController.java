@@ -1,6 +1,6 @@
 package com.EffortlyTimeTracker.controller;
 
-//todo role check
+//todo role check AOP
 
 import com.EffortlyTimeTracker.DTO.todo.TodoNodeDTO;
 import com.EffortlyTimeTracker.DTO.todo.TodoNodeResponseDTO;
@@ -8,6 +8,8 @@ import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import com.EffortlyTimeTracker.mapper.TodoNodeMapper;
 import com.EffortlyTimeTracker.service.TodoService;
 import com.EffortlyTimeTracker.service.middlewareOwn.CheckOwner;
+import com.EffortlyTimeTracker.service.middlewareOwn.CheckTaskOwner;
+import com.EffortlyTimeTracker.service.middlewareOwn.CheckUserIdMatchesCurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -38,6 +40,7 @@ public class TodoController {
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
+    @CheckUserIdMatchesCurrentUser
     public ResponseEntity<TodoNodeResponseDTO> addTodo(@Valid @RequestBody TodoNodeDTO todoNodeDTO) {
         TodoNodeEntity todoNodeEntity = todoNodeMapper.toEntity(todoNodeDTO);
         log.info("Add todo: {}", todoNodeEntity);
@@ -54,6 +57,7 @@ public class TodoController {
     @DeleteMapping("/del")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
+    @CheckTaskOwner
     public void delTodo(@RequestParam(required = true) Integer id) {
         log.info("Del todo: {}", id);
         todoService.delTodoById(id);
@@ -63,6 +67,7 @@ public class TodoController {
     @DeleteMapping("/del-by-user-id")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
+    @CheckOwner
     public void delAllTodoBuUserID(@RequestParam(required = true) Integer id) {
         log.info("Del all todo by user: {}", id);
         todoService.delAllTodoByIdUser(id);
