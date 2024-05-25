@@ -1,11 +1,10 @@
-package com.EffortlyTimeTracker.service.middlewareOwn;
+package com.EffortlyTimeTracker.service.middlewareOwn.todo;
 
 
+import com.EffortlyTimeTracker.service.middlewareOwn.OwnerOperation;
 import com.EffortlyTimeTracker.DTO.todo.TodoNodeDTO;
 import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import com.EffortlyTimeTracker.entity.UserEntity;
-import com.EffortlyTimeTracker.repository.RoleRepository;
-import com.EffortlyTimeTracker.repository.UserRepository;
 import com.EffortlyTimeTracker.service.TodoService;
 import com.EffortlyTimeTracker.service.UserService;
 import lombok.NonNull;
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -25,22 +23,25 @@ import java.util.Optional;
 @Aspect
 @Component
 @Slf4j
-public class OwnershipAspect {
+public class OwnershipTodo {
     private final UserService userService;
     private final TodoService todoService;
+    private final OwnerOperation ownerOperation;
+
 
 
     @Autowired
-    public OwnershipAspect(@NonNull UserService userService, TodoService todoService) {
+    public OwnershipTodo(@NonNull UserService userService, TodoService todoService, OwnerOperation ownerOperation) {
         this.userService = userService;
         this.todoService = todoService;
+        this.ownerOperation = ownerOperation;
     }
 
 
     @Before("@annotation(CheckOwner) && args(userId,..)")
     public void checkOwnership(JoinPoint joinPoint, Integer userId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (isAdmin(authentication) || isCurrentUser(authentication, userId)) {
+        if (ownerOperation.isAdmin(authentication) || ownerOperation.isCurrentUser(authentication, userId, userService)) {
             // User is authorized;
             ;
         } else {
@@ -51,7 +52,7 @@ public class OwnershipAspect {
     @Before("@annotation(CheckTaskOwner) && args(taskId,..)")
     public void checkTaskOwnership(JoinPoint joinPoint, Integer taskId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (isAdmin(authentication) || isTaskOwner(authentication, taskId)) {
+        if (ownerOperation.isAdmin(authentication) || isTaskOwner(authentication, taskId)) {
             // User is authorized
         } else {
             throw new AccessDeniedException("You are not authorized to access this task");
@@ -70,7 +71,7 @@ public class OwnershipAspect {
         if (userEntity.isPresent()) {
             UserEntity user = userEntity.get();
             Integer userId = user.getUserId();
-            if (!userId.equals(todoNodeDTO.getUserID()) && (!isAdmin(authentication))) {
+            if (!userId.equals(todoNodeDTO.getUserID()) && (!ownerOperation.isAdmin(authentication))) {
                 throw new AccessDeniedException("You are not authorized to add a todo for this user");
             }
         } else {
@@ -79,27 +80,6 @@ public class OwnershipAspect {
     }
 
 
-    private boolean isAdmin(Authentication authentication) {
-        return authentication.getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
-    }
-
-
-    private boolean isCurrentUser(Authentication authentication, Integer userId) {
-        log.info("+ Checking owner of user " + userId);
-
-        String currentUserEmail = authentication.getName(); // email as username
-        log.info("+ Current user email: {}", currentUserEmail);
-        Optional<UserEntity> userEntity = userService.getUserByEmail(currentUserEmail);
-        if (userEntity.isPresent()) {
-            UserEntity user = userEntity.get();
-            Integer id = user.getUserId();
-
-            log.info("+ Current user id: {}", id);
-            return id.equals(userId);
-        }
-        return false;
-    }
 
     private boolean isTaskOwner(Authentication authentication, Integer taskId) {
         log.info("+ Checking owner of task " + taskId);

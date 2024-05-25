@@ -1,5 +1,6 @@
 package com.EffortlyTimeTracker.config;
-
+ // todo define user  = group owner
+// define guest = user
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -48,6 +49,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/login", "/api/register", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers("/api/user/**").hasRole("ADMIN")
                         .requestMatchers("/api/todo/**").hasAnyRole("USER", "GUEST", "ADMIN")
+                        .requestMatchers("/api/group/**").hasAnyRole("USER", "ADMIN")
+
+
 
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))

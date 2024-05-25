@@ -1,12 +1,14 @@
 package com.EffortlyTimeTracker.controller;
 
 import com.EffortlyTimeTracker.DTO.group.GroupCreateDTO;
-import com.EffortlyTimeTracker.DTO.group.GroupDTO;
 import com.EffortlyTimeTracker.DTO.group.GroupResponseDTO;
 import com.EffortlyTimeTracker.entity.GroupEntity;
 //import com.EffortlyTimeTracker.mapper.GroupMapper;
 import com.EffortlyTimeTracker.mapper.GroupMapper;
 import com.EffortlyTimeTracker.service.GroupService;
+import com.EffortlyTimeTracker.service.middlewareOwn.group.CheckGroupOwner;
+import com.EffortlyTimeTracker.service.middlewareOwn.group.CheckProjectOwner;
+import com.EffortlyTimeTracker.service.middlewareOwn.todo.CheckUserIdMatchesCurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -14,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,7 +38,9 @@ public class GroupController {
     @Operation(summary = "Add group", description = "need name, proj id")
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<GroupResponseDTO> addTask(@Valid @RequestBody GroupCreateDTO groupDTO) {
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @CheckProjectOwner
+    public ResponseEntity<GroupResponseDTO> addGroup(@Valid @RequestBody GroupCreateDTO groupDTO) {
         log.info("api/group/add");
         log.info("Add group DTO: {}", groupDTO);
         GroupEntity groupEntity = groupMapper.toEntity(groupDTO);
@@ -54,6 +59,8 @@ public class GroupController {
             description = "need id")
     @DeleteMapping("/del")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @CheckGroupOwner
     public void delGroup(@RequestParam(required = true) Integer id) {
         log.info("api/group/del");
         log.info("id group to del = {}", id);
@@ -64,6 +71,8 @@ public class GroupController {
             description = "need id")
     @GetMapping("/get")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @CheckGroupOwner
     public GroupResponseDTO getGroup(@RequestParam(required = true) Integer id) {
         log.info("api/group/del");
         log.info("id group to get = {}", id);
@@ -71,10 +80,11 @@ public class GroupController {
         log.info("groupResponseDTO = {}", groupResponseDTO);
         return groupResponseDTO;
     }
-
+    //  todo user can hand this
     @Operation(summary = "Get all group")
     @GetMapping("/get-all")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize ("hasRole('ROLE_ADMIN')")
     public List<GroupResponseDTO> getGroupAll() {
         log.info("api/group/get-all");
         List <GroupResponseDTO> groupResponseDTOS = groupMapper.toDto(groupService.getAllGroup());
