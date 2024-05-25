@@ -70,3 +70,28 @@ DELETE FROM public.task WHERE name = 'Test';
 
 
 SELECT * FROM public.activity_log;
+
+
+CREATE OR REPLACE FUNCTION public.func_update_task_table_status()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Check if the project status is updated to 'NO_ACTIVE'
+    IF NEW.status = 'NO_ACTIVE' THEN
+        -- Update all tasks associated with the project
+        UPDATE public.task
+        SET status = 'NO_ACTIVE'
+        WHERE project_id = NEW.id_project;
+
+        -- Update all tables associated with the project
+        UPDATE public.table_app
+        SET status = 'NO_ACTIVE'
+        WHERE project_id = NEW.id_project;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_update_task_table_status
+AFTER UPDATE ON public.project
+FOR EACH ROW
+EXECUTE FUNCTION public.func_update_task_table_status();
