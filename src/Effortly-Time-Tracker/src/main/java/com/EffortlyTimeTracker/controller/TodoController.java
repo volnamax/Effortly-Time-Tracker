@@ -56,7 +56,7 @@ public class TodoController {
     @Operation(summary = "Dell todo by id", description = "need id")
     @DeleteMapping("/del")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST', 'ROLE_ADMIN')")
     @CheckTaskOwner
     public void delTodo(@RequestParam(required = true) Integer id) {
         log.info("Del todo: {}", id);

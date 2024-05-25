@@ -61,8 +61,8 @@ CREATE TABLE public.todo_node
     PRIMARY KEY (id_todo),
 
     content  VARCHAR(255),
-    priority VARCHAR(255),
-    status   VARCHAR(255),
+    priority VARCHAR(32),
+    status   VARCHAR(16),
     due_data TIMESTAMP(6),
 
     user_id  INTEGER NOT NULL,
@@ -125,7 +125,7 @@ CREATE TABLE public.group_member
 
     group_id INTEGER NOT NULL,
     user_id  INTEGER NOT NULL,
-    role     VARCHAR(255) NOT NULL,
+    role     VARCHAR(16) NOT NULL,
 
     FOREIGN KEY (group_id) REFERENCES public.group_user (id_group),
     FOREIGN KEY (user_id) REFERENCES public.user_app (id_user)
@@ -166,7 +166,7 @@ CREATE TABLE public.task
 
     description   VARCHAR(255),
     name          VARCHAR(255) NOT NULL,
-    status        VARCHAR(255) NOT NULL,
+    status        VARCHAR(16) NOT NULL,
 
     sum_timer     BIGINT,
     start_timer   TIMESTAMP(6),
