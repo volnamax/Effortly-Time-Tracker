@@ -1,8 +1,10 @@
 package com.EffortlyTimeTracker.service.middlewareOwn;
 
 import com.EffortlyTimeTracker.entity.ProjectEntity;
+import com.EffortlyTimeTracker.entity.TaskEntity;
 import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.service.ProjectService;
+import com.EffortlyTimeTracker.service.TaskService;
 import com.EffortlyTimeTracker.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -51,4 +53,23 @@ public class OwnerOperation {
         return false;
     }
 
+    public boolean isTaskOwner(Authentication authentication, Integer taskId, UserService userService, TaskService taskService) {
+        log.info("+ isTaskOwner Checking if user is owner of task {}", taskId);
+        String currentUserEmail = authentication.getName();
+        log.info("+ Current user email: {}", currentUserEmail);
+        Optional<UserEntity> userEntity = userService.getUserByEmail(currentUserEmail);
+        if (userEntity.isPresent()) {
+            UserEntity user = userEntity.get();
+            Integer userId = user.getUserId();
+            log.info("+ Current user ID: {}", userId);
+
+            TaskEntity taskEntity = taskService.getTaskById(taskId);
+            Integer taskOwnerId = taskEntity.getTable().getProject().getUserProject().getUserId();
+            log.info("+ Task owner ID: {}", taskOwnerId);
+
+            return taskOwnerId.equals(userId);
+        }
+        log.warn("+ User entity not found for email {}", currentUserEmail);
+        return false;
+    }
 }

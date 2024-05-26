@@ -47,7 +47,7 @@ public class OwnershipTask {
     public void checkTaskOwnership(JoinPoint joinPoint, Integer taskId) {
         log.info("+ Checking task ownership for task {}", taskId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (ownerOperation.isAdmin(authentication) || isTaskOwner(authentication, taskId)) {
+        if (ownerOperation.isAdmin(authentication) || ownerOperation.isTaskOwner(authentication, taskId, userService, taskService)) {
             log.info("+ Authorization successful for task {}", taskId);
         } else {
             log.warn("+ Authorization failed for task {}", taskId);
@@ -73,23 +73,5 @@ public class OwnershipTask {
         log.info("+ Authorization successful for userId {}", idOwner);
     }
 
-    private boolean isTaskOwner(Authentication authentication, Integer taskId) {
-        log.info("+ Checking if user is owner of task {}", taskId);
-        String currentUserEmail = authentication.getName();
-        log.info("+ Current user email: {}", currentUserEmail);
-        Optional<UserEntity> userEntity = userService.getUserByEmail(currentUserEmail);
-        if (userEntity.isPresent()) {
-            UserEntity user = userEntity.get();
-            Integer userId = user.getUserId();
-            log.info("+ Current user ID: {}", userId);
 
-            TaskEntity taskEntity = taskService.getTaskById(taskId);
-            Integer taskOwnerId = taskEntity.getTable().getProject().getUserProject().getUserId();
-            log.info("+ Task owner ID: {}", taskOwnerId);
-
-            return taskOwnerId.equals(userId);
-        }
-        log.warn("+ User entity not found for email {}", currentUserEmail);
-        return false;
-    }
 }

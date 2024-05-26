@@ -54,6 +54,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/project/get-all").hasRole("ADMIN")
                         .requestMatchers("/api/table/get-all").hasRole("ADMIN")
                         .requestMatchers("/api/task/get-all").hasRole("ADMIN")
+                        .requestMatchers("/api/tag/get-all").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
