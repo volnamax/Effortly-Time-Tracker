@@ -1,5 +1,6 @@
 package com.EffortlyTimeTracker.controller;
 
+import com.EffortlyTimeTracker.DTO.group.AddUserToGroupDTO;
 import com.EffortlyTimeTracker.DTO.group.GroupCreateDTO;
 import com.EffortlyTimeTracker.DTO.group.GroupResponseDTO;
 import com.EffortlyTimeTracker.entity.GroupEntity;
@@ -91,5 +92,32 @@ public class GroupController {
         log.info("groupResponseDTOS = {}", groupResponseDTOS);
         return groupResponseDTOS;
     }
+
+    @Operation(summary = "Add user to group", description = "Need groupId and userId")
+    @PostMapping("/add-user-to-group")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @CheckGroupOwner
+    public ResponseEntity<Void> addUserToGroup(@Valid @RequestBody AddUserToGroupDTO addUserToGroupDTO) {
+        log.info("api/group/add-user");
+        log.info("Adding user to group: {}", addUserToGroupDTO);
+
+        groupService.addUserToGroup(addUserToGroupDTO.getGroupId(), addUserToGroupDTO.getUserId());
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Remove user from group", description = "Need groupId and userId")
+    @DeleteMapping("/remove-user-from-group")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @CheckGroupOwner
+    public ResponseEntity<Void> removeUserFromGroup(@RequestBody AddUserToGroupDTO addUserToGroupDTO) {
+        log.info("api/group/remove-user");
+        log.info("Removing user from group: {}", addUserToGroupDTO);
+
+        groupService.removeUserFromGroup(addUserToGroupDTO.getGroupId(), addUserToGroupDTO.getUserId());
+        return ResponseEntity.ok().build();
+    }
+
 }
 

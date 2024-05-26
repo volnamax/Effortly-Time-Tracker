@@ -1,5 +1,6 @@
 package com.EffortlyTimeTracker.service.middlewareOwn.group;
 
+import com.EffortlyTimeTracker.DTO.group.AddUserToGroupDTO;
 import com.EffortlyTimeTracker.DTO.group.GroupCreateDTO;
 import com.EffortlyTimeTracker.entity.GroupEntity;
 import com.EffortlyTimeTracker.entity.UserEntity;
@@ -58,6 +59,18 @@ public class OwnershipGroup {
         }
     }
 
+    @Before("@annotation(CheckProjectOwner) && args(addUserToGroupDTO,..)")
+    public void checkGroupOwnership(JoinPoint joinPoint, AddUserToGroupDTO addUserToGroupDTO) {
+        Integer groupId = addUserToGroupDTO.getGroupId();
+        log.info("+ Checking group ownership for group {}", groupId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (ownerOperation.isAdmin(authentication) || isGroupOwner(authentication, groupId)) {
+            log.info("+ Authorization successful for group {}", groupId);
+        } else {
+            log.warn("+ Authorization failed for group {}", groupId);
+            throw new AccessDeniedException("You are not authorized to access this group");
+        }
+    }
 
 
     private boolean isGroupOwner(Authentication authentication, Integer groupId) {

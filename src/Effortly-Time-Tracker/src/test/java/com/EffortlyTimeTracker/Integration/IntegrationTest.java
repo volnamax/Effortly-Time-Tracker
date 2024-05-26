@@ -366,8 +366,31 @@
                     .andExpect(jsonPath("$").isArray());
         }
 
+
         @Test
         @Order(27)
+        public void testAddUserToGroup() throws Exception {
+            String jsonBody = "{\"groupId\": 1, \"userId\": 2}";
+            mockMvc.perform(post("/api/group/add-user-to-group")
+                            .contentType("application/json")
+                            .content(jsonBody)
+                            .header("Authorization", authToken))
+                    .andExpect(status().isOk());
+        }
+        @Test
+        @Order(28)
+        public void testRemoveUserFromGroup() throws Exception {
+            String jsonBody = "{\"groupId\": 1, \"userId\": 2}";
+            mockMvc.perform(delete("/api/group/remove-user-from-group")
+                            .contentType("application/json")
+                            .content(jsonBody)
+                            .header("Authorization", authToken))
+                    .andExpect(status().isOk());
+        }
+
+
+        @Test
+        @Order(29)
         public void testDeleteGroupById() throws Exception {
             mockMvc.perform(delete("/api/group/del")
                             .param("id", "1")
@@ -376,7 +399,7 @@
         }
 
         @Test
-        @Order(28)
+        @Order(30)
         public void testStartTaskTimer() throws Exception {
             mockMvc.perform(post("/api/task/start-timer")
                             .param("taskId", "1")
@@ -386,7 +409,7 @@
         }
 
         @Test
-        @Order(29)
+        @Order(31)
         public void testStopTaskTimer() throws Exception {
             mockMvc.perform(post("/api/task/stop-timer")
                             .param("taskId", "1")
@@ -397,7 +420,7 @@
         }
 
         @Test
-        @Order(30)
+        @Order(32)
         public void testCompleteTask() throws Exception {
             mockMvc.perform(post("/api/task/complete")
                             .param("taskId", "1")
@@ -408,7 +431,7 @@
         }
 
         @Test
-        @Order(38)
+        @Order(33)
         public void testDeleteAllTasksByTableId() throws Exception {
             mockMvc.perform(delete("/api/task/del-by-table-id")
                             .param("id", "1")

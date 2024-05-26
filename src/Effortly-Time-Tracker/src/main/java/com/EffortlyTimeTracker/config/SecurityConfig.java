@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/user/**").hasRole("ADMIN")
                         .requestMatchers("/api/todo/**").hasAnyRole("USER", "GUEST", "ADMIN")
                         .requestMatchers("/api/group/**").hasAnyRole("USER", "ADMIN")
+
                       //  .requestMatchers("/api/todo/get-all").hasRole("ADMIN")
                         .requestMatchers("/api/project/get-all").hasRole("ADMIN")
                         .requestMatchers("/api/table/get-all").hasRole("ADMIN")

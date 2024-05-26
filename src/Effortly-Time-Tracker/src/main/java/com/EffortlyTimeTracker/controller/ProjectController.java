@@ -1,5 +1,6 @@
 package com.EffortlyTimeTracker.controller;
 
+import com.EffortlyTimeTracker.DTO.project.ProjectAnalyticsDTO;
 import com.EffortlyTimeTracker.DTO.project.ProjectCreateDTO;
 import com.EffortlyTimeTracker.DTO.project.ProjectResponseDTO;
 import com.EffortlyTimeTracker.entity.ProjectEntity;
@@ -120,6 +121,22 @@ public class ProjectController {
 
         return projectMapper.toResponseDTO(resProjectEntity);
     }
+
+
+    @Operation(summary = "Get project analytics", description = "Returns all tasks related to the project with time spent and start/end dates, including average, max, min, and median time spent on tasks")
+    @GetMapping("/analytics")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST', 'ROLE_ADMIN')")
+    @CheckProjectOwner
+    public ProjectAnalyticsDTO getProjectAnalytics(@RequestParam Integer projectId) {
+        log.info("api/project/analytics");
+
+        log.info("in projectId = {}", projectId);
+        ProjectAnalyticsDTO analyticsDTO = projectService.getProjectAnalytics(projectId);
+        log.info("analyticsDTO = {}", analyticsDTO);
+        return analyticsDTO;
+    }
+
 }
 
 

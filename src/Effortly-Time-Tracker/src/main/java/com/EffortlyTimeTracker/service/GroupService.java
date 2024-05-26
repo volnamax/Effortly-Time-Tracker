@@ -3,6 +3,7 @@ package com.EffortlyTimeTracker.service;
 import com.EffortlyTimeTracker.entity.GroupEntity;
 import com.EffortlyTimeTracker.entity.GroupMermberEntity;
 import com.EffortlyTimeTracker.entity.ProjectEntity;
+import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.exception.group.GroupNotFoundException;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -80,6 +82,45 @@ public class GroupService {
     public List<GroupEntity> getAllGroup() {
         return groupRepository.findAll();
     }
+
+
+    public void addUserToGroup(Integer groupId, Integer userId) {
+        GroupEntity group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException("Group not found"));
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        if (group.getMembers().stream().anyMatch(member -> member.getUser().getUserId().equals(userId))) {
+            throw new IllegalArgumentException("User is already a member of this group");
+        }
+
+        GroupMermberEntity groupMember  = new GroupMermberEntity();
+        groupMember.setGroup(group);
+        groupMember.setUser(user);
+        groupMember.setRole(Role.USER);
+
+        group.getMembers().add(groupMember);
+        groupMemberRepository.save(groupMember);
+        groupRepository.save(group);
+    }
+
+
+    public void removeUserFromGroup(Integer groupId, Integer userId) {
+        GroupEntity group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException("Group not found"));
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        GroupMermberEntity groupMember = group.getMembers().stream()
+                .filter(member -> member.getUser().getUserId().equals(userId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("User is not a member of this group"));
+
+        if (groupMember.getRole() == Role.ADMIN) {
+            throw new IllegalArgumentException("Cannot remove the admin of the group");
+        }
+
+        group.getMembers().remove(groupMember);
+        groupMemberRepository.delete(groupMember);
+        groupRepository.save(group);
+    }
+
 }
 
 
