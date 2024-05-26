@@ -25,6 +25,7 @@ public class TaskResponseDTO {
 
     LocalDateTime startTimer;
 
+
     LocalDateTime timeAddTask;
 
     LocalDateTime timeEndTask;
