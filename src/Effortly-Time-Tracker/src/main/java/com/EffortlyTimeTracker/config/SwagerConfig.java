@@ -9,10 +9,12 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 import java.util.List;
 
 @Configuration
+@EnableAspectJAutoProxy
 @OpenAPIDefinition(info = @Info(title = "Effortly-Time-Tracker API", version = "v1", description = "Effortly-Time-Tracker API Documentation"))
 @SecurityScheme(
         name = "bearerAuth",

@@ -6,6 +6,9 @@ import com.EffortlyTimeTracker.DTO.table.TableResponseDTO;
 import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.mapper.TableMapper;
 import com.EffortlyTimeTracker.service.TableService;
+import com.EffortlyTimeTracker.service.middlewareOwn.project.CheckProjectOwner;
+import com.EffortlyTimeTracker.service.middlewareOwn.table.CheckTableOwner;
+import com.EffortlyTimeTracker.service.middlewareOwn.table.CheckUserIdMatchesCurrentUserTable;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -13,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +37,8 @@ public class TableController {
     @Operation(summary = "Add table", description = "need projectId, and name, status = ACTIVE, NO_ACTIVE")
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')  or hasRole('ROLE_GUEST')")
+    @CheckUserIdMatchesCurrentUserTable
     public ResponseEntity<TableResponseDTO> addTable(@Valid @RequestBody TableCreateDTO tableDTO) {
         log.info("api/table/add");
         log.info("Adding table dto: {}", tableDTO);
@@ -50,6 +56,8 @@ public class TableController {
     @Operation(summary = "Dell table by id", description = "need id table")
     @DeleteMapping("/del")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')  or hasRole('ROLE_GUEST')")
+    @CheckTableOwner
     public void deleteTable(@RequestParam(required = true) Integer id_table) {
         log.info("api/table/del");
         log.info("Deleting table by id: {}", id_table);
@@ -60,6 +68,8 @@ public class TableController {
     @Operation(summary = "Get table by id", description = "need id table")
     @GetMapping("/get")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')  or hasRole('ROLE_GUEST')")
+    @CheckTableOwner
     public TableResponseDTO getTable(@RequestParam(required = true) Integer tableId) {
         log.info("api/table/get");
         log.info("Getting table by id: {}", tableId);
@@ -76,6 +86,7 @@ public class TableController {
     @Operation(summary = "Get all table")
     @GetMapping("/get-all")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<TableResponseDTO> getAllTable() {
         log.info("api/table/get-all");
 
@@ -91,6 +102,8 @@ public class TableController {
     @Operation(summary = "Get all table by id project", description = "need proj id")
     @GetMapping("/get-all-by-project-id")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')  or hasRole('ROLE_GUEST')")
+    @CheckProjectOwner
     public List<TableResponseDTO> getTableAllByProjectId(Integer id) {
         log.info("api/table/get-all-by-project-id");
         log.info("Getting all table by id project: {}", id);
@@ -107,6 +120,8 @@ public class TableController {
     @Operation(summary = "Dell all table by project id", description = "need proj id")
     @DeleteMapping("/del-by-project-id")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')  or hasRole('ROLE_GUEST')")
+    @CheckProjectOwner
     public void delAllTableByProjectId(@RequestParam(required = true) Integer id) {
         log.info("api/table/del-by-project-id");
         log.info("Deleting table by project id: {}", id);
