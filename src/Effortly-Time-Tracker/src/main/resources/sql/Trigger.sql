@@ -80,18 +80,19 @@ BEGIN
         -- Update all tasks associated with the project
         UPDATE public.task
         SET status = 'NO_ACTIVE'
-        WHERE project_id = NEW.id_project;
-
-        -- Update all tables associated with the project
-        UPDATE public.table_app
-        SET status = 'NO_ACTIVE'
-        WHERE project_id = NEW.id_project;
+        WHERE NEW.id_table = public.task.table_id;
     END IF;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER trg_update_task_table_status ON public.table_app;
+
 CREATE TRIGGER trg_update_task_table_status
-AFTER UPDATE ON public.project
+AFTER UPDATE ON public.table_app
 FOR EACH ROW
 EXECUTE FUNCTION public.func_update_task_table_status();
+
+UPDATE public.table_app
+SET status = 'NO_ACTIVE'
+where id_table = 16;
