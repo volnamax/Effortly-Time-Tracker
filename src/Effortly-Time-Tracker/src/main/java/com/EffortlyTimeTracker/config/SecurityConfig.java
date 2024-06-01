@@ -48,8 +48,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/login", "/api/register", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers("/api/user/**").hasRole("ADMIN")
-                        .requestMatchers("/api/todo/**").hasAnyRole("USER", "GUEST", "ADMIN")
-                        .requestMatchers("/api/group/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/todo/**").hasAnyRole("MANAGER", "USER", "ADMIN")
+                        .requestMatchers("/api/group/**").hasAnyRole("MANAGER", "ADMIN")
 
                       //  .requestMatchers("/api/todo/get-all").hasRole("ADMIN")
                         .requestMatchers("/api/project/get-all").hasRole("ADMIN")

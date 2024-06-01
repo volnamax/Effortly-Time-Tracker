@@ -1,8 +1,8 @@
 CREATE TABLE public.activity_log
 (
-    id         SERIAL PRIMARY KEY,
-    table_name VARCHAR(255),
-    operation  VARCHAR(255),
+    id         SERIAL PRIMARY KEY not null ,
+    table_name VARCHAR(255) not null ,
+    operation  VARCHAR(255) not null ,
     data       JSONB,
     logged_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -59,17 +59,21 @@ DELETE FROM public.project WHERE name = 'Test Project';
 
 
 INSERT INTO public.table_app (description, name, status, project_id)
-VALUES ('Sample Description', 'Sample Table', 'ACTIVE', 7);
-
-
+VALUES ('Sample Description', 'Sample Table', 'ACTIVE', 1);
 
 INSERT INTO public.task (description, name, status, start_timer, time_add_task, time_end_task, table_id)
-VALUES ('Test task', 'Test', 'NO_ACTIVE', NOW(), NOW(), NOW() + INTERVAL '1 day', 3);
+VALUES ('Test task', 'Test', 'NO_ACTIVE', NOW(), NOW(), NOW() + INTERVAL '1 day', 1);
 UPDATE public.task SET status = 'ACTIVE' WHERE name = 'Test';
 DELETE FROM public.task WHERE name = 'Test';
 
-
 SELECT * FROM public.activity_log;
+--
+-- 1,project,INSERT,"{""new_data"": {""name"": ""Test Project"", ""user_id"": 1, ""id_project"": 2, ""description"": ""This is a test project""}, ""operation"": ""INSERT"", ""changed_at"": ""2024-06-01T14:29:21.516512+00:00""}",2024-06-01 14:29:21.516512
+--               2,project,UPDATE,"{""new_data"": {""name"": ""Test Project"", ""user_id"": 1, ""id_project"": 2, ""description"": ""Updated description""}, ""old_data"": {""name"": ""Test Project"", ""user_id"": 1, ""id_project"": 2, ""description"": ""This is a test project""}, ""operation"": ""UPDATE"", ""changed_at"": ""2024-06-01T14:29:21.533529+00:00""}",2024-06-01 14:29:21.533529
+--                             3,project,DELETE,"{""old_data"": {""name"": ""Test Project"", ""user_id"": 1, ""id_project"": 2, ""description"": ""Updated description""}, ""operation"": ""DELETE"", ""changed_at"": ""2024-06-01T14:29:21.550195+00:00""}",2024-06-01 14:29:21.550195
+--                                           4,task,INSERT,"{""new_data"": {""name"": ""Test"", ""status"": ""NO_ACTIVE"", ""id_task"": 3, ""table_id"": 1, ""sum_timer"": null, ""description"": ""Test task"", ""start_timer"": ""2024-06-01T14:29:30.652147"", ""time_add_task"": ""2024-06-01T14:29:30.652147"", ""time_end_task"": ""2024-06-02T14:29:30.652147""}, ""operation"": ""INSERT"", ""changed_at"": ""2024-06-01T14:29:30.652147+00:00""}",2024-06-01 14:29:30.652147
+--                                                      5,task,UPDATE,"{""new_data"": {""name"": ""Test"", ""status"": ""ACTIVE"", ""id_task"": 3, ""table_id"": 1, ""sum_timer"": null, ""description"": ""Test task"", ""start_timer"": ""2024-06-01T14:29:30.652147"", ""time_add_task"": ""2024-06-01T14:29:30.652147"", ""time_end_task"": ""2024-06-02T14:29:30.652147""}, ""old_data"": {""name"": ""Test"", ""status"": ""NO_ACTIVE"", ""id_task"": 3, ""table_id"": 1, ""sum_timer"": null, ""description"": ""Test task"", ""start_timer"": ""2024-06-01T14:29:30.652147"", ""time_add_task"": ""2024-06-01T14:29:30.652147"", ""time_end_task"": ""2024-06-02T14:29:30.652147""}, ""operation"": ""UPDATE"", ""changed_at"": ""2024-06-01T14:29:30.682839+00:00""}",2024-06-01 14:29:30.682839
+--                                                                 6,task,DELETE,"{""old_data"": {""name"": ""Test"", ""status"": ""ACTIVE"", ""id_task"": 3, ""table_id"": 1, ""sum_timer"": null, ""description"": ""Test task"", ""start_timer"": ""2024-06-01T14:29:30.652147"", ""time_add_task"": ""2024-06-01T14:29:30.652147"", ""time_end_task"": ""2024-06-02T14:29:30.652147""}, ""operation"": ""DELETE"", ""changed_at"": ""2024-06-01T14:29:30.701649+00:00""}",2024-06-01 14:29:30.701649
 
 
 CREATE OR REPLACE FUNCTION public.func_update_task_table_status()
@@ -93,6 +97,20 @@ AFTER UPDATE ON public.table_app
 FOR EACH ROW
 EXECUTE FUNCTION public.func_update_task_table_status();
 
+--table
+-- 1,Table for tracking issues,Issue Tracker,ACTIVE,1
+-- 2,Sample Description,Sample Table,ACTIVE,1
+
+
+
+    --task
+-- 1,Fix all UI bugs,UI Bugfix,ACTIVE,0,2024-06-01 14:28:53.818965,2024-06-01 14:28:53.818965,2024-12-31 23:59:59.000000,1
+
 UPDATE public.table_app
 SET status = 'NO_ACTIVE'
-where id_table = 16;
+where id_table = 1;
+
+--1,Fix all UI bugs,UI Bugfix,NO_ACTIVE,0,2024-06-01 14:28:53.818965,2024-06-01 14:28:53.818965,2024-12-31 23:59:59.000000,1
+UPDATE public.table_app
+SET status = 'ACTIVE'
+where id_table = 1;

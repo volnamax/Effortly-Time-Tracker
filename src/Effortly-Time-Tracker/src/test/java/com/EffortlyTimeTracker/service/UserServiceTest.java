@@ -47,7 +47,7 @@ class UserServiceTest {
 
         userEntity = new UserEntity();
         roleEntity = new RoleEntity();
-        roleEntity.setName(Role.USER);
+        roleEntity.setName(Role.MANAGER);
 
         userEntity.setUserId(1);
         userEntity.setUserName("TestUser");
@@ -60,7 +60,7 @@ class UserServiceTest {
 
     @Test
     public void addUserTestSuccess() {
-        when(roleRepository.findByName(Role.USER)).thenReturn(roleEntity);  // Mock the behavior of roleRepository
+        when(roleRepository.findByName(Role.MANAGER)).thenReturn(roleEntity);  // Mock the behavior of roleRepository
         when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);  // Mock the behavior of userRepository
 
         UserEntity savedUser = userService.addUser(userEntity);

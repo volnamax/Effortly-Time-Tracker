@@ -16,7 +16,7 @@ import com.EffortlyTimeTracker.repository.RoleRepository;
 //
 //    @Named("roleToRoleName")
 //    public String roleToRoleName(RoleEntity role) {
-//        return role != null ? role.getName().name() : "GUEST";
+//        return role != null ? role.getName().name() : "USER";
 //    }
 //
 //    @Named("roleNameToRole")

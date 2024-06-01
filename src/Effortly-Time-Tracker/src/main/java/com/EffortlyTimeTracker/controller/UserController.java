@@ -37,7 +37,7 @@ public class UserController {
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Add user for dto obj",
-            description = "need name , sname, email, password, role (ADMIN, USER, GUEST)")
+            description = "need name , sname, email, password, role (ADMIN, MANAGER, USER)")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserResponseDTO> addUser(@Valid @RequestBody UserCreateDTO userCreateDTO) {
         log.info("Add user: {}", userCreateDTO);

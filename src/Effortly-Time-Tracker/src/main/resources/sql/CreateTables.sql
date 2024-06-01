@@ -1,7 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS public;
 SET search_path TO public, pg_catalog;
 
-CREATE TYPE public.role_t AS ENUM ('ADMIN', 'USER', 'GUEST');
+CREATE TYPE public.role_t AS ENUM ('ADMIN', 'MANAGER', 'USER');
 CREATE TYPE public.status_t AS ENUM ('NO_ACTIVE', 'ACTIVE');
 CREATE TYPE public.priority_t AS ENUM ('IMPORTANT_URGENTLY', 'NO_IMPORTANT_URGENTLY', 'IMPORTANT_NO_URGENTLY', 'NO_IMPORTANT_NO_URGENTLY');
 
@@ -11,16 +11,16 @@ CREATE TABLE public.roles
     id_role SERIAL NOT NULL,
     PRIMARY KEY (id_role),
 
-    name    VARCHAR(255) CHECK (name IN ('ADMIN', 'USER', 'GUEST'))
+    name    VARCHAR(255) CHECK (name IN ('ADMIN', 'MANAGER', 'USER'))
 );
 
 ALTER TABLE public.roles
-    ADD CONSTRAINT chk_roles_name CHECK (name IN ('ADMIN', 'USER', 'GUEST'));
+    ADD CONSTRAINT chk_roles_name CHECK (name IN ('ADMIN', 'MANAGER', 'USER'));
 
 INSERT INTO public.roles ("name")
 VALUES ('ADMIN'),
-       ('USER'),
-       ('GUEST');
+       ('MANAGER'),
+       ('USER');
 
 
 CREATE TABLE public.user_app
@@ -132,7 +132,7 @@ CREATE TABLE public.group_member
 );
 
 ALTER TABLE public.group_member
-    ADD CONSTRAINT chk_group_member_role CHECK (role IN ('ADMIN', 'USER', 'GUEST'));
+    ADD CONSTRAINT chk_group_member_role CHECK (role IN ('ADMIN', 'MANAGER', 'USER'));
 
 
 

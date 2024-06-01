@@ -95,7 +95,7 @@ public class GroupService {
         GroupMermberEntity groupMember  = new GroupMermberEntity();
         groupMember.setGroup(group);
         groupMember.setUser(user);
-        groupMember.setRole(Role.USER);
+        groupMember.setRole(Role.MANAGER);
 
         group.getMembers().add(groupMember);
         groupMemberRepository.save(groupMember);

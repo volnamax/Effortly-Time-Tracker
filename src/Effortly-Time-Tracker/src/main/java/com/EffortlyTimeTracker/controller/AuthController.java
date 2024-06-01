@@ -57,7 +57,7 @@ public class AuthController {
         }
     }
 
-    @Operation(summary = "registration new user", description = "need name , sname, email, password, role (ADMIN, USER, GUEST)")
+    @Operation(summary = "registration new user", description = "need name , sname, email, password, role (ADMIN, MANAGER, USER)")
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<TokenResponse> registrationHandler(@Valid @RequestBody UserCreateDTO request) {

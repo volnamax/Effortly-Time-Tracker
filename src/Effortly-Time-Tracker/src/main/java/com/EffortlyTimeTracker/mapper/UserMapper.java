@@ -66,7 +66,7 @@ public interface UserMapper {
 //        if (userEntity.getRole() != null) {
 //            userDTO.setRole(userEntity.getRole().getName().toString());
 //        } else {
-//            userDTO.setRole("GUEST");
+//            userDTO.setRole("USER");
 //        }
 //
 //        userDTO.setDataSignIn(userEntity.getDataSignIn());

@@ -49,7 +49,7 @@ class GroupServiceTest {
     @BeforeEach
     void setUp() {
         roleEntity = new RoleEntity();
-        roleEntity.setName(Role.USER);
+        roleEntity.setName(Role.MANAGER);
 
         userEntity = UserEntity.builder()
                 .userName("name")
