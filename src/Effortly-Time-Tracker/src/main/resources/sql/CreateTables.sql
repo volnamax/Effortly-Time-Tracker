@@ -217,3 +217,9 @@ CREATE TABLE public.task_tag
     FOREIGN KEY (tag_id) REFERENCES public.tag (id_tags),
     FOREIGN KEY (task_id) REFERENCES public.task (id_task)
 );
+
+
+
+-- SELECT pg_terminate_backend(pid)
+-- FROM pg_stat_activity
+-- WHERE datname = 'имя_вашей_базы_данных' AND pid <> pg_backend_pid();
