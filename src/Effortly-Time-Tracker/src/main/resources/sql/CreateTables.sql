@@ -218,8 +218,22 @@ CREATE TABLE public.task_tag
     FOREIGN KEY (task_id) REFERENCES public.task (id_task)
 );
 
-
-
--- SELECT pg_terminate_backend(pid)
--- FROM pg_stat_activity
--- WHERE datname = 'имя_вашей_базы_данных' AND pid <> pg_backend_pid();
+--
+-- CREATE INDEX poh ON public.user_app USING  hash (id_user) ;
+--
+-- EXPLAIN
+-- SELECT
+--     ua.user_name, ua.email,
+--     p.name AS project_name, p.description AS project_description,
+--     ta.name AS table_name, ta.description AS table_description,
+--     t.name AS task_name, t.description AS task_description, t.status AS task_status
+-- FROM
+--     public.user_app ua
+--         JOIN
+--     public.project p ON ua.id_user = p.user_id
+--         JOIN
+--     public.table_app ta ON p.id_project = ta.project_id
+--         JOIN
+--     public.task t ON ta.id_table = t.table_id
+-- WHERE
+--     ua.id_user = 10;

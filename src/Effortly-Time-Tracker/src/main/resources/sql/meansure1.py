@@ -131,46 +131,39 @@ def generate_random_task_data(n):
 def measure_query_time_and_explain(conn, email, users, n=100, index_type="No Index", num_records=0):
     """ Measure the execution time of a query over 'n' repetitions and fetch the EXPLAIN (ANALYZE, BUFFERS) plan """
     """ Run a complex query involving multiple joins and conditions """
-    query = """
-    SELECT 
-        ua.user_name, 
-        ua.email, 
-        p.name AS project_name, 
-        p.description AS project_description, 
-        ta.name AS table_name, 
-        ta.description AS table_description, 
-        t.name AS task_name, 
-        t.description AS task_description, 
-        t.status AS task_status
-    FROM 
+
+
+    query = """        
+          SELECT
+    ua.user_name, ua.email,
+    p.name AS project_name, p.description AS project_description,
+    ta.name AS table_name, ta.description AS table_description,
+    t.name AS task_name, t.description AS task_description, t.status AS task_status
+        FROM
         public.user_app ua
-    JOIN 
+        JOIN
         public.project p ON ua.id_user = p.user_id
-    JOIN 
+        JOIN
         public.table_app ta ON p.id_project = ta.project_id
-    JOIN 
+        JOIN
         public.task t ON ta.id_table = t.table_id
-    WHERE 
-        ua.email = %s
-    ORDER BY 
-        p.name, ta.name, t.name;
+        WHERE
+        ua.id_user = %s;
     """
 
     times = []
     explain_plan = None
     with conn.cursor() as cur:  # Create the cursor within the function
         for _ in range(n):
-            random_user = random.choice(users)  # Choose a random user each time
-            email_to_search = random_user[0]    # Email is the first element in the tuple
-            params = [email_to_search]          # Params must be a list or tuple
+            user_id = random.choice(users)[4]
             start = time()
-            cur.execute(query, [email])
+            cur.execute(query, [user_id])
             conn.commit()
             end = time()
             query_time = end - start
             times.append(query_time)
             if explain_plan is None:  # Fetch the EXPLAIN plan only once to avoid redundancy
-                cur.execute("EXPLAIN (ANALYZE, BUFFERS) " + query, params)
+                cur.execute("EXPLAIN (ANALYZE, BUFFERS) " + query,  [user_id])
                 explain_plan = cur.fetchall()
         avg_time = np.mean(times)
         logging.info(f"Index Type: {index_type}, Number of Records: {num_records}, Average Query Time: {avg_time:.4f} seconds")
@@ -181,8 +174,8 @@ def main():
     index_types = ["BTREE", "HASH"]
     results = []
     # Number of records for testing at different scales
-    num_records = [1000, 10000]
-    for n in num_records:
+    num_records = [100, 500, 1000, 5000, 10000]
+    for n in range(10000, 60000, 10000):
         # Generate random data for users, projects, and tasks
         users = generate_random_user_data(n)
         projects = generate_random_project_data(n)
@@ -224,8 +217,8 @@ def main():
         recreate_tables(conn, 'CreateTables.sql')
 
         for index_type in index_types:
-            index_name = f"idx_email_{index_type.lower()}"
-            create_index(conn, index_type, index_name, "public.user_app", "email")
+            index_name = f"idx_user_id_{index_type.lower()}"
+            create_index(conn, index_type, index_name, "public.user_app", "id_user")
             insert_random_users(conn, users)
             insert_data(conn, projects, project_insert_query)
             insert_data(conn, tables, table_insert_query)
