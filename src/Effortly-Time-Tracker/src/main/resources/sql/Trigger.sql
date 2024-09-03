@@ -52,21 +52,21 @@ CREATE TRIGGER log_task_changes
     AFTER INSERT OR UPDATE OR DELETE ON public.task
     FOR EACH ROW EXECUTE FUNCTION log_activity();
 
+--
+-- INSERT INTO public.project (name, description, user_id) VALUES ('Test Project', 'This is a test project', 1);
+-- UPDATE public.project SET description = 'Updated description' WHERE name = 'Test Project';
+-- DELETE FROM public.project WHERE name = 'Test Project';
+--
+--
+-- INSERT INTO public.table_app (description, name, status, project_id)
+-- VALUES ('Sample Description', 'Sample Table', 'ACTIVE', 1);
+--
+-- INSERT INTO public.task (description, name, status, start_timer, time_add_task, time_end_task, table_id)
+-- VALUES ('Test task', 'Test', 'NO_ACTIVE', NOW(), NOW(), NOW() + INTERVAL '1 day', 1);
+-- UPDATE public.task SET status = 'ACTIVE' WHERE name = 'Test';
+-- DELETE FROM public.task WHERE name = 'Test';
 
-INSERT INTO public.project (name, description, user_id) VALUES ('Test Project', 'This is a test project', 1);
-UPDATE public.project SET description = 'Updated description' WHERE name = 'Test Project';
-DELETE FROM public.project WHERE name = 'Test Project';
-
-
-INSERT INTO public.table_app (description, name, status, project_id)
-VALUES ('Sample Description', 'Sample Table', 'ACTIVE', 1);
-
-INSERT INTO public.task (description, name, status, start_timer, time_add_task, time_end_task, table_id)
-VALUES ('Test task', 'Test', 'NO_ACTIVE', NOW(), NOW(), NOW() + INTERVAL '1 day', 1);
-UPDATE public.task SET status = 'ACTIVE' WHERE name = 'Test';
-DELETE FROM public.task WHERE name = 'Test';
-
-SELECT * FROM public.activity_log;
+-- SELECT * FROM public.activity_log;
 --
 -- 1,project,INSERT,"{""new_data"": {""name"": ""Test Project"", ""user_id"": 1, ""id_project"": 2, ""description"": ""This is a test project""}, ""operation"": ""INSERT"", ""changed_at"": ""2024-06-01T14:29:21.516512+00:00""}",2024-06-01 14:29:21.516512
 --               2,project,UPDATE,"{""new_data"": {""name"": ""Test Project"", ""user_id"": 1, ""id_project"": 2, ""description"": ""Updated description""}, ""old_data"": {""name"": ""Test Project"", ""user_id"": 1, ""id_project"": 2, ""description"": ""This is a test project""}, ""operation"": ""UPDATE"", ""changed_at"": ""2024-06-01T14:29:21.533529+00:00""}",2024-06-01 14:29:21.533529
@@ -90,7 +90,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-DROP TRIGGER trg_update_task_table_status ON public.table_app;
+-- DROP TRIGGER trg_update_task_table_status ON public.table_app;
 
 CREATE TRIGGER trg_update_task_table_status
 AFTER UPDATE ON public.table_app
@@ -106,11 +106,11 @@ EXECUTE FUNCTION public.func_update_task_table_status();
     --task
 -- 1,Fix all UI bugs,UI Bugfix,ACTIVE,0,2024-06-01 14:28:53.818965,2024-06-01 14:28:53.818965,2024-12-31 23:59:59.000000,1
 
-UPDATE public.table_app
-SET status = 'NO_ACTIVE'
-where id_table = 1;
+-- UPDATE public.table_app
+-- SET status = 'NO_ACTIVE'
+-- where id_table = 1;
 
 --1,Fix all UI bugs,UI Bugfix,NO_ACTIVE,0,2024-06-01 14:28:53.818965,2024-06-01 14:28:53.818965,2024-12-31 23:59:59.000000,1
-UPDATE public.table_app
-SET status = 'ACTIVE'
-where id_table = 1;
+-- UPDATE public.table_app
+-- SET status = 'ACTIVE'
+-- where id_table = 1;

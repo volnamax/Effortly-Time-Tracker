@@ -76,7 +76,18 @@ def drop_tables(conn):
         try:
             cur.execute("DROP schema public cascade;")
             conn.commit()
-            logging.info("Tables dropped successfully.")
+            # logging.info("Tables dropped successfully.")
+        except Exception as e:
+            logging.error(f"Failed to drop tables: {e}")
+            conn.rollback()
+
+def ooo(conn):
+    """Удаление всех таблиц в схеме 'public' для очистки базы данных"""
+    with conn.cursor() as cur:
+        try:
+            cur.execute("DISCARD ALL;")
+            conn.commit()
+            # logging.info("Tables dropped successfully.")
         except Exception as e:
             logging.error(f"Failed to drop tables: {e}")
             conn.rollback()
@@ -89,7 +100,7 @@ def recreate_tables(conn, script_path):
         try:
             cur.execute(sql_script)
             conn.commit()
-            logging.info("Tables recreated successfully.")
+            # logging.info("Tables recreated successfully.")
         except Exception as e:
             logging.error(f"Failed to recreate tables from script {script_path}: {e}")
             conn.rollback()
@@ -141,7 +152,7 @@ def generate_random_task_data(n):
     return tasks
 
 # Функция для замера времени выполнения запроса и получения плана EXPLAIN
-def measure_query_time_and_explain(conn, id_user, users, index_type="No Index", num_records=0):
+def measure_query_time_and_explain(conn, id_user, users, index_type, num_records, projects, project_insert_query, tables, table_insert_query, tasks, task_insert_query):
     query = """        
     SELECT
     ua.user_name, ua.email,
@@ -157,23 +168,28 @@ def measure_query_time_and_explain(conn, id_user, users, index_type="No Index", 
         JOIN
         public.task t ON ta.id_table = t.table_id
             WHERE
-            ua.id_user > %s;
+            ua.id_user BETWEEN 1 AND %s ;
     """
 
     """Замер времени выполнения запроса и получение плана EXPLAIN"""
-    n = 100
+    n = 3
     times = []
     explain_plan = None
     avg_time = 0
     with conn.cursor() as cur:
         for _ in range(n):
+            # updata(conn, index_type)
+            # if (index_type != "No Index"):
+            #     create_index(conn, index_type, index_type, "public.user_app", "id_user")
+            #
+            # insert(conn, projects, project_insert_query, tables, table_insert_query, tasks, task_insert_query, users)
             start = time()
             cur.execute("BEGIN;")
             cur.execute(query, [id_user])
             cur.execute("COMMIT;")
             conn.commit()
             end = time()
-            query_time = (end - start ) * 1_000_000  # Преобразование в микросекунды
+            query_time = (end - start ) * 1_000  # Преобразование в микросекунды
             times.append(query_time)
             if explain_plan is None:
                 cur.execute("EXPLAIN (ANALYZE, BUFFERS) " + query, [id_user])
@@ -182,14 +198,28 @@ def measure_query_time_and_explain(conn, id_user, users, index_type="No Index", 
         logging.info(f"Index Type: {index_type}, Number of Records: {num_records}, Average Query Time: {avg_time:.4f} seconds")
     return avg_time, explain_plan
 
-# Основная функция программы
+
+
+def insert(conn, projects, project_insert_query, tables, table_insert_query, tasks, task_insert_query, users):
+    insert_random_users(conn, users)
+    insert_data(conn, projects, project_insert_query)
+    insert_data(conn, tables, table_insert_query)
+    insert_data(conn, tasks, task_insert_query)
+
+def updata(conn, index_name):
+    if (index_name != "No Index"):
+        drop_index(conn, index_name)
+
+    drop_tables(conn)
+    recreate_tables(conn, 'CreateTables.sql')
+
 def main():
     conn = psycopg2.connect(**conn_params)  # Подключение к базе данных
     index_types = ["BTREE", "HASH"]  # Типы индексов для тестирования
     results = []  # Список результатов для анализа производительности
-    num_records = [100, 500, 1000, 5000, 10000]  # Различные объемы данных для тестирования
+    num_records = [100, 1000, 10000,20000 ,50000,70000, 100000]  # Различные объемы данных для тестирования
 
-    for n in range(10000, 110000, 10000):
+    for n in range(10000, 110000,10000):
         users = generate_random_user_data(n)
         projects = generate_random_project_data(n)
         tables = generate_random_table_data(n)
@@ -212,15 +242,12 @@ def main():
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
         """
 
-        insert_random_users(conn, users)
-        insert_data(conn, projects, project_insert_query)
-        insert_data(conn, tables, table_insert_query)
-        insert_data(conn, tasks, task_insert_query)
+        insert(conn, projects, project_insert_query, tables, table_insert_query, tasks, task_insert_query, users)
 
         random_id_user = random.choice(users)[4]
         random_email = random.choice(users)[0]
 
-        time_without_index, explain_no_index = measure_query_time_and_explain(conn, random_id_user, users, "No Index", n)
+        time_without_index, explain_no_index = measure_query_time_and_explain(conn, random_id_user, users, "No Index", n, projects, project_insert_query, tables, table_insert_query, tasks, task_insert_query)
         results.append((n, "No Index", time_without_index, str(explain_no_index)))
         drop_tables(conn)
         recreate_tables(conn, 'CreateTables.sql')
@@ -233,12 +260,10 @@ def main():
             insert_data(conn, tasks, task_insert_query)
             create_index(conn, index_type, index_name, "public.user_app", "id_user")
 
-            time_with_index, explain_with_index = measure_query_time_and_explain(conn, random_id_user, users, index_type, n)
+            time_with_index, explain_with_index = measure_query_time_and_explain(conn, random_id_user, users, index_type, n, projects, project_insert_query, tables, table_insert_query, tasks, task_insert_query)
             results.append((n, index_type, time_with_index, str(explain_with_index)))
 
-            drop_index(conn, index_name)
-            drop_tables(conn)
-            recreate_tables(conn, 'CreateTables.sql')
+            updata(conn, index_name)
 
     conn.close()
 
@@ -253,7 +278,7 @@ def main():
         plt.plot(subset["Number of Records"], subset["Query Time (s)"], label=index_type, marker=markers[index_type], markersize=8)
 
     plt.xlabel("Кол-во записей в БД")
-    plt.ylabel("Среднее время выполнения запроса (микросекунды)")
+    plt.ylabel("Среднее время выполнения запроса (мс)")
     plt.title("Сравнение времени выполнения запросов с индексами HASH и B-TREE и без них.")
     plt.legend()
     plt.grid(True)

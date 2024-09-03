@@ -218,6 +218,8 @@ CREATE TABLE public.task_tag
     FOREIGN KEY (task_id) REFERENCES public.task (id_task)
 );
 
+
+
 --
 -- CREATE INDEX poh ON public.user_app USING  hash (id_user) ;
 --

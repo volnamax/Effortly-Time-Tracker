@@ -56,6 +56,7 @@ public class TableController {
     @Operation(summary = "Dell table by id", description = "need id table")
     @DeleteMapping("/del")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    //todo not need autth controll
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')  or hasRole('ROLE_GUEST')")
     @CheckTableOwner
     public void deleteTable(@RequestParam(required = true) Integer id_table) {

@@ -35,7 +35,7 @@ public class AuthController {
     private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
 
-    @Operation(summary = "Получение токена авторизации")
+    @Operation(summary = "Get token auth")
     @PostMapping("/login")
     public TokenResponse loginHandler(@RequestBody LoginRequestDto request) {
         log.info("Got request on /api/v1/login");
@@ -57,7 +57,7 @@ public class AuthController {
         }
     }
 
-    @Operation(summary = "registration new user", description = "need name , sname, email, password, role (ADMIN, MANAGER, USER)")
+    @Operation(summary = "registration new user", description = "need: name , sname, email, password, role (ADMIN, MANAGER, USER)")
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<TokenResponse> registrationHandler(@Valid @RequestBody UserCreateDTO request) {

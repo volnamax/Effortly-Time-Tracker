@@ -141,7 +141,7 @@ def generate_random_task_data(n):
     return tasks
 
 # Функция для замера времени выполнения запроса и получения плана EXPLAIN
-def measure_query_time_and_explain(conn, id_user, users, index_type="No Index", num_records=0):
+def measure_query_time_and_explain(conn, email, users, index_type="No Index", num_records=0):
     query = """        
     SELECT   
     ua.user_name, ua.email,
@@ -156,11 +156,11 @@ def measure_query_time_and_explain(conn, id_user, users, index_type="No Index", 
             public.table_app ta ON p.id_project = ta.project_id
             JOIN
             public.task t ON ta.id_table = t.table_id
-                WHERE email >%s;
+                WHERE email  = %s;
     """
 
     """Замер времени выполнения запроса и получение плана EXPLAIN"""
-    n = 500
+    n = 3
     times = []
     explain_plan = None
     avg_time = 0
@@ -168,14 +168,14 @@ def measure_query_time_and_explain(conn, id_user, users, index_type="No Index", 
         for _ in range(n):
             start = time()
             cur.execute("BEGIN;")
-            cur.execute(query, [id_user])
+            cur.execute(query, [email])
             cur.execute("COMMIT;")
             conn.commit()
             end = time()
-            query_time = (end - start ) * 1_000_000  # Преобразование в микросекунды
+            query_time = (end - start ) * 1_000  # Преобразование в микросекунды
             times.append(query_time)
             if explain_plan is None:
-                cur.execute("EXPLAIN (ANALYZE, BUFFERS) " + query, [id_user])
+                cur.execute("EXPLAIN (ANALYZE, BUFFERS) " + query, [email])
                 explain_plan = cur.fetchall()
         avg_time = np.mean(times)
         logging.info(f"Index Type: {index_type}, Number of Records: {num_records}, Average Query Time: {avg_time:.4f} seconds")
@@ -225,12 +225,12 @@ def main():
         recreate_tables(conn, 'CreateTables.sql')
 
         for index_type in index_types:
-            index_name = f"idx_user_id_{index_type.lower()}"
+            index_name = f"idx_user_email_{index_type.lower()}"
             insert_random_users(conn, users)
             insert_data(conn, projects, project_insert_query)
             insert_data(conn, tables, table_insert_query)
             insert_data(conn, tasks, task_insert_query)
-            create_index(conn, index_type, index_name, "public.user_app", "id_user")
+            create_index(conn, index_type, index_name, "public.user_app", "email")
 
             time_with_index, explain_with_index = measure_query_time_and_explain(conn, random_email, users, index_type, n)
             results.append((n, index_type, time_with_index, str(explain_with_index)))
@@ -252,7 +252,7 @@ def main():
         plt.plot(subset["Number of Records"], subset["Query Time (s)"], label=index_type, marker=markers[index_type], markersize=8)
 
     plt.xlabel("Кол-во записей в БД")
-    plt.ylabel("Среднее время выполнения запроса (микросекунды)")
+    plt.ylabel("Среднее время выполнения запроса (мс)")
     plt.title("Сравнение времени выполнения запросов с индексами HASH и B-TREE и без них.")
     plt.legend()
     plt.grid(True)

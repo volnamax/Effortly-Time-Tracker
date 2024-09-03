@@ -20,12 +20,12 @@ VALUES ('New Project', 'Project to develop new product', 1); -- предпола
 INSERT INTO public.group_user (name, description, project_id)
 VALUES ('Development Team', 'Team responsible for development', 1); -- предполагается, что project_id 1 существует
 
-
-
-
-
 INSERT INTO public.group_member (group_id, user_id, role)
 VALUES (1, 1, 'MANAGER'); -- предполагается, что group_id 1 и user_id 1 существуют
+
+
+
+
 
 
 
