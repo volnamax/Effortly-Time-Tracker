@@ -22,28 +22,31 @@ public class RsaKeyProperties {
 
     @Value("${rsa.public-key}")
     private Resource publicKeyResource;
-
     public RSAPublicKey getPublicKey() throws Exception {
         String key = new String(FileCopyUtils.copyToByteArray(publicKeyResource.getInputStream()), StandardCharsets.UTF_8)
                 .replace("-----BEGIN PUBLIC KEY-----", "")
                 .replace("-----END PUBLIC KEY-----", "")
-                .replace("\\n", "")
-                .replace("\n", "");
+                .replaceAll("\\s", ""); // Удаляем все пробелы, переводы строк и другие незначащие символы
+
         byte[] keyBytes = Base64.getDecoder().decode(key);
         X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
         KeyFactory kf = KeyFactory.getInstance("RSA");
         return (RSAPublicKey) kf.generatePublic(spec);
     }
-
     public RSAPrivateKey getPrivateKey() throws Exception {
         String key = new String(FileCopyUtils.copyToByteArray(privateKeyResource.getInputStream()), StandardCharsets.UTF_8)
                 .replace("-----BEGIN PRIVATE KEY-----", "")
                 .replace("-----END PRIVATE KEY-----", "")
-                .replace("\\n", "")
-                .replace("\n", "");
+                .replaceAll("\\s", ""); // Удаляем все пробелы, переводы строк и другие незначащие символы
+
         byte[] keyBytes = Base64.getDecoder().decode(key);
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory kf = KeyFactory.getInstance("RSA");
         return (RSAPrivateKey) kf.generatePrivate(spec);
     }
-}
+
+    }
+
+
+
+
