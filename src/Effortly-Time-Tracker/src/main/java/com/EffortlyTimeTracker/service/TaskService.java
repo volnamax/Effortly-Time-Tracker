@@ -2,6 +2,7 @@ package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.entity.TaskEntity;
+import com.EffortlyTimeTracker.enums.Status;
 import com.EffortlyTimeTracker.exception.table.TableIsEmpty;
 import com.EffortlyTimeTracker.exception.table.TableNotFoundException;
 import com.EffortlyTimeTracker.exception.task.TaskNotFoundException;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 //todo think about empty table (is exception ?)
@@ -29,6 +31,7 @@ public class TaskService {
     }
 
     public TaskEntity addTask(@NonNull TaskEntity task) {
+        task.setTimeAddTask(LocalDateTime.now());
         return taskRepository.save(task);
     }
 
@@ -73,4 +76,53 @@ public class TaskService {
         log.info("All todos for table with id {} deleted", table);
     }
 
+    public TaskEntity startTaskTimer(Integer taskId) {
+        TaskEntity task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(taskId));
+
+        if (task.getStartTimer() != null) {
+            throw new IllegalStateException("Timer is already running for this task.");
+        }
+
+        task.setStartTimer(LocalDateTime.now());
+        return taskRepository.save(task);
+    }
+
+    public TaskEntity stopTaskTimer(Integer taskId) {
+        TaskEntity task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(taskId));
+
+        if (task.getStartTimer() == null) {
+            throw new IllegalStateException("Timer is not running for this task.");
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        long duration = java.time.Duration.between(task.getStartTimer(), now).getSeconds();
+
+        task.setSumTimer(task.getSumTimer() == null ? duration : task.getSumTimer() + duration);
+        task.setStartTimer(null);
+
+        return taskRepository.save(task);
+    }
+
+    public TaskEntity completeTask(Integer taskId) {
+        TaskEntity task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(taskId));
+
+        if (task.getStatus() == Status.NO_ACTIVE) {
+            throw new IllegalStateException("Task is already completed.");
+        }
+
+        // Если таймер запущен, останавливаем его
+        if (task.getStartTimer() != null) {
+            LocalDateTime now = LocalDateTime.now();
+            long duration = java.time.Duration.between(task.getStartTimer(), now).getSeconds();
+            task.setSumTimer(task.getSumTimer() == null ? duration : task.getSumTimer() + duration);
+            task.setStartTimer(null);
+        }
+
+        task.setStatus(Status.NO_ACTIVE);
+        task.setTimeEndTask(LocalDateTime.now());
+        return taskRepository.save(task);
+    }
 }

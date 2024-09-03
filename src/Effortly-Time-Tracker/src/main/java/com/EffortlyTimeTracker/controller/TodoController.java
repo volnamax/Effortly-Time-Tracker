@@ -1,23 +1,26 @@
 package com.EffortlyTimeTracker.controller;
 
-import com.EffortlyTimeTracker.DTO.todoDTO.TodoNodeDTO;
-import com.EffortlyTimeTracker.DTO.todoDTO.TodoNodeResponseDTO;
+//todo role check AOP
+
+import com.EffortlyTimeTracker.DTO.todo.TodoNodeDTO;
+import com.EffortlyTimeTracker.DTO.todo.TodoNodeResponseDTO;
 import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import com.EffortlyTimeTracker.mapper.TodoNodeMapper;
 import com.EffortlyTimeTracker.service.TodoService;
+import com.EffortlyTimeTracker.service.middlewareOwn.todo.CheckOwner;
+import com.EffortlyTimeTracker.service.middlewareOwn.todo.CheckTaskOwner;
+import com.EffortlyTimeTracker.service.middlewareOwn.todo.CheckUserIdMatchesCurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @Slf4j
 @Tag(name = "TODO-controller")
 @RestController
@@ -36,6 +39,8 @@ public class TodoController {
             "priority(IMPORTANT_URGENTLY, NO_IMPORTANT_URGENTLY, IMPORTANT_NO_URGENTLY, NO_IMPORTANT_NO_URGENTLY)")
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
+    @CheckUserIdMatchesCurrentUser
     public ResponseEntity<TodoNodeResponseDTO> addTodo(@Valid @RequestBody TodoNodeDTO todoNodeDTO) {
         TodoNodeEntity todoNodeEntity = todoNodeMapper.toEntity(todoNodeDTO);
         log.info("Add todo: {}", todoNodeEntity);
@@ -51,22 +56,28 @@ public class TodoController {
     @Operation(summary = "Dell todo by id", description = "need id")
     @DeleteMapping("/del")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delTodo(@RequestParam(required = true) Integer TodoId) {
-        log.info("Del todo: {}", TodoId);
-        todoService.delTodoById(TodoId);
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST', 'ROLE_ADMIN')")
+    @CheckTaskOwner
+    public void delTodo(@RequestParam(required = true) Integer id) {
+        log.info("Del todo: {}", id);
+        todoService.delTodoById(id);
     }
 
     @Operation(summary = "Dell all todo by user id", description = "need user id")
     @DeleteMapping("/del-by-user-id")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delAllTodoBuUserID(@RequestParam(required = true) Integer userId) {
-        log.info("Del all todo by user: {}", userId);
-        todoService.delAllTodoByIdUser(userId);
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
+    @CheckOwner
+    public void delAllTodoBuUserID(@RequestParam(required = true) Integer id) {
+        log.info("Del all todo by user: {}", id);
+        todoService.delAllTodoByIdUser(id);
     }
 
     @Operation(summary = "Get all todo by id user")
     @GetMapping("/get-all-by-user-id")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
+    @CheckOwner
     public List<TodoNodeResponseDTO> getTodoAll(Integer id) {
         log.info("Get todo by id: {}", id);
         List<TodoNodeEntity> resTodoNodeEntity = todoService.getAllTodoByIdUser(id);
@@ -74,18 +85,6 @@ public class TodoController {
         List<TodoNodeResponseDTO> todoNodeResponseDTOS = todoNodeMapper.toDtoResponse(resTodoNodeEntity);
         log.info("Response: {}", todoNodeResponseDTOS);
         return todoNodeResponseDTOS;
-    }
-
-    @Operation(summary = "Get all todo")
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/get-all")
-    public List<TodoNodeResponseDTO> getTodoAll() {
-        List<TodoNodeEntity> resTodoNodeEntity = todoService.getAllTodo();
-        log.info("Response: {}", resTodoNodeEntity);
-        List<TodoNodeResponseDTO> todoNodeResponseDTOS = todoNodeMapper.toDtoResponse(resTodoNodeEntity);
-        log.info("Response: {}", todoNodeResponseDTOS);
-        return todoNodeResponseDTOS;
-
     }
 
 }

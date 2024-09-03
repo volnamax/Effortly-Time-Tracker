@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -35,15 +36,18 @@ class UserServiceTest {
     private UserEntity userEntity;
     private RoleEntity roleEntity;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
 
 
     @BeforeEach
     void setUp() {
-        userService = new UserService(userRepository, roleRepository);
+        userService = new UserService(userRepository, roleRepository, passwordEncoder);
 
         userEntity = new UserEntity();
         roleEntity = new RoleEntity();
-        roleEntity.setName(Role.USER);
+        roleEntity.setName(Role.MANAGER);
 
         userEntity.setUserId(1);
         userEntity.setUserName("TestUser");
@@ -56,7 +60,7 @@ class UserServiceTest {
 
     @Test
     public void addUserTestSuccess() {
-        when(roleRepository.findByName(Role.USER)).thenReturn(roleEntity);  // Mock the behavior of roleRepository
+        when(roleRepository.findByName(Role.MANAGER)).thenReturn(roleEntity);  // Mock the behavior of roleRepository
         when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);  // Mock the behavior of userRepository
 
         UserEntity savedUser = userService.addUser(userEntity);

@@ -1,8 +1,8 @@
 
 package com.EffortlyTimeTracker.mapper;
 
-import com.EffortlyTimeTracker.DTO.userDTO.UserCreateDTO;
-import com.EffortlyTimeTracker.DTO.userDTO.UserResponseDTO;
+import com.EffortlyTimeTracker.DTO.user.UserCreateDTO;
+import com.EffortlyTimeTracker.DTO.user.UserResponseDTO;
 import com.EffortlyTimeTracker.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -20,6 +20,7 @@ public interface UserMapper {
 
     @Mapping(source = "role.name", target = "role") // Обратное преобразование для role
     UserResponseDTO toDTOResponse(UserEntity entity);
+
 
     List<UserResponseDTO> toDtoListResponse(List<UserEntity> entities);
 
@@ -65,7 +66,7 @@ public interface UserMapper {
 //        if (userEntity.getRole() != null) {
 //            userDTO.setRole(userEntity.getRole().getName().toString());
 //        } else {
-//            userDTO.setRole("GUEST");
+//            userDTO.setRole("USER");
 //        }
 //
 //        userDTO.setDataSignIn(userEntity.getDataSignIn());

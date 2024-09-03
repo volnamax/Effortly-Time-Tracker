@@ -1,7 +1,7 @@
 package com.EffortlyTimeTracker.controller;
 
-import com.EffortlyTimeTracker.DTO.userDTO.UserCreateDTO;
-import com.EffortlyTimeTracker.DTO.userDTO.UserResponseDTO;
+import com.EffortlyTimeTracker.DTO.user.UserCreateDTO;
+import com.EffortlyTimeTracker.DTO.user.UserResponseDTO;
 import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.mapper.UserMapper;
 import com.EffortlyTimeTracker.service.UserService;
@@ -12,9 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Tag(name = "User-controller")
@@ -35,7 +37,8 @@ public class UserController {
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Add user for dto obj",
-            description = "need name , sname, email, password, role (ADMIN, USER, GUEST)")
+            description = "need name , sname, email, password, role (ADMIN, MANAGER, USER)")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserResponseDTO> addUser(@Valid @RequestBody UserCreateDTO userCreateDTO) {
         log.info("Add user: {}", userCreateDTO);
 
@@ -53,6 +56,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Dell user by id",
             description = "need id")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteUser(@RequestParam(required = true) Integer id) {
         log.info("Delete user by id: {}", id);
         userService.delUserById(id);
@@ -62,6 +66,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get user by id",
             description = "need id")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public UserResponseDTO getUser(@RequestParam(required = true) Integer id) {
         log.info("Get user by id: {}", id);
 
@@ -74,6 +79,7 @@ public class UserController {
     @GetMapping("/get-all")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get all user")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<UserResponseDTO> getUser() {
         log.info("Get all user");
         List<UserResponseDTO> userResponseDTOS = userMapper.toDtoListResponse(userService.getAllUsers());
@@ -81,5 +87,13 @@ public class UserController {
         return userResponseDTOS;
     }
 
+
+    //todo
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/api/user")
+    public ResponseEntity<UserEntity> getUserByEmail(@RequestParam String email) {
+        Optional<UserEntity> user = userService.getUserByEmail(email);
+        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }
 

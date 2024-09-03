@@ -1,5 +1,5 @@
 
-// todo check to all entity for controller and service
+
 
 
 package com.EffortlyTimeTracker.entity;

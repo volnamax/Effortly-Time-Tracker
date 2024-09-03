@@ -1,4 +1,4 @@
-package com.EffortlyTimeTracker.DTO.todoDTO;
+package com.EffortlyTimeTracker.DTO.todo;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TodoNodeDTO {
-
+public class TodoNodeResponseDTO {
+    Integer todoNodeId;
     @NotBlank(message = "Error todo node content  is empty")
     String content;
 

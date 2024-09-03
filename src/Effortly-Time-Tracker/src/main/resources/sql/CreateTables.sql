@@ -1,7 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS public;
 SET search_path TO public, pg_catalog;
 
-CREATE TYPE public.role_t AS ENUM ('ADMIN', 'USER', 'GUEST');
+CREATE TYPE public.role_t AS ENUM ('ADMIN', 'MANAGER', 'USER');
 CREATE TYPE public.status_t AS ENUM ('NO_ACTIVE', 'ACTIVE');
 CREATE TYPE public.priority_t AS ENUM ('IMPORTANT_URGENTLY', 'NO_IMPORTANT_URGENTLY', 'IMPORTANT_NO_URGENTLY', 'NO_IMPORTANT_NO_URGENTLY');
 
@@ -11,16 +11,16 @@ CREATE TABLE public.roles
     id_role SERIAL NOT NULL,
     PRIMARY KEY (id_role),
 
-    name    VARCHAR(255) CHECK (name IN ('ADMIN', 'USER', 'GUEST'))
+    name    VARCHAR(255) CHECK (name IN ('ADMIN', 'MANAGER', 'USER'))
 );
 
 ALTER TABLE public.roles
-    ADD CONSTRAINT chk_roles_name CHECK (name IN ('ADMIN', 'USER', 'GUEST'));
+    ADD CONSTRAINT chk_roles_name CHECK (name IN ('ADMIN', 'MANAGER', 'USER'));
 
 INSERT INTO public.roles ("name")
 VALUES ('ADMIN'),
-       ('USER'),
-       ('GUEST');
+       ('MANAGER'),
+       ('USER');
 
 
 CREATE TABLE public.user_app
@@ -35,7 +35,7 @@ CREATE TABLE public.user_app
     user_name        VARCHAR(255) NOT NULL,
     user_secondname  VARCHAR(255) NOT NULL,
 
-    role_id          INTEGER,
+    role_id          INTEGER NOT NULL,
     FOREIGN KEY (role_id) REFERENCES public.roles (id_role)
 );
 
@@ -61,11 +61,11 @@ CREATE TABLE public.todo_node
     PRIMARY KEY (id_todo),
 
     content  VARCHAR(255),
-    priority VARCHAR(255),
-    status   VARCHAR(255),
+    priority VARCHAR(32),
+    status   VARCHAR(16),
     due_data TIMESTAMP(6),
 
-    user_id  INTEGER,
+    user_id  INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES public.user_app (id_user)
 );
 
@@ -88,7 +88,7 @@ CREATE TABLE public.project
     name        VARCHAR(255) NOT NULL,
     description VARCHAR(255),
 
-    user_id     INTEGER,
+    user_id     INTEGER NOT NULL ,
     FOREIGN KEY (user_id) REFERENCES public.user_app (id_user)
 );
 
@@ -107,7 +107,7 @@ CREATE TABLE public.group_user
     name        VARCHAR(255) NOT NULL,
     description VARCHAR(255),
 
-    project_id  INTEGER UNIQUE,
+    project_id  INTEGER UNIQUE NOT NULL,
     FOREIGN KEY (project_id) REFERENCES public.project (id_project)
 );
 
@@ -125,14 +125,14 @@ CREATE TABLE public.group_member
 
     group_id INTEGER NOT NULL,
     user_id  INTEGER NOT NULL,
-    role     VARCHAR(255),
+    role     VARCHAR(16) NOT NULL,
 
     FOREIGN KEY (group_id) REFERENCES public.group_user (id_group),
     FOREIGN KEY (user_id) REFERENCES public.user_app (id_user)
 );
 
 ALTER TABLE public.group_member
-    ADD CONSTRAINT chk_group_member_role CHECK (role IN ('ADMIN', 'USER', 'GUEST'));
+    ADD CONSTRAINT chk_group_member_role CHECK (role IN ('ADMIN', 'MANAGER', 'USER'));
 
 
 
@@ -143,9 +143,9 @@ CREATE TABLE public.table_app
 
     description VARCHAR(255),
     name        VARCHAR(255) NOT NULL,
-    status      VARCHAR(255),
+    status      VARCHAR(255) NOT NULL,
 
-    project_id  INTEGER,
+    project_id  INTEGER NOT NULL,
     FOREIGN KEY (project_id) REFERENCES project (id_project)
 );
 
@@ -166,14 +166,14 @@ CREATE TABLE public.task
 
     description   VARCHAR(255),
     name          VARCHAR(255) NOT NULL,
-    status        VARCHAR(255) NOT NULL,
+    status        VARCHAR(16) NOT NULL,
 
     sum_timer     BIGINT,
     start_timer   TIMESTAMP(6),
     time_add_task TIMESTAMP(6),
     time_end_task TIMESTAMP(6),
 
-    table_id      INTEGER,
+    table_id      INTEGER NOT NULL ,
     FOREIGN KEY (table_id) REFERENCES public.table_app (id_table)
 );
 
@@ -196,7 +196,7 @@ CREATE TABLE public.tag
     color      VARCHAR(255),
     name       VARCHAR(255) NOT NULL,
 
-    project_id INTEGER,
+    project_id INTEGER NOT NULL ,
     FOREIGN KEY (project_id) REFERENCES project (id_project)
 );
 
@@ -218,3 +218,24 @@ CREATE TABLE public.task_tag
     FOREIGN KEY (task_id) REFERENCES public.task (id_task)
 );
 
+
+
+--
+-- CREATE INDEX poh ON public.user_app USING  hash (id_user) ;
+--
+-- EXPLAIN
+-- SELECT
+--     ua.user_name, ua.email,
+--     p.name AS project_name, p.description AS project_description,
+--     ta.name AS table_name, ta.description AS table_description,
+--     t.name AS task_name, t.description AS task_description, t.status AS task_status
+-- FROM
+--     public.user_app ua
+--         JOIN
+--     public.project p ON ua.id_user = p.user_id
+--         JOIN
+--     public.table_app ta ON p.id_project = ta.project_id
+--         JOIN
+--     public.task t ON ta.id_table = t.table_id
+-- WHERE
+--     ua.id_user = 10;

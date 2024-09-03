@@ -1,15 +1,13 @@
 package com.EffortlyTimeTracker.service;
 
-import com.EffortlyTimeTracker.entity.GroupEntity;
-import com.EffortlyTimeTracker.entity.ProjectEntity;
-import com.EffortlyTimeTracker.entity.RoleEntity;
-import com.EffortlyTimeTracker.entity.UserEntity;
+import com.EffortlyTimeTracker.entity.*;
 import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.exception.group.GroupNotFoundException;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.repository.GroupMemberRepository;
 import com.EffortlyTimeTracker.repository.GroupRepository;
 import com.EffortlyTimeTracker.repository.ProjectRepository;
+import com.EffortlyTimeTracker.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashSet;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,26 +30,41 @@ class GroupServiceTest {
 
     @Mock
     private ProjectRepository projectRepository;
+
     @Mock
     private GroupMemberRepository groupMemberRepository;
+
+    @Mock
+    private UserRepository userRepository;
+
     @InjectMocks
     private GroupService groupService;
 
     private GroupEntity groupEntity;
     private ProjectEntity projectEntity;
     private UserEntity userEntity;
+    private UserEntity anotherUserEntity;
     private RoleEntity roleEntity;
 
     @BeforeEach
     void setUp() {
         roleEntity = new RoleEntity();
-        roleEntity.setName(Role.USER);
+        roleEntity.setName(Role.MANAGER);
 
-        userEntity =  UserEntity.builder()
+        userEntity = UserEntity.builder()
                 .userName("name")
                 .userSecondname("secondname")
                 .email("qwerty@gmail.com")
                 .role(roleEntity)
+                .userId(1)
+                .build();
+
+        anotherUserEntity = UserEntity.builder()
+                .userName("anotherName")
+                .userSecondname("anotherSecondname")
+                .email("another@gmail.com")
+                .role(roleEntity)
+                .userId(2)
                 .build();
 
         projectEntity = ProjectEntity.builder()
@@ -65,15 +79,14 @@ class GroupServiceTest {
                 .name("New Group")
                 .description("New Group Description")
                 .project(projectEntity)
+                .members(new HashSet<>())  // Initialize members
                 .build();
     }
-
 
     @Test
     void addGroupTestSuccess() {
         when(projectRepository.findById(anyInt())).thenReturn(Optional.of(projectEntity));
         when(groupRepository.save(any(GroupEntity.class))).thenReturn(groupEntity);
-        when(groupMemberRepository.save(any())).thenReturn(null);  // Mock save method for GroupMemberRepository
 
         GroupEntity savedGroup = groupService.addGroup(groupEntity);
 
@@ -138,5 +151,122 @@ class GroupServiceTest {
 
         assertEquals("Group with id 1 not found", exception.getMessage());
     }
+    //todo test
+//
+//    @Test
+//    void addUserToGroupTestSuccess() {
+//        when(groupRepository.findById(anyInt())).thenReturn(Optional.of(groupEntity));
+//        when(userRepository.findById(2)).thenReturn(Optional.of(anotherUserEntity));
+//        when(groupMemberRepository.save(any(GroupMermberEntity.class))).thenReturn(null);
+//
+//        groupService.addUserToGroup(groupEntity.getGroupId(), anotherUserEntity.getUserId());
+//
+//        verify(groupMemberRepository).save(any(GroupMermberEntity.class));
+//        verify(groupRepository).save(any(GroupEntity.class));
+//    }
+//
+//    @Test
+//    void addUserToGroupTestGroupNotFound() {
+//        when(groupRepository.findById(anyInt())).thenReturn(Optional.empty());
+//
+//        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+//            groupService.addUserToGroup(1, anotherUserEntity.getUserId());
+//        });
+//
+//        assertEquals("Group not found", exception.getMessage());
+//    }
+//
+//    @Test
+//    void addUserToGroupTestUserNotFound() {
+//        when(groupRepository.findById(anyInt())).thenReturn(Optional.of(groupEntity));
+//        when(userRepository.findById(2)).thenReturn(Optional.empty());
+//
+//        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+//            groupService.addUserToGroup(groupEntity.getGroupId(), anotherUserEntity.getUserId());
+//        });
+//
+//        assertEquals("User not found", exception.getMessage());
+//    }
+//
+//    @Test
+//    void addUserToGroupTestUserAlreadyMember() {
+//        when(groupRepository.findById(anyInt())).thenReturn(Optional.of(groupEntity));
+//        when(userRepository.findById(1)).thenReturn(Optional.of(userEntity));
+//
+//        GroupMermberEntity existingMember = new GroupMermberEntity();
+//        existingMember.setGroup(groupEntity);
+//        existingMember.setUser(userEntity);
+//
+//        groupEntity.getMembers().add(existingMember);
+//
+//        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+//            groupService.addUserToGroup(groupEntity.getGroupId(), userEntity.getUserId());
+//        });
+//
+//        assertEquals("User is already a member of this group", exception.getMessage());
+//    }
+//
+//    @Test
+//    void removeUserFromGroupTestSuccess() {
+//        GroupMermberEntity existingMember = new GroupMermberEntity();
+//        existingMember.setGroup(groupEntity);
+//        existingMember.setUser(anotherUserEntity);
+//
+//        groupEntity.getMembers().add(existingMember);
+//
+//        when(groupRepository.findById(anyInt())).thenReturn(Optional.of(groupEntity));
+//        when(userRepository.findById(2)).thenReturn(Optional.of(anotherUserEntity));
+//
+//        groupService.removeUserFromGroup(groupEntity.getGroupId(), anotherUserEntity.getUserId());
+//
+//        verify(groupMemberRepository).delete(any(GroupMermberEntity.class));
+//        verify(groupRepository).save(any(GroupEntity.class));
+//    }
+//
+//    @Test
+//    void removeUserFromGroupTestGroupNotFound() {
+//        when(groupRepository.findById(anyInt())).thenReturn(Optional.empty());
+//
+//        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+//            groupService.removeUserFromGroup(1, anotherUserEntity.getUserId());
+//        });
+//
+//        assertEquals("Group not found", exception.getMessage());
+//    }
+//
+//    @Test
+//    void removeUserFromGroupTestUserNotFound() {
+//        when(groupRepository.findById(anyInt())).thenReturn(Optional.of(groupEntity));
+//        when(userRepository.findById(2)).thenReturn(Optional.empty());
+//
+//        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+//            groupService.removeUserFromGroup(groupEntity.getGroupId(), anotherUserEntity.getUserId());
+//        });
+//
+//        assertEquals("User not found", exception.getMessage());
+//    }
+//
+//    @Test
+//    void removeUserFromGroupTestUserNotMember() {
+//        when(groupRepository.findById(anyInt())).thenReturn(Optional.of(groupEntity));
+//        when(userRepository.findById(2)).thenReturn(Optional.of(anotherUserEntity));
+//
+//        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+//            groupService.removeUserFromGroup(groupEntity.getGroupId(), anotherUserEntity.getUserId());
+//        });
+//
+//        assertEquals("User is not a member of this group", exception.getMessage());
+//    }
+//
+//    @Test
+//    void removeUserFromGroupTestUserIsAdmin() {
+//        when(groupRepository.findById(anyInt())).thenReturn(Optional.of(groupEntity));
+//        when(userRepository.findById(1)).thenReturn(Optional.of(userEntity));
+//
+//        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+//            groupService.removeUserFromGroup(groupEntity.getGroupId(), userEntity.getUserId());
+//        });
+//
+//        assertEquals("Cannot remove the admin of the group", exception.getMessage());
+//    }
 }
-

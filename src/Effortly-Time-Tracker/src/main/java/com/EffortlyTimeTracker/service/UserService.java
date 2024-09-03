@@ -10,9 +10,11 @@ import com.EffortlyTimeTracker.repository.UserRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -20,11 +22,14 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder; // Внедрение PasswordEncoder
+
 
     @Autowired
-    public UserService(@NonNull UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(@NonNull UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder; // Внедрение PasswordEncoder
     }
 
 
@@ -38,6 +43,8 @@ public class UserService {
             throw new UserNotRoleException();
         }
         userEntity.setRole(role);
+        userEntity.setPasswordHash(passwordEncoder.encode(userEntity.getPasswordHash())); // Шифрование пароля
+
         return userRepository.save(userEntity);
 
     }
@@ -56,5 +63,8 @@ public class UserService {
 
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
+    }
+    public Optional<UserEntity> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }
