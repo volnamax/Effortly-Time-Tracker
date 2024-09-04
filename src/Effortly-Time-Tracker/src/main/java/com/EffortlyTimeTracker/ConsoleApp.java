@@ -4,6 +4,7 @@ import com.EffortlyTimeTracker.entity.*;
 import com.EffortlyTimeTracker.enums.Priority;
 import com.EffortlyTimeTracker.enums.Status;
 import com.EffortlyTimeTracker.service.*;
+import org.hibernate.collection.spi.PersistentSet;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -515,6 +516,7 @@ public class ConsoleApp implements CommandLineRunner {
             TableEntity table = tableService.getTableById(id);
             System.out.println("Table found: " + table);
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Error fetching table: " + e.getMessage());
         }
     }
