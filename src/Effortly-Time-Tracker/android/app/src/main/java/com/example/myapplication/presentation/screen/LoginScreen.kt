@@ -10,11 +10,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.koin.androidx.compose.koinViewModel
-
 @Composable
 fun LoginScreen(navController: NavController, viewModel: AuthViewModel = koinViewModel()) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val loginState by viewModel.loginState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -45,6 +45,12 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = koinVie
             Text("Login")
         }
 
+        // Отображение состояния логина, если пользователь успешно вошел
+        loginState?.let {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text("Welcome, ${it.displayName}")
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = { navController.navigate("register") },
@@ -54,3 +60,4 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = koinVie
         }
     }
 }
+

@@ -17,6 +17,7 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = koin
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var role by remember { mutableStateOf("") }
+    val registerState by viewModel.registerState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -65,6 +66,12 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = koin
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Register")
+        }
+
+        // Отображение состояния регистрации, если пользователь успешно зарегистрирован
+        registerState?.let {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text("Welcome, ${it.displayName}")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
