@@ -34,8 +34,12 @@ public class ConsoleApp implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        // Сначала проверяем переменную окружения
+        String entityChoice = System.getenv("ENTITY_TYPE");
         Scanner scanner = new Scanner(System.in);
-        while (true) {
+
+        // Если переменной окружения нет, запрашиваем ввод через консоль
+        if (entityChoice == null) {
             System.out.println("Choose an entity type to manage: ");
             System.out.println("1. User");
             System.out.println("2. Todo");
@@ -45,43 +49,51 @@ public class ConsoleApp implements CommandLineRunner {
             System.out.println("6. Tag");
             System.out.println("7. Group");
             System.out.println("8. Exit");
-            String entityChoice = scanner.nextLine();
+            entityChoice = scanner.nextLine();
+        }
 
-            try {
-                switch (entityChoice) {
-                    case "1":
-                        manageUsers(scanner);
-                        break;
-                    case "2":
-                        manageTodos(scanner);
-                        break;
-                    case "3":
-                        manageProjects(scanner);
-                        break;
-                    case "4":
-                        manageTables(scanner);
-                        break;
-                    case "5":
-                        manageTasks(scanner);
-                        break;
-                    case "6":
-                        manageTags(scanner);
-                        break;
-                    case "7":
-                        manageGroups(scanner);
-                        break;
-                    case "8":
-                        System.out.println("Exiting...");
-                        return;
-                    default:
-                        System.out.println("Invalid choice, try again.");
-                }
-            } catch (Exception e) {
-                System.out.println("An error occurred: " + e.getMessage());
-                System.out.println("Returning to main menu...");
+        try {
+            switch (entityChoice) {
+                case "1":
+                case "User":
+                    manageUsers(scanner);
+                    break;
+                case "2":
+                case "Todo":
+                    manageTodos(scanner);
+                    break;
+                case "3":
+                case "Project":
+                    manageProjects(scanner);
+                    break;
+                case "4":
+                case "Table":
+                    manageTables(scanner);
+                    break;
+                case "5":
+                case "Task":
+                    manageTasks(scanner);
+                    break;
+                case "6":
+                case "Tag":
+                    manageTags(scanner);
+                    break;
+                case "7":
+                case "Group":
+                    manageGroups(scanner);
+                    break;
+                case "8":
+                case "Exit":
+                    System.out.println("Exiting...");
+                    return;
+                default:
+                    System.out.println("Invalid choice, exiting.");
             }
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
         }
     }
+
 
     private void manageGroups(Scanner scanner) {
         while (true) {
