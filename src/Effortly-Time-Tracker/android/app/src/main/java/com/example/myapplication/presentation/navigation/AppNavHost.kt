@@ -2,13 +2,12 @@ package com.example.myapplication.presentation.navigation
 
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.myapplication.presentation.screen.LoginScreen
-import com.example.myapplication.presentation.screen.MainScreen
-import com.example.myapplication.presentation.screen.RegisterScreen
+import com.example.myapplication.presentation.screen.auth.LoginScreen
+import com.example.myapplication.presentation.screen.auth.RegisterScreen
+import com.example.myapplication.presentation.screen.todo.TodoListScreen
 
 @Composable
 fun AppNavHost(navController: NavHostController) {
@@ -19,9 +18,8 @@ fun AppNavHost(navController: NavHostController) {
         composable("register") {
             RegisterScreen(navController)
         }
-        composable("main_screen") {
-            MainScreen()  // Ваш главный экран
+        composable("todo") {
+            TodoListScreen(navController)
         }
     }
 }
-

@@ -96,4 +96,10 @@ public class AuthController {
         return tokenService.generateToken(auth);
     }
 
+    @GetMapping("/get-user-id")
+    public ResponseEntity<Integer> getUserIdByEmail(@RequestParam String email) {
+        Optional<UserEntity> userEntity = userService.getUserByEmail(email);
+        return userEntity.map(entity -> ResponseEntity.ok(entity.getUserId())).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+    }
+
 }

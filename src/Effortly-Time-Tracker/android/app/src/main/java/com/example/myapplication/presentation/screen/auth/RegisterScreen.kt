@@ -1,4 +1,4 @@
-package com.example.myapplication.presentation.screen
+package com.example.myapplication.presentation.screen.auth
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
