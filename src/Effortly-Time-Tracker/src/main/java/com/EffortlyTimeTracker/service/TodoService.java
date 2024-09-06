@@ -2,6 +2,7 @@ package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import com.EffortlyTimeTracker.entity.UserEntity;
+import com.EffortlyTimeTracker.enums.Status;
 import com.EffortlyTimeTracker.exception.todo.TodoNodeIsEmpty;
 import com.EffortlyTimeTracker.exception.todo.TodoNotFoudException;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
@@ -77,4 +78,11 @@ public class TodoService {
         return userTodos;
     }
 
+    public TodoNodeEntity updateTodoStatus(Integer id, Status status) {
+        TodoNodeEntity todo = todoRepository.findById(id)
+                .orElseThrow(() -> new TodoNotFoudException(id));
+
+        todo.setStatus(status);  // Обновляем статус
+        return todoRepository.save(todo);  // Сохраняем изменения
+    }
 }

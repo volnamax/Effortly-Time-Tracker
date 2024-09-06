@@ -4,10 +4,11 @@ package com.example.myapplication.presentation.screen.todo
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.domain.model.Priority
-import com.example.myapplication.domain.model.Todo
+import com.example.myapplication.datasource.remote.model.StatusEnum
+import com.example.myapplication.datasource.remote.model.TodoNodeDTO
 import com.example.myapplication.domain.usecase.todo.AddTodoUseCase
 import com.example.myapplication.domain.usecase.todo.GetTodosUseCase
+import com.example.myapplication.domain.usecase.todo.UpdateTodoStatusUseCase
 import com.example.myapplication.presentation.mapper.toPresentation
 import com.example.myapplication.presentation.model.TodoPresentation
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +18,8 @@ import kotlinx.coroutines.launch
 
 class TodoViewModel(
     private val getTodosUseCase: GetTodosUseCase,
-    private val addTodoUseCase: AddTodoUseCase // Добавляем UseCase для добавления задачи
+    private val addTodoUseCase: AddTodoUseCase, // Добавляем UseCase для добавления задачи
+    private val updateTodoStatusUseCase: UpdateTodoStatusUseCase
 ) : ViewModel() {
 
     private val _todoState = MutableStateFlow<List<TodoPresentation>>(emptyList())
@@ -36,19 +38,33 @@ class TodoViewModel(
     }
 
     // Функция для добавления новой задачи
+
+
     fun addTodo(content: String, priority: String, userId: Int) {
         viewModelScope.launch {
             try {
-                val newTodo = Todo(
-                    id = 0L,
+                val newTodoDTO = TodoNodeDTO(
                     content = content,
-                    status = "ACTIVE",
-                    priority = Priority.valueOf(priority)
+                    priority = priority,
+                    userID = userId
                 )
-                addTodoUseCase(newTodo, userId)
-                loadTodos(userId) // Обновляем список после добавления
+                Log.d("APP", "Adding new todo: $newTodoDTO")
+                addTodoUseCase(newTodoDTO)  // Передаем DTO в UseCase
+                loadTodos(userId)  // Обновляем список после добавления
             } catch (e: Exception) {
-                //todo  Обрабатываем ошибку
+                Log.e("APP", "Error adding todo: ${e.message}")
+            }
+        }
+    }
+
+    fun updateTodoStatus(todoId: Long, newStatus: StatusEnum, userId: Int) {
+        viewModelScope.launch {
+            try {
+                Log.d("APP", "todoId = $todoId,,,,,,${newStatus.toString()}")
+                updateTodoStatusUseCase(todoId, newStatus)
+                loadTodos(userId)
+            } catch (e: Exception) {
+                // Handle the error
             }
         }
     }

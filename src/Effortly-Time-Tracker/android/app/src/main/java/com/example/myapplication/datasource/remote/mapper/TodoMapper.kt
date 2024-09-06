@@ -1,13 +1,17 @@
 package com.example.myapplication.datasource.remote.mapper
+import com.example.myapplication.datasource.remote.model.StatusEnum
 import com.example.myapplication.datasource.remote.model.TodoNodeResponseDTO
 import com.example.myapplication.domain.model.Priority
 import com.example.myapplication.domain.model.Todo
 
 fun TodoNodeResponseDTO.toDomain(): Todo {
     return Todo(
-        id = this.id,
+        id_todo = this.id_todo,
         content = this.content,
-        status = this.status,
+        status = when(this.status){
+            "NO_ACTIVE" -> StatusEnum.NO_ACTIVE
+            else -> StatusEnum.ACTIVE
+        },
         priority = when (this.priority) {
             "IMPORTANT_URGENTLY" -> Priority.IMPORTANT_URGENTLY
             "NO_IMPORTANT_URGENTLY" -> Priority.NO_IMPORTANT_URGENTLY

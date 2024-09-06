@@ -5,6 +5,7 @@ package com.EffortlyTimeTracker.controller;
 import com.EffortlyTimeTracker.DTO.todo.TodoNodeDTO;
 import com.EffortlyTimeTracker.DTO.todo.TodoNodeResponseDTO;
 import com.EffortlyTimeTracker.entity.TodoNodeEntity;
+import com.EffortlyTimeTracker.enums.Status;
 import com.EffortlyTimeTracker.mapper.TodoNodeMapper;
 import com.EffortlyTimeTracker.service.TodoService;
 import com.EffortlyTimeTracker.service.middlewareOwn.todo.CheckOwner;
@@ -86,5 +87,20 @@ public class TodoController {
         log.info("Response: {}", todoNodeResponseDTOS);
         return todoNodeResponseDTOS;
     }
+
+    @PatchMapping("/update-status")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
+    public ResponseEntity<?> updateTodoStatus(@RequestParam Integer id, @RequestParam Status status) {
+        log.info("Updating status of todo with ID: {} to {}", id, status);
+
+        TodoNodeEntity updatedTodo = todoService.updateTodoStatus(id, status);  // Логика обновления статуса
+        TodoNodeResponseDTO updatedTodoDTO = todoNodeMapper.toDtoResponse(updatedTodo);
+
+        return ResponseEntity.ok(updatedTodoDTO);
+    }
+
+
+
 
 }

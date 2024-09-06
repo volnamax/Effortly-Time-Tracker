@@ -10,6 +10,7 @@ import com.example.myapplication.domain.usecase.todo.GetTodosUseCase
 import com.example.myapplication.domain.usecase.LoginUseCase
 import com.example.myapplication.domain.usecase.RegisterUseCase
 import com.example.myapplication.domain.usecase.todo.AddTodoUseCase
+import com.example.myapplication.domain.usecase.todo.UpdateTodoStatusUseCase
 import com.example.myapplication.presentation.screen.auth.AuthViewModel
 import com.example.myapplication.presentation.screen.todo.TodoViewModel
 import org.koin.android.ext.koin.androidContext
@@ -29,5 +30,8 @@ val appModule = module {
     viewModel { AuthViewModel(get(), get()) }
 
     single { AddTodoUseCase(get()) }
-    viewModel { TodoViewModel(get(), get()) } // Передаём оба use case в viewModel
+    viewModel { TodoViewModel(get(), get(), get()) } // Передаём оба use case в viewModel
+
+    factory { UpdateTodoStatusUseCase(get()) }
+
 }

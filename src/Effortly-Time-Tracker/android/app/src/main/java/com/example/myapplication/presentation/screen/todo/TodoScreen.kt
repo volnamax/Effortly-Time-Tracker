@@ -1,5 +1,6 @@
 package com.example.myapplication.presentation.screen.todo
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,12 @@ import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -30,14 +37,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.myapplication.context.TokenManager
+import com.example.myapplication.datasource.remote.model.StatusEnum
 import com.example.myapplication.domain.model.Priority
 import com.example.myapplication.presentation.model.TodoPresentation
 import org.koin.androidx.compose.koinViewModel
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodoListScreen(
     navController: NavController,
@@ -47,7 +58,14 @@ fun TodoListScreen(
     val userId = remember { TokenManager.getUserId(context) ?: -1 }
 
     var newTodoContent by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
     var selectedPriority by remember { mutableStateOf("IMPORTANT_URGENTLY") }
+    val priorityOptions = listOf(
+        "IMPORTANT_URGENTLY",
+        "NO_IMPORTANT_URGENTLY",
+        "IMPORTANT_NO_URGENTLY",
+        "NO_IMPORTANT_NO_URGENTLY"
+    )
 
     LaunchedEffect(userId) {
         if (userId != -1) {
@@ -62,98 +80,92 @@ fun TodoListScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        if (todos.value.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("No tasks available", color = Color.Gray)
-            }
-        } else {
-            TodoCard(todoItems = todos.value)
-        }
+        // Форма для добавления нового todo
+        TextField(
+            value = newTodoContent,
+            onValueChange = { newTodoContent = it },
+            label = { Text("Введите название дела") },
+            modifier = Modifier.fillMaxWidth()
+        )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+        // Выбор приоритета с использованием ExposedDropdownMenuBox
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = { expanded = !expanded }
         ) {
-            // Форма для добавления нового todo
-            TextField(
-                value = newTodoContent,
-                onValueChange = { newTodoContent = it },
-                label = { Text("Введите название дела") },
-                modifier = Modifier.fillMaxWidth()
+            OutlinedTextField(
+                label = { Text(text = "Выберите приоритет") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .menuAnchor(),
+                value = selectedPriority,
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Выбор приоритета
-            DropdownMenu(
-                expanded = true, // Сделайте выбор приоритета интерактивным
-                onDismissRequest = { /* закрытие меню */ }
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
             ) {
-                listOf(
-                    "IMPORTANT_URGENTLY",
-                    "NO_IMPORTANT_URGENTLY",
-                    "IMPORTANT_NO_URGENTLY",
-                    "NO_IMPORTANT_NO_URGENTLY"
-                ).forEach { priority ->
-                    DropdownMenuItem(onClick = { selectedPriority = priority }) {
+                priorityOptions.forEach { priority ->
+                    DropdownMenuItem(
+                        onClick = {
+                            selectedPriority = priority
+                            expanded = false
+                        }
+                    ) {
                         Text(text = priority)
                     }
                 }
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Button(
-                onClick = {
-                    viewModel.addTodo(newTodoContent, selectedPriority, userId)
-                    newTodoContent = "" // Очищаем поле ввода после добавления
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Add Todo")
-            }
         }
 
-    }
-}
+        Spacer(modifier = Modifier.height(8.dp))
 
-
-@Composable
-fun TodoCard(todoItems: List<TodoPresentation>) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        elevation = 8.dp,
-        backgroundColor = Color(0xFFE3F2FD) // Задаём цвет фона для карточки
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
+        Button(
+            onClick = {
+                viewModel.addTodo(newTodoContent, selectedPriority, userId)
+                newTodoContent = "" // Очищаем поле ввода после добавления
+            },
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = "Дела",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-            // Отображаем список задач
-            LazyColumn {
-                items(todoItems) { todo ->
-                    TodoItem(todo)
+            Text("Добавить дело")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Отображаем список только активных задач
+        val activeTodos = todos.value.filter { it.status  == StatusEnum.ACTIVE }
+
+        if (activeTodos.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("No active tasks available", color = Color.Gray)
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+                items(todos.value) { todo ->
+                    TodoItem(todo) { todoId, newStatus ->
+                        viewModel.updateTodoStatus(todoId, newStatus, userId)
+                        Log.e("sds", "$todo")
+                    }
                 }
             }
+
         }
     }
 }
 
 @Composable
-fun TodoItem(todo: TodoPresentation) {
+fun TodoItem(todo: TodoPresentation, onStatusChange: (Long, StatusEnum) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -162,18 +174,20 @@ fun TodoItem(todo: TodoPresentation) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Checkbox(
-            checked = todo.status == "DONE", // Измените в зависимости от состояния задачи
-            onCheckedChange = { /* TODO: Добавить обработку завершения задачи */ }
+            checked = todo.status == StatusEnum.NO_ACTIVE,
+            onCheckedChange = {
+                val newStatus = if (todo.status == StatusEnum.NO_ACTIVE) StatusEnum.ACTIVE else StatusEnum.NO_ACTIVE
+                onStatusChange(todo.id_todo, newStatus) // Now passing both the ID and the new status
+            }
         )
         Text(
             text = todo.content,
             modifier = Modifier
                 .weight(1f)
                 .padding(start = 8.dp),
-            fontWeight = if (todo.status == "DONE") FontWeight.Normal else FontWeight.Bold
+            fontWeight = if (todo.status == StatusEnum.NO_ACTIVE) FontWeight.Normal else FontWeight.Bold
         )
 
-        // Иконка приоритета (например, восклицательный знак для важных задач)
         when (todo.priority) {
             Priority.IMPORTANT_URGENTLY -> {
                 Text(
@@ -196,8 +210,9 @@ fun TodoItem(todo: TodoPresentation) {
             }
 
             else -> {
-                // Для остальных приоритетов иконку можно не отображать
+                // For other priorities, don't show the icon
             }
         }
     }
 }
+

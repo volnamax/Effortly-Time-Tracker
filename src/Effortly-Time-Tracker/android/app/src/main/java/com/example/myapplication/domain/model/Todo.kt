@@ -1,9 +1,11 @@
 package com.example.myapplication.domain.model
 
+import com.example.myapplication.datasource.remote.model.StatusEnum
+
 data class Todo(
-    val id: Long,
+    val id_todo: Long,
     val content: String,
-    val status: String,
+    val status: StatusEnum,
     val priority: Priority
 )
 
