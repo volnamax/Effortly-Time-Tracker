@@ -5,6 +5,7 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
@@ -21,14 +22,15 @@ sealed class BottomNavItem(
 ) {
     object Todos : BottomNavItem("todo", "Todos", Icons.Default.List)
     object Profile : BottomNavItem("profile", "Profile", Icons.Default.Person)
-    object Settings : BottomNavItem("settings", "Settings", Icons.Default.Settings)
+    object Project : BottomNavItem("projects", "Project", Icons.Default.DateRange)
 }
+
 @Composable
 fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
         BottomNavItem.Todos,
-        BottomNavItem.Profile,
-        BottomNavItem.Settings
+        BottomNavItem.Project,
+        BottomNavItem.Profile
     )
 
     BottomNavigation(

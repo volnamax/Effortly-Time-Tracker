@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.myapplication.presentation.screen.auth.LoginScreen
 import com.example.myapplication.presentation.screen.auth.RegisterScreen
+import com.example.myapplication.presentation.screen.project.AddProjectScreen
+import com.example.myapplication.presentation.screen.project.ProjectListScreen
 import com.example.myapplication.presentation.screen.profile.ProfileScreen
 import com.example.myapplication.presentation.screen.todo.TodoListScreen
 
@@ -25,6 +27,12 @@ fun AppNavHost(navController: NavHostController) {
         }
         composable("register") {
             RegisterScreen(navController)
+        }
+        composable("projects") {
+            ProjectListScreen(navController)
+        }
+        composable("addProject") {
+            AddProjectScreen(navController)
         }
     }
 }

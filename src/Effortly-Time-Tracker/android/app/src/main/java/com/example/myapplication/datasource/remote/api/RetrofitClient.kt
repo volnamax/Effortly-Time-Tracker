@@ -4,6 +4,7 @@ package com.example.myapplication.datasource.remote.api
 import android.content.Context
 import com.example.myapplication.context.AuthInterceptor
 import com.example.myapplication.data.datasourse.remote.sevice.AuthService
+import com.example.myapplication.data.datasourse.remote.sevice.ProjectService
 import com.example.myapplication.data.datasourse.remote.sevice.TodoService
 import com.example.myapplication.data.datasourse.remote.sevice.UserService
 import okhttp3.OkHttpClient
@@ -30,19 +31,20 @@ object RetrofitClient {
             .build()
     }
 
-    // Пример использования AuthService
     fun createAuthService(context: Context): AuthService {
         return createRetrofit(context).create(AuthService::class.java)
     }
 
-    // Создаем TodoService
     fun createTodoService(context: Context): TodoService {
         return createRetrofit(context).create(TodoService::class.java)
     }
 
 
-    // Создаем TodoService
     fun createUserService(context: Context): UserService {
         return createRetrofit(context).create(UserService::class.java)
+    }
+
+    fun createProjectService(context: Context): ProjectService {
+        return createRetrofit(context).create(ProjectService::class.java)
     }
 }
