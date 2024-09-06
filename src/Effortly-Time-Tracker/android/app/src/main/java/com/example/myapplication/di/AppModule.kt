@@ -5,12 +5,14 @@ import TodoViewModel
 import com.example.myapplication.data.repository.AuthRepositoryImpl
 import com.example.myapplication.data.repository.ProjectRepositoryImpl
 import com.example.myapplication.data.repository.TableRepositoryImpl
+import com.example.myapplication.data.repository.TaskRepositoryImpl
 import com.example.myapplication.data.repository.TodoRepositoryImpl
 import com.example.myapplication.data.repository.UserRepositoryImpl
 import com.example.myapplication.datasource.remote.api.RetrofitClient
 import com.example.myapplication.domain.repository.AuthRepository
 import com.example.myapplication.domain.repository.ProjectRepository
 import com.example.myapplication.domain.repository.TableRepository
+import com.example.myapplication.domain.repository.TaskRepository
 import com.example.myapplication.domain.repository.TodoRepository
 import com.example.myapplication.domain.repository.UserRepository
 import com.example.myapplication.domain.usecase.project.AddProjectUseCase
@@ -25,6 +27,8 @@ import com.example.myapplication.presentation.screen.auth.AuthViewModel
 import com.example.myapplication.presentation.screen.project.ProjectViewModel
 import com.example.myapplication.presentation.screen.profile.ProfileViewModel
 import com.example.myapplication.presentation.screen.project.ProjectDetailViewModel
+import com.example.myapplication.presentation.screen.table.TableDetailScreen
+import com.example.myapplication.presentation.screen.table.TableDetailViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -43,6 +47,7 @@ val appModule = module {
         )
     }
     single<TableRepository> { TableRepositoryImpl(RetrofitClient.createTableService(androidContext())) }
+    single<TaskRepository> { TaskRepositoryImpl(RetrofitClient.createTaskService(androidContext())) }
 
     // Use Cases
     single { RegisterUseCase(get()) }
@@ -62,6 +67,7 @@ val appModule = module {
     viewModel { ProjectViewModel(get()) }
     viewModel { ProjectDetailViewModel(get(), get()) }
 
+    viewModel { TableDetailViewModel(get()) }
 
     // Services
     single { RetrofitClient.createUserService(androidContext()) }

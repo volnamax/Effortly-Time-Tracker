@@ -1,5 +1,6 @@
 package com.example.myapplication.presentation.screen.project
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -110,23 +111,26 @@ fun ProjectDetailScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Отображаем таблицы проекта
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
         ) {
             items(tables) { table ->
-                TableItem(table = table)
+                TableItem(table = table, onClick = {
+                    navController.navigate("tableDetail/${table.tableId}")
+                })
             }
         }
     }
 }
 
 @Composable
-fun TableItem(table: Table) {
+fun TableItem(table: Table,  onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
+            .clickable(onClick = onClick) // Открываем экран таблицы при нажатии
+
     ) {
         Text(text = table.name, fontSize = 20.sp, fontWeight = FontWeight.Bold)
         Text(text = table.description ?: "Без описания", fontSize = 16.sp)

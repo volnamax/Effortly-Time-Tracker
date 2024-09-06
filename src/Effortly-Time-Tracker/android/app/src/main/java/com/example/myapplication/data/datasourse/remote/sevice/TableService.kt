@@ -9,7 +9,7 @@ import retrofit2.http.Query
 interface TableService {
 
     @GET("/api/table/get-all-by-project-id")
-    suspend fun getTablesByProjectId(@Query("id") projectId: Int): List<Table>
+    suspend fun getTablesByProjectId(@Query("id") tableId: Int): List<Table>
 
     @POST("/api/table/add")
     suspend fun addTable(@Body tableDTO: Table): Table
