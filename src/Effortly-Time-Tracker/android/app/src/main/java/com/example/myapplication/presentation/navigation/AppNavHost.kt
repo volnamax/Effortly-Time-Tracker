@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.myapplication.presentation.screen.LoginScreen
+import com.example.myapplication.presentation.screen.MainScreen
 import com.example.myapplication.presentation.screen.RegisterScreen
 
 @Composable
@@ -17,6 +18,9 @@ fun AppNavHost(navController: NavHostController) {
         }
         composable("register") {
             RegisterScreen(navController)
+        }
+        composable("main_screen") {
+            MainScreen()  // Ваш главный экран
         }
     }
 }

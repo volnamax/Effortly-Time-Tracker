@@ -11,9 +11,9 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
-    single<AuthRepository> { AuthRepositoryImpl(get()) }
+    single { RetrofitClient.createAuthService(get()) }  // Передаем context через Koin
 
-    single { RetrofitClient.authService }
+    single<AuthRepository> { AuthRepositoryImpl(get()) }
 
     single { RegisterUseCase(get()) }
 
