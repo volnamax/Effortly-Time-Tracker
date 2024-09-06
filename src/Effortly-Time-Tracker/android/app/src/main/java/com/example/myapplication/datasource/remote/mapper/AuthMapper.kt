@@ -6,9 +6,9 @@ import com.example.myapplication.domain.model.User
 
 fun UserResponseDTO.toDomain(): User {
     return User(
-        id = this.id,
-        firstName = this.userName,
-        lastName = this.userSecondname,
+        userId = this.userId,
+        userName = this.userName,
+        userSecondname = this.userSecondname,
         email = this.email,
         role = this.role
     )

@@ -47,7 +47,22 @@ object TokenManager {
         sharedPreferences.edit().remove(TOKEN_KEY).remove(USER_ID_KEY).apply()
         Log.d("TokenManager", "Token and UserID cleared")
     }
-
+    // New method to extract the email from the token
+    fun getEmailFromToken(token: String): String? {
+        return try {
+            val parts = token.split(".")
+            if (parts.size == 3) {
+                val payload = String(Base64.decode(parts[1], Base64.URL_SAFE))
+                val jsonObject = JSONObject(payload)
+                jsonObject.getString("sub") // Assuming "sub" contains the email
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("TokenManager", "Error extracting email from token: ${e.message}")
+            null
+        }
+    }
     // Метод для извлечения userId из JWT токена по email
     fun getUserIdFromToken(token: String, context: Context, onSuccess: (Int?) -> Unit) {
         try {

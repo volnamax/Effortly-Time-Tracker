@@ -5,6 +5,7 @@ import android.content.Context
 import com.example.myapplication.context.AuthInterceptor
 import com.example.myapplication.data.datasourse.remote.sevice.AuthService
 import com.example.myapplication.data.datasourse.remote.sevice.TodoService
+import com.example.myapplication.data.datasourse.remote.sevice.UserService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -37,5 +38,11 @@ object RetrofitClient {
     // Создаем TodoService
     fun createTodoService(context: Context): TodoService {
         return createRetrofit(context).create(TodoService::class.java)
+    }
+
+
+    // Создаем TodoService
+    fun createUserService(context: Context): UserService {
+        return createRetrofit(context).create(UserService::class.java)
     }
 }

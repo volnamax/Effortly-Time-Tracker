@@ -89,11 +89,14 @@ public class UserController {
 
 
     //todo
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/api/user")
-    public ResponseEntity<UserEntity> getUserByEmail(@RequestParam String email) {
+ //   @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/get-by-email")
+    public UserResponseDTO getUserByEmail(@RequestParam String email) {
         Optional<UserEntity> user = userService.getUserByEmail(email);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        log.info("UserEntity: {}", user);
+        UserResponseDTO userResponseDTO = userMapper.toDTOResponse(user.get());
+        log.info("UserResponseDTO: {}", userResponseDTO);
+        return userResponseDTO;
     }
 }
 
