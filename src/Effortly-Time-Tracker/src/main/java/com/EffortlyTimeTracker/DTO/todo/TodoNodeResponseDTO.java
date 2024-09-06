@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TodoNodeResponseDTO {
-    Integer todoNodeId;
+    Integer todoId;
     @NotBlank(message = "Error todo node content  is empty")
     String content;
 

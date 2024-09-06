@@ -12,8 +12,8 @@ class TodoRepositoryImpl(private val todoService: TodoService) : TodoRepository 
     override suspend fun getTodosByUserId(userId: Int): List<Todo> {
         return todoService.getTodosByUserId(userId).map { it.toDomain() }
     }
-    override suspend fun addTodo(todoNodeDTO: TodoNodeDTO) {
-        todoService.addTodo(todoNodeDTO)
+    override suspend fun addTodo(todo: TodoNodeDTO) {
+        todoService.addTodo(todo)
     }
     override suspend fun updateTodoStatus(id: Long, status: StatusEnum): TodoNodeResponseDTO {
         return todoService.updateTodoStatus(id, status)

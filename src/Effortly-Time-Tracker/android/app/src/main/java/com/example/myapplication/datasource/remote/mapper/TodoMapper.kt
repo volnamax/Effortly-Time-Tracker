@@ -6,7 +6,7 @@ import com.example.myapplication.domain.model.Todo
 
 fun TodoNodeResponseDTO.toDomain(): Todo {
     return Todo(
-        id_todo = this.id_todo,
+        todoId = this.todoId,
         content = this.content,
         status = when(this.status){
             "NO_ACTIVE" -> StatusEnum.NO_ACTIVE

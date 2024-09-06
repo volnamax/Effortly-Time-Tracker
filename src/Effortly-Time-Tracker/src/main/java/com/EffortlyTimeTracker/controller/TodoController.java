@@ -96,6 +96,7 @@ public class TodoController {
 
         TodoNodeEntity updatedTodo = todoService.updateTodoStatus(id, status);  // Логика обновления статуса
         TodoNodeResponseDTO updatedTodoDTO = todoNodeMapper.toDtoResponse(updatedTodo);
+        log.info("updatedTodoDTO {}", updatedTodoDTO);
 
         return ResponseEntity.ok(updatedTodoDTO);
     }

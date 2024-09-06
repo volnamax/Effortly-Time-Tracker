@@ -1,5 +1,6 @@
 package com.example.myapplication.presentation.screen.todo
 
+import TodoViewModel
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -13,17 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
-import androidx.compose.material.Card
 import androidx.compose.material.Checkbox
-import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,16 +34,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.myapplication.context.TokenManager
 import com.example.myapplication.datasource.remote.model.StatusEnum
 import com.example.myapplication.domain.model.Priority
-import com.example.myapplication.presentation.model.TodoPresentation
+import com.example.myapplication.domain.model.Todo
 import org.koin.androidx.compose.koinViewModel
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,23 +75,23 @@ fun TodoListScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Форма для добавления нового todo
+        // Form to add a new todo
         TextField(
             value = newTodoContent,
             onValueChange = { newTodoContent = it },
-            label = { Text("Введите название дела") },
+            label = { Text("Enter todo title") },
             modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Выбор приоритета с использованием ExposedDropdownMenuBox
+        // Priority dropdown menu
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = { expanded = !expanded }
         ) {
             OutlinedTextField(
-                label = { Text(text = "Выберите приоритет") },
+                label = { Text(text = "Select Priority") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .menuAnchor(),
@@ -127,17 +122,17 @@ fun TodoListScreen(
         Button(
             onClick = {
                 viewModel.addTodo(newTodoContent, selectedPriority, userId)
-                newTodoContent = "" // Очищаем поле ввода после добавления
+                newTodoContent = "" // Clear input after adding
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Добавить дело")
+            Text("Add Todo")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Отображаем список только активных задач
-        val activeTodos = todos.value.filter { it.status  == StatusEnum.ACTIVE }
+        // Show only active tasks
+        val activeTodos = todos.value.filter { it.status == StatusEnum.ACTIVE }
 
         if (activeTodos.isEmpty()) {
             Box(
@@ -152,20 +147,18 @@ fun TodoListScreen(
                     .fillMaxWidth()
                     .weight(1f)
             ) {
-                items(todos.value) { todo ->
+                items(activeTodos) { todo ->
                     TodoItem(todo) { todoId, newStatus ->
                         viewModel.updateTodoStatus(todoId, newStatus, userId)
-                        Log.e("sds", "$todo")
                     }
                 }
             }
-
         }
     }
 }
 
 @Composable
-fun TodoItem(todo: TodoPresentation, onStatusChange: (Long, StatusEnum) -> Unit) {
+fun TodoItem(todo: Todo, onStatusChange: (Long, StatusEnum) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -177,7 +170,7 @@ fun TodoItem(todo: TodoPresentation, onStatusChange: (Long, StatusEnum) -> Unit)
             checked = todo.status == StatusEnum.NO_ACTIVE,
             onCheckedChange = {
                 val newStatus = if (todo.status == StatusEnum.NO_ACTIVE) StatusEnum.ACTIVE else StatusEnum.NO_ACTIVE
-                onStatusChange(todo.id_todo, newStatus) // Now passing both the ID and the new status
+                onStatusChange(todo.todoId, newStatus) // Pass id and new status
             }
         )
         Text(
@@ -188,6 +181,7 @@ fun TodoItem(todo: TodoPresentation, onStatusChange: (Long, StatusEnum) -> Unit)
             fontWeight = if (todo.status == StatusEnum.NO_ACTIVE) FontWeight.Normal else FontWeight.Bold
         )
 
+        // Priority icons
         when (todo.priority) {
             Priority.IMPORTANT_URGENTLY -> {
                 Text(
@@ -198,7 +192,6 @@ fun TodoItem(todo: TodoPresentation, onStatusChange: (Long, StatusEnum) -> Unit)
                     modifier = Modifier.padding(8.dp)
                 )
             }
-
             Priority.NO_IMPORTANT_URGENTLY -> {
                 Text(
                     text = "!",
@@ -208,11 +201,9 @@ fun TodoItem(todo: TodoPresentation, onStatusChange: (Long, StatusEnum) -> Unit)
                     modifier = Modifier.padding(8.dp)
                 )
             }
-
-            else -> {
-                // For other priorities, don't show the icon
-            }
+            else -> {}
         }
     }
 }
+
 

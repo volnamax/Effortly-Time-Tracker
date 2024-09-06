@@ -3,7 +3,7 @@ package com.example.myapplication.domain.model
 import com.example.myapplication.datasource.remote.model.StatusEnum
 
 data class Todo(
-    val id_todo: Long,
+    val todoId: Long,
     val content: String,
     val status: StatusEnum,
     val priority: Priority
