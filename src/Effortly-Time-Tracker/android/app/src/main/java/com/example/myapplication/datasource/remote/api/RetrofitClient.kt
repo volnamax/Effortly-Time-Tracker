@@ -5,6 +5,7 @@ import android.content.Context
 import com.example.myapplication.context.AuthInterceptor
 import com.example.myapplication.data.datasourse.remote.sevice.AuthService
 import com.example.myapplication.data.datasourse.remote.sevice.ProjectService
+import com.example.myapplication.data.datasourse.remote.sevice.TableService
 import com.example.myapplication.data.datasourse.remote.sevice.TodoService
 import com.example.myapplication.data.datasourse.remote.sevice.UserService
 import okhttp3.OkHttpClient
@@ -46,5 +47,8 @@ object RetrofitClient {
 
     fun createProjectService(context: Context): ProjectService {
         return createRetrofit(context).create(ProjectService::class.java)
+    }
+    fun createTableService(context: Context): TableService {
+        return createRetrofit(context).create(TableService::class.java)
     }
 }

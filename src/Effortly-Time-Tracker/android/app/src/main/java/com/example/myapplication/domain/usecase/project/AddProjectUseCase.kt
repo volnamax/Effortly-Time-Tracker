@@ -1,4 +1,4 @@
-package com.example.myapplication.domain.usecase
+package com.example.myapplication.domain.usecase.project
 
 import com.example.myapplication.datasource.remote.model.ProjectCreateDTO
 import com.example.myapplication.domain.repository.ProjectRepository

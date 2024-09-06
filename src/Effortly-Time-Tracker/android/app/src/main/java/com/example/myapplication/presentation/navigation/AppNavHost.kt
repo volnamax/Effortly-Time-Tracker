@@ -10,6 +10,7 @@ import com.example.myapplication.presentation.screen.auth.RegisterScreen
 import com.example.myapplication.presentation.screen.project.AddProjectScreen
 import com.example.myapplication.presentation.screen.project.ProjectListScreen
 import com.example.myapplication.presentation.screen.profile.ProfileScreen
+import com.example.myapplication.presentation.screen.project.ProjectDetailScreen
 import com.example.myapplication.presentation.screen.todo.TodoListScreen
 
 @Composable
@@ -33,6 +34,12 @@ fun AppNavHost(navController: NavHostController) {
         }
         composable("addProject") {
             AddProjectScreen(navController)
+        }
+        composable("projectDetail/{projectId}") { backStackEntry ->
+            val projectId = backStackEntry.arguments?.getString("projectId")?.toIntOrNull()
+            projectId?.let {
+                ProjectDetailScreen(projectId = it, navController = navController)
+            }
         }
     }
 }

@@ -4,22 +4,27 @@ package com.example.myapplication.di
 import TodoViewModel
 import com.example.myapplication.data.repository.AuthRepositoryImpl
 import com.example.myapplication.data.repository.ProjectRepositoryImpl
+import com.example.myapplication.data.repository.TableRepositoryImpl
 import com.example.myapplication.data.repository.TodoRepositoryImpl
 import com.example.myapplication.data.repository.UserRepositoryImpl
 import com.example.myapplication.datasource.remote.api.RetrofitClient
 import com.example.myapplication.domain.repository.AuthRepository
 import com.example.myapplication.domain.repository.ProjectRepository
+import com.example.myapplication.domain.repository.TableRepository
 import com.example.myapplication.domain.repository.TodoRepository
 import com.example.myapplication.domain.repository.UserRepository
-import com.example.myapplication.domain.usecase.AddProjectUseCase
+import com.example.myapplication.domain.usecase.project.AddProjectUseCase
 import com.example.myapplication.domain.usecase.todo.GetTodosUseCase
 import com.example.myapplication.domain.usecase.LoginUseCase
 import com.example.myapplication.domain.usecase.RegisterUseCase
+import com.example.myapplication.domain.usecase.table.AddTableUseCase
+import com.example.myapplication.domain.usecase.table.GetTablesByProjectIdUseCase
 import com.example.myapplication.domain.usecase.todo.AddTodoUseCase
 import com.example.myapplication.domain.usecase.todo.UpdateTodoStatusUseCase
 import com.example.myapplication.presentation.screen.auth.AuthViewModel
 import com.example.myapplication.presentation.screen.project.ProjectViewModel
 import com.example.myapplication.presentation.screen.profile.ProfileViewModel
+import com.example.myapplication.presentation.screen.project.ProjectDetailViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -30,7 +35,14 @@ val appModule = module {
     single<AuthRepository> { AuthRepositoryImpl(RetrofitClient.createAuthService(androidContext())) }
     single<TodoRepository> { TodoRepositoryImpl(RetrofitClient.createTodoService(androidContext())) }
     single<UserRepository> { UserRepositoryImpl(RetrofitClient.createUserService(androidContext())) }
-    single<ProjectRepository> { ProjectRepositoryImpl(RetrofitClient.createProjectService(androidContext())) }
+    single<ProjectRepository> {
+        ProjectRepositoryImpl(
+            RetrofitClient.createProjectService(
+                androidContext()
+            )
+        )
+    }
+    single<TableRepository> { TableRepositoryImpl(RetrofitClient.createTableService(androidContext())) }
 
     // Use Cases
     single { RegisterUseCase(get()) }
@@ -39,6 +51,8 @@ val appModule = module {
     single { AddTodoUseCase(get()) }
     factory { UpdateTodoStatusUseCase(get()) }
     single { AddProjectUseCase(get()) }
+    factory { GetTablesByProjectIdUseCase(get()) }
+    factory { AddTableUseCase(get()) }
 
 
     // ViewModels
@@ -46,6 +60,8 @@ val appModule = module {
     viewModel { TodoViewModel(get(), get(), get()) } // GetTodos, AddTodo, UpdateTodoStatus UseCase
     viewModel { ProfileViewModel(get()) } // GetTodos, AddTodo, UpdateTodoStatus UseCase
     viewModel { ProjectViewModel(get()) }
+    viewModel { ProjectDetailViewModel(get(), get()) }
+
 
     // Services
     single { RetrofitClient.createUserService(androidContext()) }

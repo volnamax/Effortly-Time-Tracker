@@ -1,6 +1,7 @@
 package com.example.myapplication.presentation.screen.project
 
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -64,23 +65,23 @@ fun ProjectListScreen(
         verticalArrangement = Arrangement.Top
     ) {
         Text("Проекты", fontSize = 30.sp, fontWeight = FontWeight.Bold, color = Color.Blue)
-
         Spacer(modifier = Modifier.height(16.dp))
 
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
         ) {
             items(projects) { project ->
-                ProjectItem(project = project)
+                ProjectItem(project = project, onClick = {
+                    // Переход на экран проекта
+                    navController.navigate("projectDetail/${project.id}")
+                })
             }
         }
 
         // Кнопка добавления нового проекта
         FloatingActionButton(
             onClick = {
-                navController.navigate("addProject")  // Переход на экран добавления проекта
-
-
+                navController.navigate("addProject")
             },
             modifier = Modifier
                 .align(Alignment.End)
@@ -92,14 +93,16 @@ fun ProjectListScreen(
 }
 
 @Composable
-fun ProjectItem(project: Project) {
+fun ProjectItem(project: Project, onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
+            .clickable { onClick() }
     ) {
         Text(text = project.name, fontSize = 20.sp, fontWeight = FontWeight.Bold)
         Text(text = project.description ?: "Без описания", fontSize = 16.sp)
         Spacer(modifier = Modifier.height(8.dp))
     }
 }
+
