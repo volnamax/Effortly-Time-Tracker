@@ -1,7 +1,9 @@
 package com.EffortlyTimeTracker.controller;
 
+import com.EffortlyTimeTracker.DTO.task.InactiveTaskDTO;
 import com.EffortlyTimeTracker.DTO.task.TaskCreateDTO;
 import com.EffortlyTimeTracker.DTO.task.TaskResponseDTO;
+import com.EffortlyTimeTracker.entity.InactiveTaskEntity;
 import com.EffortlyTimeTracker.entity.TaskEntity;
 import com.EffortlyTimeTracker.mapper.TaskMapper;
 import com.EffortlyTimeTracker.service.TaskService;
@@ -171,5 +173,13 @@ public class TaskController {
         TaskResponseDTO taskResponseDTO =  taskMapper.toResponseDTO(task);
         log.info("taskResponseDTO: {}", taskResponseDTO);
         return taskResponseDTO;
+    }
+    @Operation(summary = "Deactivate task")
+    @PostMapping("/deactivate")
+    public ResponseEntity<InactiveTaskDTO> deactivateTask(@RequestParam Integer taskId, @RequestParam(required = false) String reason) {
+        InactiveTaskEntity inactiveTask = taskService.deactivateTask(taskId, reason);
+        // Преобразование сущности в DTO для ответа клиенту
+        InactiveTaskDTO response = new InactiveTaskDTO(inactiveTask.getId(), inactiveTask.getTask().getTaskId(), inactiveTask.getDeactivatedAt(), inactiveTask.getReason());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
