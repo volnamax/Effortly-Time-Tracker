@@ -7,12 +7,15 @@ import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.exception.project.ProjectIsEmpty;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
+import com.EffortlyTimeTracker.repository.IUserRepository;
 import com.EffortlyTimeTracker.repository.ProjectRepository;
 import com.EffortlyTimeTracker.repository.TaskRepository;
-import com.EffortlyTimeTracker.repository.UserRepository;
+import com.EffortlyTimeTracker.repository.UserPostgresRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -24,15 +27,30 @@ import java.util.stream.Collectors;
 @Service
 public class ProjectService {
     private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
+    private final IUserRepository userRepository;
     private final TaskRepository taskRepository;
 
     @Autowired
-    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, TaskRepository taskRepository) {
+    public ProjectService(
+            ProjectRepository projectRepository,
+            @Qualifier("userPostgresRepository") IUserRepository userPostgresRepository,
+            @Qualifier("userMongoRepository") IUserRepository userMongoRepository,
+            TaskRepository taskRepository,
+            @Value("${app.active-db}") String activeDb) {
+
         this.projectRepository = projectRepository;
-        this.userRepository = userRepository;
         this.taskRepository = taskRepository;
+
+        // Программный выбор репозитория в зависимости от конфигурации
+        if ("postgres".equalsIgnoreCase(activeDb)) {
+            this.userRepository = userPostgresRepository;
+        } else if ("mongo".equalsIgnoreCase(activeDb)) {
+            this.userRepository = userMongoRepository;
+        } else {
+            throw new IllegalArgumentException("Unknown database type: " + activeDb);
+        }
     }
+
 
 
     public ProjectEntity addProject(@NotNull ProjectEntity projectEntity) {

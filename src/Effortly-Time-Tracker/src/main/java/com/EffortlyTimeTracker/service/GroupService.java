@@ -10,12 +10,15 @@ import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.mapper.ProjectMapper;
 import com.EffortlyTimeTracker.repository.GroupMemberRepository;
 import com.EffortlyTimeTracker.repository.GroupRepository;
+import com.EffortlyTimeTracker.repository.IUserRepository;
 import com.EffortlyTimeTracker.repository.ProjectRepository;
-import com.EffortlyTimeTracker.repository.UserRepository;
+
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -29,18 +32,32 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
     private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
+    private final IUserRepository userRepository;
     private final GroupMemberRepository groupMemberRepository;
     private final ProjectMapper projectMapper;
 
-
     @Autowired
-    public GroupService(@NonNull GroupRepository groupRepository, ProjectRepository projectRepository, UserRepository userRepository, GroupMemberRepository groupMemberRepository, ProjectMapper projectMapper) {
+    public GroupService(GroupRepository groupRepository,
+                        ProjectRepository projectRepository,
+                        @Qualifier("userPostgresRepository") IUserRepository userPostgresRepository,
+                        @Qualifier("userMongoRepository") IUserRepository userMongoRepository,
+                        GroupMemberRepository groupMemberRepository,
+                        ProjectMapper projectMapper,
+                        @Value("${app.active-db}") String activeDb) {
+
         this.groupRepository = groupRepository;
         this.projectRepository = projectRepository;
-        this.userRepository = userRepository;
         this.groupMemberRepository = groupMemberRepository;
         this.projectMapper = projectMapper;
+
+        // Программно выбираем репозиторий на основе конфигурации
+        if ("postgres".equalsIgnoreCase(activeDb)) {
+            this.userRepository = userPostgresRepository;
+        } else if ("mongo".equalsIgnoreCase(activeDb)) {
+            this.userRepository = userMongoRepository;
+        } else {
+            throw new IllegalArgumentException("Unknown database type: " + activeDb);
+        }
     }
     @Transactional
     public GroupEntity addGroup(GroupEntity groupEntity) {

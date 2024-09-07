@@ -1,11 +1,12 @@
 package com.EffortlyTimeTracker.service;
 
-
-
 import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.enums.Role;
-import com.EffortlyTimeTracker.repository.UserRepository;
+import com.EffortlyTimeTracker.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,14 +22,34 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
-//Класс TokenService обрабатывает генерацию токена JWT и извлечение пользователем данных из токена.
+
 @Service
 @RequiredArgsConstructor
 public class TokenService {
 
     private final JwtEncoder jwtEncoder;
-    private final UserRepository userRepository;
+    private final IUserRepository userRepository;
     private final AuthenticationManager authenticationManager;
+
+    @Autowired
+    public TokenService(JwtEncoder jwtEncoder,
+                        AuthenticationManager authenticationManager,
+                        @Qualifier("userPostgresRepository") IUserRepository userPostgresRepository,
+                        @Qualifier("userMongoRepository") IUserRepository userMongoRepository,
+                        @Value("${app.active-db}") String activeDb) {
+
+        this.jwtEncoder = jwtEncoder;
+        this.authenticationManager = authenticationManager;
+
+        // Программный выбор репозитория на основе конфигурации
+        if ("postgres".equalsIgnoreCase(activeDb)) {
+            this.userRepository = userPostgresRepository;
+        } else if ("mongo".equalsIgnoreCase(activeDb)) {
+            this.userRepository = userMongoRepository;
+        } else {
+            throw new IllegalArgumentException("Unknown database type: " + activeDb);
+        }
+    }
 
     public String generateToken(Authentication authentication) {
         Instant now = Instant.now();
@@ -54,7 +75,6 @@ public class TokenService {
         return generateToken(auth);
     }
 
-    //todo refresh in the futer
     public String refreshToken(Authentication authentication, Role role) {
         Instant now = Instant.now();
         return jwtEncoder.encode(JwtEncoderParameters.from(JwtClaimsSet.builder()
@@ -64,7 +84,6 @@ public class TokenService {
                         .subject(authentication.getName())
                         .claim("scope", role.toString())
                         .claim("role", role.toString()) // Добавляем роль в токен
-
                         .build()))
                 .getTokenValue();
     }
@@ -75,5 +94,4 @@ public class TokenService {
                 .findByEmail(principal.getSubject())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with login: " + principal.getSubject()));
     }
-
 }

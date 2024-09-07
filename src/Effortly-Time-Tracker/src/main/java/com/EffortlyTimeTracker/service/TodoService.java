@@ -7,12 +7,11 @@ import com.EffortlyTimeTracker.exception.todo.TodoNodeIsEmpty;
 import com.EffortlyTimeTracker.exception.todo.TodoNotFoudException;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
 import com.EffortlyTimeTracker.repository.TodoRepository;
-import com.EffortlyTimeTracker.repository.UserRepository;
+import com.EffortlyTimeTracker.repository.IUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,17 +19,30 @@ import java.util.List;
 @Service
 @Slf4j
 public class TodoService {
+
     private final TodoRepository todoRepository;
-    private final UserRepository userRepository;
+    private final IUserRepository userRepository;
 
     @Autowired
-    public TodoService(TodoRepository todoRepository, UserRepository userRepository) {
+    public TodoService(TodoRepository todoRepository,
+                       @Qualifier("userPostgresRepository") IUserRepository userPostgresRepository,
+                       @Qualifier("userMongoRepository") IUserRepository userMongoRepository,
+                       @Value("${app.active-db}") String activeDb) {
+
         this.todoRepository = todoRepository;
-        this.userRepository = userRepository;
+
+        // Программный выбор репозитория на основе конфигурации
+        if ("postgres".equalsIgnoreCase(activeDb)) {
+            this.userRepository = userPostgresRepository;
+        } else if ("mongo".equalsIgnoreCase(activeDb)) {
+            this.userRepository = userMongoRepository;
+        } else {
+            throw new IllegalArgumentException("Unknown database type: " + activeDb);
+        }
     }
 
     public TodoNodeEntity addTodo(TodoNodeEntity todoNodeEntity) {
-          return todoRepository.save(todoNodeEntity);
+        return todoRepository.save(todoNodeEntity);
     }
 
     public void delTodoById(Integer id) {
@@ -39,13 +51,13 @@ public class TodoService {
         }
         todoRepository.deleteById(id);
     }
+
     public TodoNodeEntity getTodoById(Integer id) {
         if (!todoRepository.existsById(id)) {
             throw new TodoNotFoudException(id);
         }
         return todoRepository.findById(id).orElseThrow(() -> new TodoNotFoudException(id));
     }
-
 
     public void delAllTodoByIdUser(Integer userId) {
         UserEntity user = userRepository.findById(userId)
@@ -59,7 +71,6 @@ public class TodoService {
         }
         todoRepository.deleteAll(userTodos);
     }
-
 
     public List<TodoNodeEntity> getAllTodo() {
         return todoRepository.findAll();

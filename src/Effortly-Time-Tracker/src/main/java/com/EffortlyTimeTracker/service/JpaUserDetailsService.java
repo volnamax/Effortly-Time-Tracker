@@ -1,18 +1,32 @@
 package com.EffortlyTimeTracker.service;
 
-
-import com.EffortlyTimeTracker.repository.UserRepository;
+import com.EffortlyTimeTracker.repository.IUserRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+//todo ebat cho eto
 @Service
 public class JpaUserDetailsService implements UserDetailsService {
-    private final UserRepository userRepository;
 
-    public JpaUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    private final IUserRepository userRepository;
+
+
+    public JpaUserDetailsService(
+            @Value("${app.active-db}") String activeDb,
+            @Qualifier("userPostgresRepository") IUserRepository userPostgresRepository,
+            @Qualifier("userMongoRepository") IUserRepository userMongoRepository
+    ) {
+        if ("postgres".equalsIgnoreCase(activeDb)) {
+            this.userRepository = userPostgresRepository;
+        } else if ("mongo".equalsIgnoreCase(activeDb)) {
+            this.userRepository = userMongoRepository;
+        } else {
+            throw new IllegalArgumentException("Unknown database type: " + activeDb);
+        }
     }
 
     @Override
