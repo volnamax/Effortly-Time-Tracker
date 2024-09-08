@@ -8,19 +8,13 @@ import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.exception.group.GroupNotFoundException;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.mapper.ProjectMapper;
-import com.EffortlyTimeTracker.mapper.UserMongoMapper;
 import com.EffortlyTimeTracker.repository.GroupMemberRepository;
 import com.EffortlyTimeTracker.repository.GroupRepository;
 import com.EffortlyTimeTracker.repository.IUserRepository;
 import com.EffortlyTimeTracker.repository.ProjectRepository;
-import com.EffortlyTimeTracker.repository.mongo.IMongoUserRepository;
-
 import jakarta.transaction.Transactional;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,27 +25,21 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
     private final ProjectRepository projectRepository;
-    private final IUserRepository userPostgresRepository;
-    private final IMongoUserRepository userMongoRepository;
+    private final IUserRepository userRepository;
     private final GroupMemberRepository groupMemberRepository;
     private final ProjectMapper projectMapper;
-    private final String activeDb;
 
     @Autowired
     public GroupService(GroupRepository groupRepository,
                         ProjectRepository projectRepository,
-                        @Qualifier("userPostgresRepository") IUserRepository userPostgresRepository,
-                        @Qualifier("userMongoRepository") IMongoUserRepository userMongoRepository,
+                        IUserRepository userRepository,
                         GroupMemberRepository groupMemberRepository,
-                        ProjectMapper projectMapper,
-                        @Value("${app.active-db}") String activeDb) {
+                        ProjectMapper projectMapper) {
         this.groupRepository = groupRepository;
         this.projectRepository = projectRepository;
-        this.userPostgresRepository = userPostgresRepository;
-        this.userMongoRepository = userMongoRepository;
+        this.userRepository = userRepository;
         this.groupMemberRepository = groupMemberRepository;
         this.projectMapper = projectMapper;
-        this.activeDb = activeDb;
     }
 
     @Transactional
@@ -79,7 +67,7 @@ public class GroupService {
             throw new GroupNotFoundException(id);
         }
         groupRepository.deleteById(id);
-        log.info("group with id {} delete", id);
+        log.info("Group with id {} deleted", id);
     }
 
     public GroupEntity getGroupById(Integer id) {
@@ -130,15 +118,7 @@ public class GroupService {
     }
 
     private UserEntity findUserById(Integer userId) {
-        if ("postgres".equalsIgnoreCase(activeDb)) {
-            return userPostgresRepository.findById(userId)
-                    .orElseThrow(() -> new IllegalArgumentException("User not found in Postgres"));
-        } else if ("mongo".equalsIgnoreCase(activeDb)) {
-            return userMongoRepository.findById(userId.toString())
-                    .map(UserMongoMapper::toUserEntity)
-                    .orElseThrow(() -> new IllegalArgumentException("User not found in MongoDB"));
-        } else {
-            throw new IllegalStateException("Unknown database type: " + activeDb);
-        }
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 }

@@ -6,14 +6,10 @@ import com.EffortlyTimeTracker.enums.Status;
 import com.EffortlyTimeTracker.exception.todo.TodoNodeIsEmpty;
 import com.EffortlyTimeTracker.exception.todo.TodoNotFoudException;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
-import com.EffortlyTimeTracker.mapper.UserMongoMapper;
 import com.EffortlyTimeTracker.repository.TodoRepository;
 import com.EffortlyTimeTracker.repository.IUserRepository;
-import com.EffortlyTimeTracker.repository.mongo.IMongoUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,21 +19,12 @@ import java.util.List;
 public class TodoService {
 
     private final TodoRepository todoRepository;
-    private final IUserRepository userPostgresRepository;
-    private final IMongoUserRepository userMongoRepository;
-    private final String activeDb;
+    private final IUserRepository userRepository;
 
     @Autowired
-    public TodoService(
-            TodoRepository todoRepository,
-            @Qualifier("userPostgresRepository") IUserRepository userPostgresRepository,
-            @Qualifier("userMongoRepository") IMongoUserRepository userMongoRepository,
-            @Value("${app.active-db}") String activeDb) {
-
+    public TodoService(TodoRepository todoRepository, IUserRepository userRepository) {
         this.todoRepository = todoRepository;
-        this.userPostgresRepository = userPostgresRepository;
-        this.userMongoRepository = userMongoRepository;
-        this.activeDb = activeDb;
+        this.userRepository = userRepository;
     }
 
     public TodoNodeEntity addTodo(TodoNodeEntity todoNodeEntity) {
@@ -94,17 +81,9 @@ public class TodoService {
         return todoRepository.save(todo);  // Сохраняем изменения
     }
 
-    // Метод для поиска пользователя с выбором репозитория на основе активной базы данных
+    // Метод для поиска пользователя через единый интерфейс IUserRepository
     private UserEntity findUserById(Integer userId) {
-        if ("postgres".equalsIgnoreCase(activeDb)) {
-            return userPostgresRepository.findById(userId)
-                    .orElseThrow(() -> new UserNotFoudException(userId));
-        } else if ("mongo".equalsIgnoreCase(activeDb)) {
-            return userMongoRepository.findById(userId.toString())
-                    .map(UserMongoMapper::toUserEntity)
-                    .orElseThrow(() -> new UserNotFoudException(userId));
-        } else {
-            throw new IllegalStateException("Unknown database type: " + activeDb);
-        }
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoudException(userId));
     }
 }
