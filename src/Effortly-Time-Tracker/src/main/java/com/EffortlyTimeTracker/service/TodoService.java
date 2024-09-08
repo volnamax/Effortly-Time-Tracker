@@ -6,8 +6,10 @@ import com.EffortlyTimeTracker.enums.Status;
 import com.EffortlyTimeTracker.exception.todo.TodoNodeIsEmpty;
 import com.EffortlyTimeTracker.exception.todo.TodoNotFoudException;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
+import com.EffortlyTimeTracker.mapper.UserMongoMapper;
 import com.EffortlyTimeTracker.repository.TodoRepository;
 import com.EffortlyTimeTracker.repository.IUserRepository;
+import com.EffortlyTimeTracker.repository.mongo.IMongoUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,24 +23,21 @@ import java.util.List;
 public class TodoService {
 
     private final TodoRepository todoRepository;
-    private final IUserRepository userRepository;
+    private final IUserRepository userPostgresRepository;
+    private final IMongoUserRepository userMongoRepository;
+    private final String activeDb;
 
     @Autowired
-    public TodoService(TodoRepository todoRepository,
-                       @Qualifier("userPostgresRepository") IUserRepository userPostgresRepository,
-                       @Qualifier("userMongoRepository") IUserRepository userMongoRepository,
-                       @Value("${app.active-db}") String activeDb) {
+    public TodoService(
+            TodoRepository todoRepository,
+            @Qualifier("userPostgresRepository") IUserRepository userPostgresRepository,
+            @Qualifier("userMongoRepository") IMongoUserRepository userMongoRepository,
+            @Value("${app.active-db}") String activeDb) {
 
         this.todoRepository = todoRepository;
-
-        // Программный выбор репозитория на основе конфигурации
-        if ("postgres".equalsIgnoreCase(activeDb)) {
-            this.userRepository = userPostgresRepository;
-        } else if ("mongo".equalsIgnoreCase(activeDb)) {
-            this.userRepository = userMongoRepository;
-        } else {
-            throw new IllegalArgumentException("Unknown database type: " + activeDb);
-        }
+        this.userPostgresRepository = userPostgresRepository;
+        this.userMongoRepository = userMongoRepository;
+        this.activeDb = activeDb;
     }
 
     public TodoNodeEntity addTodo(TodoNodeEntity todoNodeEntity) {
@@ -60,8 +59,7 @@ public class TodoService {
     }
 
     public void delAllTodoByIdUser(Integer userId) {
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoudException(userId));
+        UserEntity user = findUserById(userId);
 
         List<TodoNodeEntity> userTodos = todoRepository.findByUserId(userId);
 
@@ -77,8 +75,7 @@ public class TodoService {
     }
 
     public List<TodoNodeEntity> getAllTodoByIdUser(Integer userId) {
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoudException(userId));
+        UserEntity user = findUserById(userId);
 
         List<TodoNodeEntity> userTodos = todoRepository.findByUserId(userId);
 
@@ -95,5 +92,19 @@ public class TodoService {
 
         todo.setStatus(status);  // Обновляем статус
         return todoRepository.save(todo);  // Сохраняем изменения
+    }
+
+    // Метод для поиска пользователя с выбором репозитория на основе активной базы данных
+    private UserEntity findUserById(Integer userId) {
+        if ("postgres".equalsIgnoreCase(activeDb)) {
+            return userPostgresRepository.findById(userId)
+                    .orElseThrow(() -> new UserNotFoudException(userId));
+        } else if ("mongo".equalsIgnoreCase(activeDb)) {
+            return userMongoRepository.findById(userId.toString())
+                    .map(UserMongoMapper::toUserEntity)
+                    .orElseThrow(() -> new UserNotFoudException(userId));
+        } else {
+            throw new IllegalStateException("Unknown database type: " + activeDb);
+        }
     }
 }

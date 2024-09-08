@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository("userPostgresRepository")
-@Profile("postgres")  // Репозиторий активен только при профиле postgres
+  // Переименовываем бин для PostgreSQL
 public interface UserPostgresRepository extends JpaRepository<UserEntity, Integer>, IUserRepository {
 
     // Метод для поиска пользователя по email

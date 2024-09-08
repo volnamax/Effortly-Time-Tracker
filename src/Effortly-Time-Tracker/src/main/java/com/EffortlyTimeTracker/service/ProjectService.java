@@ -7,10 +7,11 @@ import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.exception.project.ProjectIsEmpty;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
+import com.EffortlyTimeTracker.mapper.UserMongoMapper;
 import com.EffortlyTimeTracker.repository.IUserRepository;
 import com.EffortlyTimeTracker.repository.ProjectRepository;
 import com.EffortlyTimeTracker.repository.TaskRepository;
-import com.EffortlyTimeTracker.repository.UserPostgresRepository;
+import com.EffortlyTimeTracker.repository.mongo.IMongoUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,31 +28,25 @@ import java.util.stream.Collectors;
 @Service
 public class ProjectService {
     private final ProjectRepository projectRepository;
-    private final IUserRepository userRepository;
+    private final IUserRepository userPostgresRepository;
+    private final IMongoUserRepository userMongoRepository;
     private final TaskRepository taskRepository;
+    private final String activeDb;
 
     @Autowired
     public ProjectService(
             ProjectRepository projectRepository,
             @Qualifier("userPostgresRepository") IUserRepository userPostgresRepository,
-            @Qualifier("userMongoRepository") IUserRepository userMongoRepository,
+            @Qualifier("userMongoRepository") IMongoUserRepository userMongoRepository,
             TaskRepository taskRepository,
             @Value("${app.active-db}") String activeDb) {
 
         this.projectRepository = projectRepository;
         this.taskRepository = taskRepository;
-
-        // Программный выбор репозитория в зависимости от конфигурации
-        if ("postgres".equalsIgnoreCase(activeDb)) {
-            this.userRepository = userPostgresRepository;
-        } else if ("mongo".equalsIgnoreCase(activeDb)) {
-            this.userRepository = userMongoRepository;
-        } else {
-            throw new IllegalArgumentException("Unknown database type: " + activeDb);
-        }
+        this.userPostgresRepository = userPostgresRepository;
+        this.userMongoRepository = userMongoRepository;
+        this.activeDb = activeDb;
     }
-
-
 
     public ProjectEntity addProject(@NotNull ProjectEntity projectEntity) {
         return projectRepository.save(projectEntity);
@@ -65,40 +60,38 @@ public class ProjectService {
     }
 
     public ProjectEntity getProjectsById(Integer id) {
-        return  projectRepository.findById(id)
+        return projectRepository.findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException(id));
     }
-    public List<ProjectEntity>getAllProject () {
+
+    public List<ProjectEntity> getAllProject() {
         return projectRepository.findAll();
     }
 
-
     public List<ProjectEntity> getAllProjectByIdUser(Integer userId) {
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoudException(userId));
+        UserEntity user = findUserById(userId);
 
         List<ProjectEntity> userTodos = projectRepository.findByUserId(userId);
 
         if (userTodos.isEmpty()) {
-            log.info("No todos found for user with id {}", userId);
+            log.info("No projects found for user with id {}", userId);
             throw new ProjectIsEmpty();
         }
         return userTodos;
     }
 
     public void delAllProjectByIdUser(Integer userId) {
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoudException(userId));
+        UserEntity user = findUserById(userId);
 
-        List<ProjectEntity> userTodos = projectRepository.findByUserId(userId);
+        List<ProjectEntity> userProjects = projectRepository.findByUserId(userId);
 
-        if (userTodos.isEmpty()) {
-            log.info("No todos found for user with id {}", userId);
+        if (userProjects.isEmpty()) {
+            log.info("No projects found for user with id {}", userId);
             return;
         }
 
-        projectRepository.deleteAll(userTodos);
-        log.info("All todos for user with id {} deleted", userId);
+        projectRepository.deleteAll(userProjects);
+        log.info("All projects for user with id {} deleted", userId);
     }
 
     public ProjectAnalyticsDTO getProjectAnalytics(Integer projectId) {
@@ -148,21 +141,16 @@ public class ProjectService {
         return analyticsDTO;
     }
 
-
+    private UserEntity findUserById(Integer userId) {
+        if ("postgres".equalsIgnoreCase(activeDb)) {
+            return userPostgresRepository.findById(userId)
+                    .orElseThrow(() -> new UserNotFoudException(userId));
+        } else if ("mongo".equalsIgnoreCase(activeDb)) {
+            return userMongoRepository.findById(userId.toString())
+                    .map(UserMongoMapper::toUserEntity)
+                    .orElseThrow(() -> new UserNotFoudException(userId));
+        } else {
+            throw new IllegalStateException("Unknown database type: " + activeDb);
+        }
+    }
 }
-
-//    @Transactional(readOnly = true)
-//    public List<ProjectDTO> getAllProject() {
-//        return projectRepository.findAll().stream()
-//                .map(this::convertToDto)
-//                .collect(Collectors.toList());
-//    }
-////
-//    private ProjectDTO convertToDto(ProjectEntity projectEntity) {
-//        ProjectDTO projectDTO = new ProjectDTO();
-//        projectDTO.setName(projectEntity.getName());
-//        projectDTO.setDescription(projectEntity.getDescription());
-//        projectDTO.setUserProject(projectEntity.getUserProject());
-//        projectDTO.setGroupProject(projectEntity.getGroup());
-//        return projectDTO;
-//    }

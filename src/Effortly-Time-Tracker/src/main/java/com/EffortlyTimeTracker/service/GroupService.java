@@ -8,10 +8,12 @@ import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.exception.group.GroupNotFoundException;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.mapper.ProjectMapper;
+import com.EffortlyTimeTracker.mapper.UserMongoMapper;
 import com.EffortlyTimeTracker.repository.GroupMemberRepository;
 import com.EffortlyTimeTracker.repository.GroupRepository;
 import com.EffortlyTimeTracker.repository.IUserRepository;
 import com.EffortlyTimeTracker.repository.ProjectRepository;
+import com.EffortlyTimeTracker.repository.mongo.IMongoUserRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
@@ -21,10 +23,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -32,43 +31,36 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
     private final ProjectRepository projectRepository;
-    private final IUserRepository userRepository;
+    private final IUserRepository userPostgresRepository;
+    private final IMongoUserRepository userMongoRepository;
     private final GroupMemberRepository groupMemberRepository;
     private final ProjectMapper projectMapper;
+    private final String activeDb;
 
     @Autowired
     public GroupService(GroupRepository groupRepository,
                         ProjectRepository projectRepository,
                         @Qualifier("userPostgresRepository") IUserRepository userPostgresRepository,
-                        @Qualifier("userMongoRepository") IUserRepository userMongoRepository,
+                        @Qualifier("userMongoRepository") IMongoUserRepository userMongoRepository,
                         GroupMemberRepository groupMemberRepository,
                         ProjectMapper projectMapper,
                         @Value("${app.active-db}") String activeDb) {
-
         this.groupRepository = groupRepository;
         this.projectRepository = projectRepository;
+        this.userPostgresRepository = userPostgresRepository;
+        this.userMongoRepository = userMongoRepository;
         this.groupMemberRepository = groupMemberRepository;
         this.projectMapper = projectMapper;
-
-        // Программно выбираем репозиторий на основе конфигурации
-        if ("postgres".equalsIgnoreCase(activeDb)) {
-            this.userRepository = userPostgresRepository;
-        } else if ("mongo".equalsIgnoreCase(activeDb)) {
-            this.userRepository = userMongoRepository;
-        } else {
-            throw new IllegalArgumentException("Unknown database type: " + activeDb);
-        }
+        this.activeDb = activeDb;
     }
+
     @Transactional
     public GroupEntity addGroup(GroupEntity groupEntity) {
         ProjectEntity project = projectRepository.findById(groupEntity.getProject().getProjectId())
                 .orElseThrow(() -> new ProjectNotFoundException(groupEntity.getProject().getProjectId()));
 
-        // Устанавливаем связь с проектом
         groupEntity.setProject(project);
-        // Сохраняем группу, которая теперь связана с проектом
         GroupEntity savedGroup = groupRepository.save(groupEntity);
-        // Обязательно обновляем проект с новым group_id
         project.setGroup(savedGroup);
         projectRepository.save(project);
 
@@ -81,7 +73,6 @@ public class GroupService {
 
         return savedGroup;
     }
-
 
     public void delGroupById(Integer id) {
         if (!groupRepository.existsById(id)) {
@@ -100,16 +91,16 @@ public class GroupService {
         return groupRepository.findAll();
     }
 
-
     public void addUserToGroup(Integer groupId, Integer userId) {
-        GroupEntity group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException("Group not found"));
-        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        GroupEntity group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("Group not found"));
+        UserEntity user = findUserById(userId);
 
         if (group.getMembers().stream().anyMatch(member -> member.getUser().getUserId().equals(userId))) {
             throw new IllegalArgumentException("User is already a member of this group");
         }
 
-        GroupMermberEntity groupMember  = new GroupMermberEntity();
+        GroupMermberEntity groupMember = new GroupMermberEntity();
         groupMember.setGroup(group);
         groupMember.setUser(user);
         groupMember.setRole(Role.MANAGER);
@@ -119,10 +110,10 @@ public class GroupService {
         groupRepository.save(group);
     }
 
-
     public void removeUserFromGroup(Integer groupId, Integer userId) {
-        GroupEntity group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException("Group not found"));
-        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        GroupEntity group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("Group not found"));
+        UserEntity user = findUserById(userId);
 
         GroupMermberEntity groupMember = group.getMembers().stream()
                 .filter(member -> member.getUser().getUserId().equals(userId))
@@ -138,6 +129,16 @@ public class GroupService {
         groupRepository.save(group);
     }
 
+    private UserEntity findUserById(Integer userId) {
+        if ("postgres".equalsIgnoreCase(activeDb)) {
+            return userPostgresRepository.findById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found in Postgres"));
+        } else if ("mongo".equalsIgnoreCase(activeDb)) {
+            return userMongoRepository.findById(userId.toString())
+                    .map(UserMongoMapper::toUserEntity)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found in MongoDB"));
+        } else {
+            throw new IllegalStateException("Unknown database type: " + activeDb);
+        }
+    }
 }
-
-

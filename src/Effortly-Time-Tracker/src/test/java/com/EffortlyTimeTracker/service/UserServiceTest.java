@@ -4,8 +4,8 @@ import com.EffortlyTimeTracker.entity.RoleEntity;
 import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
+import com.EffortlyTimeTracker.repository.IUserRepository;
 import com.EffortlyTimeTracker.repository.RoleRepository;
-import com.EffortlyTimeTracker.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
     @Mock
-    private UserRepository userRepository;
+    private IUserRepository userRepository;
 
     @Mock
     private RoleRepository roleRepository;
@@ -43,7 +43,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        userService = new UserService(userRepository, roleRepository, passwordEncoder);
+      //  userService = new UserService(userRepository);
 
         userEntity = new UserEntity();
         roleEntity = new RoleEntity();

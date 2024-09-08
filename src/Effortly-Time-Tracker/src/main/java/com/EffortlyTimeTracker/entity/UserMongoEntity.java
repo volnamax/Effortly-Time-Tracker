@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
+
 @Document(collection = "users")
 @Getter
 @Setter
@@ -15,10 +16,11 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserMongoEntity {
+
     @Id
     String id;
     String userName;
-    String userSecondname;
+    String userSecondName;
     String email;
     String passwordHash;
     String role;

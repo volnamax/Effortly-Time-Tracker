@@ -2,7 +2,9 @@ package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.enums.Role;
+import com.EffortlyTimeTracker.mapper.UserMongoMapper;
 import com.EffortlyTimeTracker.repository.IUserRepository;
+import com.EffortlyTimeTracker.repository.mongo.IMongoUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,30 +24,34 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
-
 @Service
-@RequiredArgsConstructor
 public class TokenService {
 
     private final JwtEncoder jwtEncoder;
-    private final IUserRepository userRepository;
     private final AuthenticationManager authenticationManager;
+
+    private final IUserRepository userRepository;
+    private final IMongoUserRepository userMongoRepository;
+    private final String activeDb;
 
     @Autowired
     public TokenService(JwtEncoder jwtEncoder,
                         AuthenticationManager authenticationManager,
                         @Qualifier("userPostgresRepository") IUserRepository userPostgresRepository,
-                        @Qualifier("userMongoRepository") IUserRepository userMongoRepository,
+                        @Qualifier("userMongoRepository") IMongoUserRepository userMongoRepository,
                         @Value("${app.active-db}") String activeDb) {
 
         this.jwtEncoder = jwtEncoder;
         this.authenticationManager = authenticationManager;
+        this.activeDb = activeDb;
 
         // Программный выбор репозитория на основе конфигурации
         if ("postgres".equalsIgnoreCase(activeDb)) {
             this.userRepository = userPostgresRepository;
+            this.userMongoRepository = null; // Mongo не используется
         } else if ("mongo".equalsIgnoreCase(activeDb)) {
-            this.userRepository = userMongoRepository;
+            this.userMongoRepository = userMongoRepository;
+            this.userRepository = null; // Postgres не используется
         } else {
             throw new IllegalArgumentException("Unknown database type: " + activeDb);
         }
@@ -90,8 +96,19 @@ public class TokenService {
 
     public UserEntity getCurrentUser() {
         Jwt principal = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userRepository
-                .findByEmail(principal.getSubject())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with login: " + principal.getSubject()));
+
+        if ("postgres".equalsIgnoreCase(activeDb)) {
+            return userRepository
+                    .findByEmail(principal.getSubject())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found with login: " + principal.getSubject()));
+        } else if ("mongo".equalsIgnoreCase(activeDb)) {
+            // Пример получения из Mongo
+            return userMongoRepository
+                    .findByEmail(principal.getSubject())
+                    .map(UserMongoMapper::toUserEntity)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found with login: " + principal.getSubject()));
+        } else {
+            throw new IllegalStateException("Unknown database type: " + activeDb);
+        }
     }
 }
