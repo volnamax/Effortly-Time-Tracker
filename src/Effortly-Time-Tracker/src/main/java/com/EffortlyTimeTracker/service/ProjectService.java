@@ -40,7 +40,7 @@ public class ProjectService {
     }
 
     public ProjectEntity addProject(@NotNull ProjectEntity projectEntity) {
-        projectEntity.setProjectId((int) sequenceGeneratorService.generateSequence(UserEntity.class.getSimpleName()));
+        projectEntity.setProjectId((int) sequenceGeneratorService.generateSequence(ProjectEntity.class.getSimpleName()));
 
         return projectRepository.save(projectEntity);
     }

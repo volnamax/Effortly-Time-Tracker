@@ -2,12 +2,13 @@ package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TableEntity;
+import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.table.TableIsEmpty;
 import com.EffortlyTimeTracker.exception.table.TableNotFoundException;
 import com.EffortlyTimeTracker.repository.IProjectRepository;
-import com.EffortlyTimeTracker.repository.postgres.ProjectPostgresRepository;
-import com.EffortlyTimeTracker.repository.postgres.TableRepository;
+import com.EffortlyTimeTracker.repository.ITableRepository;
+import com.EffortlyTimeTracker.repository.IUserRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +19,20 @@ import java.util.List;
 @Slf4j
 @Service
 public class TableService {
-    private final TableRepository tableRepository;
+    private final ITableRepository tableRepository;
     private final IProjectRepository postgresRepository;
+    private final SequenceGeneratorService sequenceGeneratorService;
 
     @Autowired
-    public TableService(TableRepository tableRepository, IProjectRepository postgresRepository) {
+    public TableService(ITableRepository tableRepository, IProjectRepository postgresRepository, SequenceGeneratorService sequenceGeneratorService) {
         this.tableRepository = tableRepository;
         this.postgresRepository = postgresRepository;
+        this.sequenceGeneratorService = sequenceGeneratorService;
     }
 
     public TableEntity addTable(@NonNull TableEntity tableEntity) {
+        tableEntity.setTableId((int) sequenceGeneratorService.generateSequence(TableEntity.class.getSimpleName()));
+
         return tableRepository.save(tableEntity);
     }
 

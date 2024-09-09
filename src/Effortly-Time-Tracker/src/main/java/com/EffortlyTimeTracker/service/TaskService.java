@@ -7,8 +7,8 @@ import com.EffortlyTimeTracker.enums.Status;
 import com.EffortlyTimeTracker.exception.table.TableIsEmpty;
 import com.EffortlyTimeTracker.exception.table.TableNotFoundException;
 import com.EffortlyTimeTracker.exception.task.TaskNotFoundException;
+import com.EffortlyTimeTracker.repository.ITableRepository;
 import com.EffortlyTimeTracker.repository.postgres.InactiveTaskRepository;
-import com.EffortlyTimeTracker.repository.postgres.TableRepository;
 import com.EffortlyTimeTracker.repository.postgres.TaskRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -24,12 +24,12 @@ import java.util.List;
 @Service
 public class TaskService {
     private final TaskRepository taskRepository;
-    private final TableRepository tableRepository;
+    private final ITableRepository tableRepository;
     private final InactiveTaskRepository inactiveTaskRepository;
 
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, TableRepository tableRepository,InactiveTaskRepository  inactiveTaskRepository) {
+    public TaskService(TaskRepository taskRepository, ITableRepository tableRepository,InactiveTaskRepository  inactiveTaskRepository) {
         this.taskRepository = taskRepository;
         this.tableRepository = tableRepository;
         this.inactiveTaskRepository = inactiveTaskRepository;
