@@ -8,10 +8,9 @@ import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.tag.TagNotFoundException;
 import com.EffortlyTimeTracker.exception.task.TaskNotFoundException;
 import com.EffortlyTimeTracker.repository.IProjectRepository;
+import com.EffortlyTimeTracker.repository.ITagRepository;
 import com.EffortlyTimeTracker.repository.ITaskRepository;
-import com.EffortlyTimeTracker.repository.postgres.TagRepository;
-import com.EffortlyTimeTracker.repository.postgres.TaskPostgresRepository;
-import com.EffortlyTimeTracker.repository.postgres.TaskTagRepository;
+import com.EffortlyTimeTracker.repository.postgres.TaskTagPostgresRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +21,13 @@ import java.util.List;
 @Slf4j
 @Service
 public class TagService {
-    private final TagRepository tagRepository;
+    private final ITagRepository tagRepository;
     private final IProjectRepository projectRepository;
     private final ITaskRepository taskRepository;
-    private final TaskTagRepository taskTagRepository;
+    private final TaskTagPostgresRepository taskTagRepository;
 
     @Autowired
-    public TagService(TagRepository tagRepository, IProjectRepository projectRepository, ITaskRepository taskRepository, TaskTagRepository taskTagRepository) {
+    public TagService(ITagRepository tagRepository, IProjectRepository projectRepository, ITaskRepository taskRepository, TaskTagPostgresRepository taskTagRepository) {
         this.tagRepository = tagRepository;
         this.projectRepository = projectRepository;
         this.taskRepository = taskRepository;

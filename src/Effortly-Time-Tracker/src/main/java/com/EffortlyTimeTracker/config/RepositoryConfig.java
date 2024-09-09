@@ -72,4 +72,16 @@ public class RepositoryConfig {
     public ITaskRepository taskMongoRepository(TaskMongoRepository repository) {
         return repository;
     }
+
+    @Bean
+    @Profile("postgres")
+    public ITagRepository tagPostgresRepository (TagPostgresRepository repository) {
+        return repository;
+    }
+
+    @Bean
+    @Profile("mongo")
+    public ITagRepository tagMongoRepository(TagMongoRepository repository) {
+        return repository;
+    }
 }

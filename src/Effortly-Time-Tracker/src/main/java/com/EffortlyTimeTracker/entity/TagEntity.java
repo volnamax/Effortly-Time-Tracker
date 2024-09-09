@@ -35,6 +35,9 @@ public class TagEntity {
     @JsonBackReference
     ProjectEntity project;
 
+    // Поле для хранения идентификатора пользователя mongo
+    @Column(name = "project_id", insertable = false, updatable = false)
+    private Integer projectId;
 
 //    @ManyToMany(mappedBy = "tag")
 //    Set<TaskEntity> tasks;
