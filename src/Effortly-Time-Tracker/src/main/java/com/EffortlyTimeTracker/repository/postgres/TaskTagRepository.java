@@ -1,6 +1,5 @@
-package com.EffortlyTimeTracker.repository;
+package com.EffortlyTimeTracker.repository.postgres;
 
-import com.EffortlyTimeTracker.entity.GroupMermberEntity;
 import com.EffortlyTimeTracker.entity.TaskTagEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -6,7 +6,7 @@ import com.EffortlyTimeTracker.enums.Status;
 import com.EffortlyTimeTracker.exception.todo.TodoNodeIsEmpty;
 import com.EffortlyTimeTracker.exception.todo.TodoNotFoudException;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
-import com.EffortlyTimeTracker.repository.TodoRepository;
+import com.EffortlyTimeTracker.repository.ITodoRepository;
 import com.EffortlyTimeTracker.repository.IUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +17,12 @@ import java.util.List;
 @Service
 @Slf4j
 public class TodoService {
+    private final ITodoRepository todoRepository;
 
-    private final TodoRepository todoRepository;
     private final IUserRepository userRepository;
 
     @Autowired
-    public TodoService(TodoRepository todoRepository, IUserRepository userRepository) {
+    public TodoService(ITodoRepository todoRepository, IUserRepository userRepository) {
         this.todoRepository = todoRepository;
         this.userRepository = userRepository;
     }

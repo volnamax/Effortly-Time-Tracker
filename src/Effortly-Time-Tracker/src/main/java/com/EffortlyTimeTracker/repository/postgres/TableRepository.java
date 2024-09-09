@@ -1,7 +1,6 @@
-package com.EffortlyTimeTracker.repository;
+package com.EffortlyTimeTracker.repository.postgres;
 
 import com.EffortlyTimeTracker.entity.TableEntity;
-import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

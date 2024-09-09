@@ -6,7 +6,7 @@ import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
 import com.EffortlyTimeTracker.exception.user.UserNotRoleException;
 import com.EffortlyTimeTracker.repository.IUserRepository;
-import com.EffortlyTimeTracker.repository.RoleRepository;
+import com.EffortlyTimeTracker.repository.postgres.RoleRepository;
 import com.mongodb.lang.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,14 +21,18 @@ public class UserService {
     private final IUserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;  // Внедрение PasswordEncoder
+    private final SequenceGeneratorService sequenceGeneratorService;
 
     @Autowired
     public UserService(IUserRepository userRepository,
                        RoleRepository roleRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder,
+                       SequenceGeneratorService sequenceGeneratorService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.sequenceGeneratorService = sequenceGeneratorService;
+
     }
 
     // Метод для получения роли по имени
@@ -44,7 +48,10 @@ public class UserService {
         }
         userEntity.setRole(role);  // Устанавливаем роль пользователю
         userEntity.setPasswordHash(passwordEncoder.encode(userEntity.getPasswordHash()));  // Шифрование пароля
-        return userRepository.save(userEntity);  // Сохранение пользователя в выбранную базу данных
+        // Присваиваем userId с помощью SequenceGeneratorService
+        userEntity.setUserId((int) sequenceGeneratorService.generateSequence(UserEntity.class.getSimpleName()));
+
+        return userRepository.save(userEntity);  // Сохранение пользователя в базу данных
     }
 
     // Метод для удаления пользователя по ID
