@@ -41,6 +41,7 @@ public class TaskService {
 
     public TaskEntity addTask(@NonNull TaskEntity task) {
         task.setTimeAddTask(LocalDateTime.now());
+        log.info("Adding task: {}", task);
         task.setTaskId((int) sequenceGeneratorService.generateSequence(TaskEntity.class.getSimpleName()));
 
         return taskRepository.save(task);

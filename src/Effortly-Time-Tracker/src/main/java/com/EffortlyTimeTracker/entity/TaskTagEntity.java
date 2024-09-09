@@ -26,5 +26,12 @@ public class TaskTagEntity {
     @ManyToOne
     @JoinColumn(name = "tag_id")
     private TagEntity tag;
+
+    // Поле для хранения идентификатора пользователя mongo
+    @Column(name = "task_id", insertable = false, updatable = false)
+    private Integer taskId;
+
+    @Column(name = "tag_id", insertable = false, updatable = false)
+    private Integer tagId;
 }
 

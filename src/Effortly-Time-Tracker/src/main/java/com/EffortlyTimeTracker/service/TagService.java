@@ -10,6 +10,7 @@ import com.EffortlyTimeTracker.exception.task.TaskNotFoundException;
 import com.EffortlyTimeTracker.repository.IProjectRepository;
 import com.EffortlyTimeTracker.repository.ITagRepository;
 import com.EffortlyTimeTracker.repository.ITaskRepository;
+import com.EffortlyTimeTracker.repository.ITaskTagRepository;
 import com.EffortlyTimeTracker.repository.postgres.TaskTagPostgresRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -24,10 +25,10 @@ public class TagService {
     private final ITagRepository tagRepository;
     private final IProjectRepository projectRepository;
     private final ITaskRepository taskRepository;
-    private final TaskTagPostgresRepository taskTagRepository;
+    private final ITaskTagRepository taskTagRepository;
 
     @Autowired
-    public TagService(ITagRepository tagRepository, IProjectRepository projectRepository, ITaskRepository taskRepository, TaskTagPostgresRepository taskTagRepository) {
+    public TagService(ITagRepository tagRepository, IProjectRepository projectRepository, ITaskRepository taskRepository, ITaskTagRepository taskTagRepository) {
         this.tagRepository = tagRepository;
         this.projectRepository = projectRepository;
         this.taskRepository = taskRepository;
