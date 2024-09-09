@@ -8,9 +8,9 @@ import com.EffortlyTimeTracker.exception.project.ProjectIsEmpty;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
 import com.EffortlyTimeTracker.repository.IProjectRepository;
+import com.EffortlyTimeTracker.repository.ITaskRepository;
 import com.EffortlyTimeTracker.repository.IUserRepository;
-import com.EffortlyTimeTracker.repository.postgres.ProjectPostgresRepository;
-import com.EffortlyTimeTracker.repository.postgres.TaskRepository;
+import com.EffortlyTimeTracker.repository.postgres.TaskPostgresRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +26,12 @@ import java.util.stream.Collectors;
 public class ProjectService {
     private final IProjectRepository projectRepository;
     private final IUserRepository userRepository;
-    private final TaskRepository taskRepository;
+    private final ITaskRepository taskRepository;
     private final SequenceGeneratorService sequenceGeneratorService;
 
 
     @Autowired
-    public ProjectService(IProjectRepository projectRepository, IUserRepository userRepository, TaskRepository taskRepository, SequenceGeneratorService sequenceGeneratorService) {
+    public ProjectService(IProjectRepository projectRepository, IUserRepository userRepository, ITaskRepository taskRepository, SequenceGeneratorService sequenceGeneratorService) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;

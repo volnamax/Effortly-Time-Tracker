@@ -1,6 +1,7 @@
 package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.entity.InactiveTaskEntity;
+import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.entity.TaskEntity;
 import com.EffortlyTimeTracker.enums.Status;
@@ -8,8 +9,9 @@ import com.EffortlyTimeTracker.exception.table.TableIsEmpty;
 import com.EffortlyTimeTracker.exception.table.TableNotFoundException;
 import com.EffortlyTimeTracker.exception.task.TaskNotFoundException;
 import com.EffortlyTimeTracker.repository.ITableRepository;
+import com.EffortlyTimeTracker.repository.ITaskRepository;
 import com.EffortlyTimeTracker.repository.postgres.InactiveTaskRepository;
-import com.EffortlyTimeTracker.repository.postgres.TaskRepository;
+import com.EffortlyTimeTracker.repository.postgres.TaskPostgresRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,20 +25,24 @@ import java.util.List;
 @Slf4j
 @Service
 public class TaskService {
-    private final TaskRepository taskRepository;
+    private final ITaskRepository taskRepository;
     private final ITableRepository tableRepository;
     private final InactiveTaskRepository inactiveTaskRepository;
+    private final SequenceGeneratorService sequenceGeneratorService;
 
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, ITableRepository tableRepository,InactiveTaskRepository  inactiveTaskRepository) {
+    public TaskService(ITaskRepository taskRepository, ITableRepository tableRepository, InactiveTaskRepository inactiveTaskRepository, SequenceGeneratorService sequenceGeneratorService) {
         this.taskRepository = taskRepository;
         this.tableRepository = tableRepository;
         this.inactiveTaskRepository = inactiveTaskRepository;
+        this.sequenceGeneratorService = sequenceGeneratorService;
     }
 
     public TaskEntity addTask(@NonNull TaskEntity task) {
         task.setTimeAddTask(LocalDateTime.now());
+        task.setTaskId((int) sequenceGeneratorService.generateSequence(TaskEntity.class.getSimpleName()));
+
         return taskRepository.save(task);
     }
 
@@ -54,7 +60,7 @@ public class TaskService {
     }
 
     public List<TaskEntity> getAllTask() {
-        return  taskRepository.findAll();
+        return taskRepository.findAll();
     }
 
 

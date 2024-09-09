@@ -1,17 +1,8 @@
 package com.EffortlyTimeTracker.config;
 
-import com.EffortlyTimeTracker.repository.IProjectRepository;
-import com.EffortlyTimeTracker.repository.ITableRepository;
-import com.EffortlyTimeTracker.repository.ITodoRepository;
-import com.EffortlyTimeTracker.repository.IUserRepository;
-import com.EffortlyTimeTracker.repository.mongo.ProjectMongoRepository;
-import com.EffortlyTimeTracker.repository.mongo.TableMongoRepository;
-import com.EffortlyTimeTracker.repository.mongo.TodoMongoRepository;
-import com.EffortlyTimeTracker.repository.postgres.ProjectPostgresRepository;
-import com.EffortlyTimeTracker.repository.postgres.TablePostgresRepository;
-import com.EffortlyTimeTracker.repository.postgres.TodoPostgresRepository;
-import com.EffortlyTimeTracker.repository.postgres.UserPostgresRepository;
-import com.EffortlyTimeTracker.repository.mongo.UserMongoRepository;
+import com.EffortlyTimeTracker.repository.*;
+import com.EffortlyTimeTracker.repository.mongo.*;
+import com.EffortlyTimeTracker.repository.postgres.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -67,6 +58,18 @@ public class RepositoryConfig {
     @Bean
     @Profile("mongo")
     public ITableRepository tableMongoRepository(TableMongoRepository repository) {
+        return repository;
+    }
+
+    @Bean
+    @Profile("postgres")
+    public ITaskRepository taskPostgresRepository (TaskPostgresRepository repository) {
+        return repository;
+    }
+
+    @Bean
+    @Profile("mongo")
+    public ITaskRepository taskMongoRepository(TaskMongoRepository repository) {
         return repository;
     }
 }
