@@ -7,7 +7,7 @@ import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.repository.postgres.GroupMemberRepository;
 import com.EffortlyTimeTracker.repository.postgres.GroupRepository;
 import com.EffortlyTimeTracker.repository.IUserRepository;
-import com.EffortlyTimeTracker.repository.postgres.ProjectRepository;
+import com.EffortlyTimeTracker.repository.postgres.ProjectPostgresRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +29,7 @@ class GroupServiceTest {
     private GroupRepository groupRepository;
 
     @Mock
-    private ProjectRepository projectRepository;
+    private ProjectPostgresRepository projectPostgresRepository;
 
     @Mock
     private GroupMemberRepository groupMemberRepository;
@@ -85,7 +85,7 @@ class GroupServiceTest {
 
     @Test
     void addGroupTestSuccess() {
-        when(projectRepository.findById(anyInt())).thenReturn(Optional.of(projectEntity));
+        when(projectPostgresRepository.findById(anyInt())).thenReturn(Optional.of(projectEntity));
         when(groupRepository.save(any(GroupEntity.class))).thenReturn(groupEntity);
 
         GroupEntity savedGroup = groupService.addGroup(groupEntity);
@@ -94,12 +94,12 @@ class GroupServiceTest {
         assertNotNull(savedGroup.getProject());
         assertEquals("New Group", savedGroup.getName());
         verify(groupRepository).save(any(GroupEntity.class));
-        verify(projectRepository).save(projectEntity); // Verify that the project is updated
+        verify(projectPostgresRepository).save(projectEntity); // Verify that the project is updated
     }
 
     @Test
     void addGroupTestProjectNotFound() {
-        when(projectRepository.findById(anyInt())).thenReturn(Optional.empty());
+        when(projectPostgresRepository.findById(anyInt())).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(ProjectNotFoundException.class, () -> {
             groupService.addGroup(groupEntity);

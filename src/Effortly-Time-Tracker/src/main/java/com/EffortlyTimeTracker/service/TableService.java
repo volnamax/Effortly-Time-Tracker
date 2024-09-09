@@ -5,7 +5,8 @@ import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.table.TableIsEmpty;
 import com.EffortlyTimeTracker.exception.table.TableNotFoundException;
-import com.EffortlyTimeTracker.repository.postgres.ProjectRepository;
+import com.EffortlyTimeTracker.repository.IProjectRepository;
+import com.EffortlyTimeTracker.repository.postgres.ProjectPostgresRepository;
 import com.EffortlyTimeTracker.repository.postgres.TableRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +19,12 @@ import java.util.List;
 @Service
 public class TableService {
     private final TableRepository tableRepository;
-    private final ProjectRepository projectRepository;
+    private final IProjectRepository postgresRepository;
 
     @Autowired
-    public TableService(TableRepository tableRepository, ProjectRepository projectRepository) {
+    public TableService(TableRepository tableRepository, IProjectRepository postgresRepository) {
         this.tableRepository = tableRepository;
-        this.projectRepository = projectRepository;
+        this.postgresRepository = postgresRepository;
     }
 
     public TableEntity addTable(@NonNull TableEntity tableEntity) {
@@ -48,7 +49,7 @@ public class TableService {
     }
 
     public List<TableEntity> getAllTableByIdProject(Integer projectId) {
-        ProjectEntity project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException(projectId));
+        ProjectEntity project = postgresRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException(projectId));
         List<TableEntity> tableEntities = tableRepository.findByProjectId(projectId);
 
         if (tableEntities.isEmpty()) {
@@ -59,7 +60,7 @@ public class TableService {
     }
 
     public void delAllTablleByIdProject(Integer projectId) {
-        ProjectEntity project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException(projectId));
+        ProjectEntity project = postgresRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException(projectId));
         List<TableEntity> tableEntities = tableRepository.findByProjectId(projectId);
 
         if (tableEntities.isEmpty()) {

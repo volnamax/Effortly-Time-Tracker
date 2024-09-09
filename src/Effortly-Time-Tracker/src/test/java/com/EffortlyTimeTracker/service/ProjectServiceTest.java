@@ -7,7 +7,7 @@ import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.project.ProjectIsEmpty;
 import com.EffortlyTimeTracker.repository.IUserRepository;
-import com.EffortlyTimeTracker.repository.postgres.ProjectRepository;
+import com.EffortlyTimeTracker.repository.postgres.ProjectPostgresRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 class ProjectServiceTest {
 
     @Mock
-    private ProjectRepository projectRepository;
+    private ProjectPostgresRepository projectPostgresRepository;
 
     @Mock
     private IUserRepository userRepository;
@@ -51,34 +51,34 @@ class ProjectServiceTest {
 
     @Test
     void addProjectTest() {
-        when(projectRepository.save(any(ProjectEntity.class))).thenReturn(project);
+        when(projectPostgresRepository.save(any(ProjectEntity.class))).thenReturn(project);
 
         ProjectEntity savedProject = projectService.addProject(project);
         assertNotNull(savedProject);
         assertEquals("Test Project", savedProject.getName());
 
-        verify(projectRepository).save(project);
+        verify(projectPostgresRepository).save(project);
     }
 
     @Test
     void deleteProjectByIdTestExists() {
-        when(projectRepository.existsById(anyInt())).thenReturn(true);
+        when(projectPostgresRepository.existsById(anyInt())).thenReturn(true);
 
         projectService.delProjectById(1);
 
-        verify(projectRepository).deleteById(1);
+        verify(projectPostgresRepository).deleteById(1);
     }
 
     @Test
     void deleteProjectByIdTestNotExists() {
-        when(projectRepository.existsById(anyInt())).thenReturn(false);
+        when(projectPostgresRepository.existsById(anyInt())).thenReturn(false);
 
         assertThrows(ProjectNotFoundException.class, () -> projectService.delProjectById(1));
     }
 
     @Test
     void getProjectsByIdTestFound() {
-        when(projectRepository.findById(anyInt())).thenReturn(Optional.of(project));
+        when(projectPostgresRepository.findById(anyInt())).thenReturn(Optional.of(project));
 
         ProjectEntity foundProject = projectService.getProjectsById(1);
 
@@ -88,7 +88,7 @@ class ProjectServiceTest {
 
     @Test
     void getProjectsByIdTestNotFound() {
-        when(projectRepository.findById(anyInt())).thenReturn(Optional.empty());
+        when(projectPostgresRepository.findById(anyInt())).thenReturn(Optional.empty());
 
         assertThrows(ProjectNotFoundException.class, () -> projectService.getProjectsById(1));
     }
@@ -96,7 +96,7 @@ class ProjectServiceTest {
     @Test
     void getAllProjectsByIdUserTestFound() {
         when(userRepository.findById(anyInt())).thenReturn(Optional.of(user));
-        when(projectRepository.findByUserId(anyInt())).thenReturn(Arrays.asList(project));
+        when(projectPostgresRepository.findByUserId(anyInt())).thenReturn(Arrays.asList(project));
 
         List<ProjectEntity> projects = projectService.getAllProjectByIdUser(1);
         assertFalse(projects.isEmpty());
@@ -107,28 +107,28 @@ class ProjectServiceTest {
     @Test
     void getAllProjectsByIdUserTestNotFound() {
         when(userRepository.findById(anyInt())).thenReturn(Optional.of(user));
-        when(projectRepository.findByUserId(anyInt())).thenReturn(Arrays.asList());
+        when(projectPostgresRepository.findByUserId(anyInt())).thenReturn(Arrays.asList());
 
         assertThrows(ProjectIsEmpty.class, () -> projectService.getAllProjectByIdUser(1));
     }
     @Test
     void deleteAllProjectsByIdUserTest() {
         when(userRepository.findById(anyInt())).thenReturn(Optional.of(user));
-        when(projectRepository.findByUserId(anyInt())).thenReturn(Arrays.asList(project));
+        when(projectPostgresRepository.findByUserId(anyInt())).thenReturn(Arrays.asList(project));
 
         projectService.delAllProjectByIdUser(1);
 
-        verify(projectRepository).deleteAll(anyList());
+        verify(projectPostgresRepository).deleteAll(anyList());
     }
 
     @Test
     void deleteAllProjectsByIdUserTestNoProjectsFound() {
         when(userRepository.findById(anyInt())).thenReturn(Optional.of(user));
-        when(projectRepository.findByUserId(anyInt())).thenReturn(Arrays.asList());
+        when(projectPostgresRepository.findByUserId(anyInt())).thenReturn(Arrays.asList());
 
         projectService.delAllProjectByIdUser(1);
 
-        verify(projectRepository, never()).deleteAll(anyList());
+        verify(projectPostgresRepository, never()).deleteAll(anyList());
     }
 
 

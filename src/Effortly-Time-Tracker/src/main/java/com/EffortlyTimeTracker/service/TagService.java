@@ -7,7 +7,8 @@ import com.EffortlyTimeTracker.entity.TaskTagEntity;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.tag.TagNotFoundException;
 import com.EffortlyTimeTracker.exception.task.TaskNotFoundException;
-import com.EffortlyTimeTracker.repository.postgres.ProjectRepository;
+import com.EffortlyTimeTracker.repository.IProjectRepository;
+import com.EffortlyTimeTracker.repository.postgres.ProjectPostgresRepository;
 import com.EffortlyTimeTracker.repository.postgres.TagRepository;
 import com.EffortlyTimeTracker.repository.postgres.TaskRepository;
 import com.EffortlyTimeTracker.repository.postgres.TaskTagRepository;
@@ -23,12 +24,12 @@ import java.util.List;
 public class TagService {
 
     private final TagRepository tagRepository;
-    private final ProjectRepository projectRepository;
+    private final IProjectRepository projectRepository;
     private final TaskRepository taskRepository;
     private final TaskTagRepository taskTagRepository;
 
     @Autowired
-    public TagService(TagRepository tagRepository, ProjectRepository projectRepository, TaskRepository taskRepository, TaskTagRepository taskTagRepository) {
+    public TagService(TagRepository tagRepository, IProjectRepository projectRepository, TaskRepository taskRepository, TaskTagRepository taskTagRepository) {
         this.tagRepository = tagRepository;
         this.projectRepository = projectRepository;
         this.taskRepository = taskRepository;

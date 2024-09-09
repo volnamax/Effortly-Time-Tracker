@@ -7,8 +7,9 @@ import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.exception.project.ProjectIsEmpty;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
+import com.EffortlyTimeTracker.repository.IProjectRepository;
 import com.EffortlyTimeTracker.repository.IUserRepository;
-import com.EffortlyTimeTracker.repository.postgres.ProjectRepository;
+import com.EffortlyTimeTracker.repository.postgres.ProjectPostgresRepository;
 import com.EffortlyTimeTracker.repository.postgres.TaskRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -23,18 +24,24 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class ProjectService {
-    private final ProjectRepository projectRepository;
+    private final IProjectRepository projectRepository;
     private final IUserRepository userRepository;
     private final TaskRepository taskRepository;
+    private final SequenceGeneratorService sequenceGeneratorService;
+
 
     @Autowired
-    public ProjectService(ProjectRepository projectRepository, IUserRepository userRepository, TaskRepository taskRepository) {
+    public ProjectService(IProjectRepository projectRepository, IUserRepository userRepository, TaskRepository taskRepository, SequenceGeneratorService sequenceGeneratorService) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
+        this.sequenceGeneratorService = sequenceGeneratorService;
+
     }
 
     public ProjectEntity addProject(@NotNull ProjectEntity projectEntity) {
+        projectEntity.setProjectId((int) sequenceGeneratorService.generateSequence(UserEntity.class.getSimpleName()));
+
         return projectRepository.save(projectEntity);
     }
 

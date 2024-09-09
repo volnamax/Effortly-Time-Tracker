@@ -8,10 +8,11 @@ import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.exception.group.GroupNotFoundException;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.mapper.ProjectMapper;
+import com.EffortlyTimeTracker.repository.IProjectRepository;
 import com.EffortlyTimeTracker.repository.postgres.GroupMemberRepository;
 import com.EffortlyTimeTracker.repository.postgres.GroupRepository;
 import com.EffortlyTimeTracker.repository.IUserRepository;
-import com.EffortlyTimeTracker.repository.postgres.ProjectRepository;
+import com.EffortlyTimeTracker.repository.postgres.ProjectPostgresRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +25,14 @@ import java.util.List;
 public class GroupService {
 
     private final GroupRepository groupRepository;
-    private final ProjectRepository projectRepository;
+    private final IProjectRepository projectRepository;
     private final IUserRepository userRepository;
     private final GroupMemberRepository groupMemberRepository;
     private final ProjectMapper projectMapper;
 
     @Autowired
     public GroupService(GroupRepository groupRepository,
-                        ProjectRepository projectRepository,
+                        IProjectRepository projectRepository,
                         IUserRepository userRepository,
                         GroupMemberRepository groupMemberRepository,
                         ProjectMapper projectMapper) {

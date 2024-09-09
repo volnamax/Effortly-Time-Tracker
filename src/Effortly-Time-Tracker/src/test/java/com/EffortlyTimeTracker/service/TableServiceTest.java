@@ -4,7 +4,7 @@ import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.table.TableNotFoundException;
-import com.EffortlyTimeTracker.repository.postgres.ProjectRepository;
+import com.EffortlyTimeTracker.repository.postgres.ProjectPostgresRepository;
 import com.EffortlyTimeTracker.repository.postgres.TableRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class TableServiceTest {
     private TableRepository tableRepository;
 
     @Mock
-    private ProjectRepository projectRepository;
+    private ProjectPostgresRepository projectPostgresRepository;
 
     @InjectMocks
     private TableService tableService;
@@ -97,7 +97,7 @@ class TableServiceTest {
 
     @Test
     void getAllTableByIdProjectTestFound() {
-        when(projectRepository.findById(anyInt())).thenReturn(Optional.of(project));
+        when(projectPostgresRepository.findById(anyInt())).thenReturn(Optional.of(project));
         when(tableRepository.findByProjectId(anyInt())).thenReturn(Arrays.asList(table));
 
         List<TableEntity> tables = tableService.getAllTableByIdProject(1);
@@ -109,7 +109,7 @@ class TableServiceTest {
 
     @Test
     void getAllTableByIdProjectTestNotFound() {
-        when(projectRepository.findById(anyInt())).thenReturn(Optional.empty());
+        when(projectPostgresRepository.findById(anyInt())).thenReturn(Optional.empty());
 
         assertThrows(ProjectNotFoundException.class, () -> tableService.getAllTableByIdProject(1));
     }
@@ -124,7 +124,7 @@ class TableServiceTest {
 
     @Test
     void delAllTableByIdProjectTest() {
-        when(projectRepository.findById(anyInt())).thenReturn(Optional.of(project));
+        when(projectPostgresRepository.findById(anyInt())).thenReturn(Optional.of(project));
         when(tableRepository.findByProjectId(anyInt())).thenReturn(Arrays.asList(table));
 
         tableService.delAllTablleByIdProject(1);
@@ -134,7 +134,7 @@ class TableServiceTest {
 
     @Test
     void delAllTableByIdProjectTestNoTablesFound() {
-        when(projectRepository.findById(anyInt())).thenReturn(Optional.of(project));
+        when(projectPostgresRepository.findById(anyInt())).thenReturn(Optional.of(project));
         when(tableRepository.findByProjectId(anyInt())).thenReturn(Arrays.asList());
 
         tableService.delAllTablleByIdProject(1);

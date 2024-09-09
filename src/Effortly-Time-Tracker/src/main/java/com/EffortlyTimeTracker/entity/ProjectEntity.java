@@ -22,6 +22,8 @@ public class ProjectEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_project")
+    @org.springframework.data.annotation.Id             // Для MongoDB
+    @org.springframework.data.mongodb.core.mapping.Field("_id")
     Integer projectId;
 
     @Column(name = "name", nullable = false)
@@ -35,7 +37,9 @@ public class ProjectEntity {
     @JoinColumn(name = "user_id")
     @JsonBackReference
     UserEntity userProject;
-
+    // Поле для хранения идентификатора пользователя
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private Integer userId;
     @OneToOne(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     GroupEntity group;
 
