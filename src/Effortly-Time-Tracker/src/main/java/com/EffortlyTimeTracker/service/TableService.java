@@ -30,11 +30,15 @@ public class TableService {
         this.sequenceGeneratorService = sequenceGeneratorService;
     }
 
-    public TableEntity addTable(@NonNull TableEntity tableEntity) {
-        tableEntity.setTableId((int) sequenceGeneratorService.generateSequence(TableEntity.class.getSimpleName()));
 
+    public TableEntity addTable(@NonNull TableEntity tableEntity) {
+        ProjectEntity project = postgresRepository.findById(tableEntity.getProjectId())
+                .orElseThrow(() -> new ProjectNotFoundException(tableEntity.getProjectId()));
+        tableEntity.setProject(project); // Устанавливаем проект для таблицы
+        tableEntity.setTableId((int) sequenceGeneratorService.generateSequence(TableEntity.class.getSimpleName()));
         return tableRepository.save(tableEntity);
     }
+
 
 
     public void delTableById(Integer tableId) {

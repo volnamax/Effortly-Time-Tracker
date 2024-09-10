@@ -22,6 +22,8 @@ public class TagEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_tags")
+    @org.springframework.data.annotation.Id             // Для MongoDB
+    @org.springframework.data.mongodb.core.mapping.Field("_id")
     Integer tagId;
 
     @Column(name = "name", nullable = false)

@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface TaskMapper {
-
     // Mapping from CreateDTO to Entity
     @Mappings({
             @Mapping(source = "tableId", target = "table.tableId"),
@@ -21,9 +20,11 @@ public interface TaskMapper {
     })
     TaskEntity toEntity(TaskCreateDTO dto);
 
-    // Mapping from Entity to ResponseDTO
+    // Mapping from Entity to ResponseDTO, including project details from TableEntity
     @Mappings({
             @Mapping(source = "table.tableId", target = "tableId"),
+            @Mapping(source = "table.project.projectId", target = "projectId"), // Mapping projectId from the table's project
+            @Mapping(source = "table.project.name", target = "projectName"), // Mapping project name
             @Mapping(target = "tags", ignore = true) // If handling of tags is needed, define appropriate mapping
     })
     TaskResponseDTO toResponseDTO(TaskEntity entity);

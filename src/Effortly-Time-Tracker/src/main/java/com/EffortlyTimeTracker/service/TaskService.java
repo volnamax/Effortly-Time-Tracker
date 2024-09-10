@@ -39,13 +39,29 @@ public class TaskService {
         this.sequenceGeneratorService = sequenceGeneratorService;
     }
 
-    public TaskEntity addTask(@NonNull TaskEntity task) {
+    public TaskEntity addTask( TaskEntity task) {
+                log.info("task ======={}", task);
+
+        TableEntity table = tableRepository.findById(task.getTableId())
+                .orElseThrow(() -> new TableNotFoundException(task.getTableId()));
+
+        log.info("Table found: {}", table);
+
+        if (table.getProject() == null) {
+            log.error("Table with ID {} is not linked to a project.", task.getTableId());
+            throw new IllegalStateException("Таблица не связана с проектом.");
+        }
+
+        log.info("Project for the table: {}", table.getProject());
+
+        task.setProjectId(table.getProject().getProjectId());
         task.setTimeAddTask(LocalDateTime.now());
-        log.info("Adding task: {}", task);
         task.setTaskId((int) sequenceGeneratorService.generateSequence(TaskEntity.class.getSimpleName()));
 
+        log.info("Saving task: {}", task);
         return taskRepository.save(task);
     }
+
 
     public void delTaskById(Integer taskId) {
         if (!taskRepository.existsById(taskId)) {

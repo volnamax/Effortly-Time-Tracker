@@ -16,6 +16,8 @@ import lombok.experimental.FieldDefaults;
 public class TaskTagEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @org.springframework.data.annotation.Id             // Для MongoDB
+    @org.springframework.data.mongodb.core.mapping.Field("_id")
     private Long id;
 
 

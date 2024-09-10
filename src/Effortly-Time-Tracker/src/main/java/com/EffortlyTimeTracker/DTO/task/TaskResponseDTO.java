@@ -27,7 +27,8 @@ public class TaskResponseDTO {
 
 
     LocalDateTime timeAddTask;
-
+    private Integer projectId;    // Добавляем projectId
+    private String projectName;   // Добавляем projectName
     LocalDateTime timeEndTask;
 
     @NotNull(message = "table in task is empty")
