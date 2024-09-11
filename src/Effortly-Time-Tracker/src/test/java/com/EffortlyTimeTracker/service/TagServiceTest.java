@@ -3,7 +3,7 @@ package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.entity.TagEntity;
 import com.EffortlyTimeTracker.exception.tag.TagNotFoundException;
-import com.EffortlyTimeTracker.repository.TagRepository;
+import com.EffortlyTimeTracker.repository.postgres.TagPostgresRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,9 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -22,7 +20,7 @@ import static org.mockito.Mockito.*;
 class TagServiceTest {
 
     @Mock
-    private TagRepository tagRepository;
+    private TagPostgresRepository tagRepository;
 
     @InjectMocks
     private TagService tagService;

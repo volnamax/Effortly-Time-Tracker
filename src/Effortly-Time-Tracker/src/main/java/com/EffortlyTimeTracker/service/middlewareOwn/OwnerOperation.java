@@ -64,6 +64,9 @@ public class OwnerOperation {
             log.info("+ Current user ID: {}", userId);
 
             TaskEntity taskEntity = taskService.getTaskById(taskId);
+            log.info("+ Current project ID: {}", taskEntity.getProjectId());
+
+
             Integer taskOwnerId = taskEntity.getTable().getProject().getUserProject().getUserId();
             log.info("+ Task owner ID: {}", taskOwnerId);
 

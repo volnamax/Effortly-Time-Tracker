@@ -5,10 +5,9 @@ import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
 import com.EffortlyTimeTracker.exception.user.UserNotRoleException;
-import com.EffortlyTimeTracker.repository.RoleRepository;
-import com.EffortlyTimeTracker.repository.UserRepository;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
+import com.EffortlyTimeTracker.repository.IUserRepository;
+import com.EffortlyTimeTracker.repository.postgres.RoleRepository;
+import com.mongodb.lang.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,53 +16,64 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Slf4j
-
 public class UserService {
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder; // Внедрение PasswordEncoder
 
+    private final IUserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;  // Внедрение PasswordEncoder
+    private final SequenceGeneratorService sequenceGeneratorService;
 
     @Autowired
-    public UserService(@NonNull UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserService(IUserRepository userRepository,
+                       RoleRepository roleRepository,
+                       PasswordEncoder passwordEncoder,
+                       SequenceGeneratorService sequenceGeneratorService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder; // Внедрение PasswordEncoder
+        this.passwordEncoder = passwordEncoder;
+        this.sequenceGeneratorService = sequenceGeneratorService;
+
     }
 
-
+    // Метод для получения роли по имени
     public RoleEntity getRoleByName(String roleName) {
         return roleRepository.findByName(Role.valueOf(roleName));
     }
 
+    // Метод для добавления пользователя
     public UserEntity addUser(@NonNull UserEntity userEntity) {
         RoleEntity role = getRoleByName(userEntity.getRole().getName().name());
         if (role == null) {
-            throw new UserNotRoleException();
+            throw new UserNotRoleException();  // Если роль не найдена, выбрасываем исключение
         }
-        userEntity.setRole(role);
-        userEntity.setPasswordHash(passwordEncoder.encode(userEntity.getPasswordHash())); // Шифрование пароля
+        userEntity.setRole(role);  // Устанавливаем роль пользователю
+        userEntity.setPasswordHash(passwordEncoder.encode(userEntity.getPasswordHash()));  // Шифрование пароля
+        // Присваиваем userId с помощью SequenceGeneratorService
+        userEntity.setUserId((int) sequenceGeneratorService.generateSequence(UserEntity.class.getSimpleName()));
 
-        return userRepository.save(userEntity);
-
+        return userRepository.save(userEntity);  // Сохранение пользователя в базу данных
     }
 
+    // Метод для удаления пользователя по ID
     public void delUserById(Integer id) {
         if (!userRepository.existsById(id)) {
-            throw new UserNotFoudException(id);
+            throw new UserNotFoudException(id);  // Исключение, если пользователь не найден
         }
         userRepository.deleteById(id);
     }
 
+    // Метод для получения пользователя по ID
     public UserEntity getUserById(Integer id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoudException(id));
     }
 
+    // Метод для получения всех пользователей
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
     }
+
+    // Метод для получения пользователя по email
     public Optional<UserEntity> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }

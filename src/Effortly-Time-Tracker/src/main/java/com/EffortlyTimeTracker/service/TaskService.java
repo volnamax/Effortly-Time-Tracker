@@ -1,13 +1,17 @@
 package com.EffortlyTimeTracker.service;
 
+import com.EffortlyTimeTracker.entity.InactiveTaskEntity;
+import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.entity.TaskEntity;
 import com.EffortlyTimeTracker.enums.Status;
 import com.EffortlyTimeTracker.exception.table.TableIsEmpty;
 import com.EffortlyTimeTracker.exception.table.TableNotFoundException;
 import com.EffortlyTimeTracker.exception.task.TaskNotFoundException;
-import com.EffortlyTimeTracker.repository.TableRepository;
-import com.EffortlyTimeTracker.repository.TaskRepository;
+import com.EffortlyTimeTracker.repository.ITableRepository;
+import com.EffortlyTimeTracker.repository.ITaskRepository;
+import com.EffortlyTimeTracker.repository.postgres.InactiveTaskRepository;
+import com.EffortlyTimeTracker.repository.postgres.TaskPostgresRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,19 +25,43 @@ import java.util.List;
 @Slf4j
 @Service
 public class TaskService {
-    private final TaskRepository taskRepository;
-    private final TableRepository tableRepository;
+    private final ITaskRepository taskRepository;
+    private final ITableRepository tableRepository;
+    private final InactiveTaskRepository inactiveTaskRepository;
+    private final SequenceGeneratorService sequenceGeneratorService;
+
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, TableRepository tableRepository) {
+    public TaskService(ITaskRepository taskRepository, ITableRepository tableRepository, InactiveTaskRepository inactiveTaskRepository, SequenceGeneratorService sequenceGeneratorService) {
         this.taskRepository = taskRepository;
         this.tableRepository = tableRepository;
+        this.inactiveTaskRepository = inactiveTaskRepository;
+        this.sequenceGeneratorService = sequenceGeneratorService;
     }
 
-    public TaskEntity addTask(@NonNull TaskEntity task) {
+    public TaskEntity addTask( TaskEntity task) {
+                log.info("task ======={}", task);
+
+        TableEntity table = tableRepository.findById(task.getTableId())
+                .orElseThrow(() -> new TableNotFoundException(task.getTableId()));
+
+        log.info("Table found: {}", table);
+
+        if (table.getProject() == null) {
+            log.error("Table with ID {} is not linked to a project.", task.getTableId());
+            throw new IllegalStateException("Таблица не связана с проектом.");
+        }
+
+        log.info("Project for the table: {}", table.getProject());
+
+        task.setProjectId(table.getProject().getProjectId());
         task.setTimeAddTask(LocalDateTime.now());
+        task.setTaskId((int) sequenceGeneratorService.generateSequence(TaskEntity.class.getSimpleName()));
+
+        log.info("Saving task: {}", task);
         return taskRepository.save(task);
     }
+
 
     public void delTaskById(Integer taskId) {
         if (!taskRepository.existsById(taskId)) {
@@ -49,7 +77,7 @@ public class TaskService {
     }
 
     public List<TaskEntity> getAllTask() {
-        return  taskRepository.findAll();
+        return taskRepository.findAll();
     }
 
 
@@ -124,5 +152,32 @@ public class TaskService {
         task.setStatus(Status.NO_ACTIVE);
         task.setTimeEndTask(LocalDateTime.now());
         return taskRepository.save(task);
+    }
+
+
+    public InactiveTaskEntity deactivateTask(Integer taskId, String reason) {
+        // Найти задачу по ID
+        TaskEntity task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(taskId));
+
+        // Проверка, что задача еще активна
+        if (task.getStatus() == Status.NO_ACTIVE) {
+            throw new IllegalStateException("Task is already deactivated.");
+        }
+
+        // Создание записи в inactive_task
+        InactiveTaskEntity inactiveTask = InactiveTaskEntity.builder()
+                .task(task)
+                .deactivatedAt(LocalDateTime.now())
+                .reason(reason)
+                .build();
+
+        // Изменение статуса задачи на NO_ACTIVE
+        task.setStatus(Status.NO_ACTIVE);
+        task.setTimeEndTask(LocalDateTime.now());
+        taskRepository.save(task);  // Обновление записи в таблице task
+
+        // Сохранение записи в inactive_task
+        return inactiveTaskRepository.save(inactiveTask);
     }
 }

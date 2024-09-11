@@ -7,9 +7,10 @@ import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.exception.project.ProjectIsEmpty;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
-import com.EffortlyTimeTracker.repository.ProjectRepository;
-import com.EffortlyTimeTracker.repository.TaskRepository;
-import com.EffortlyTimeTracker.repository.UserRepository;
+import com.EffortlyTimeTracker.repository.IProjectRepository;
+import com.EffortlyTimeTracker.repository.ITaskRepository;
+import com.EffortlyTimeTracker.repository.IUserRepository;
+import com.EffortlyTimeTracker.repository.postgres.TaskPostgresRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +24,24 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class ProjectService {
-    private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
-    private final TaskRepository taskRepository;
+    private final IProjectRepository projectRepository;
+    private final IUserRepository userRepository;
+    private final ITaskRepository taskRepository;
+    private final SequenceGeneratorService sequenceGeneratorService;
+
 
     @Autowired
-    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, TaskRepository taskRepository) {
+    public ProjectService(IProjectRepository projectRepository, IUserRepository userRepository, ITaskRepository taskRepository, SequenceGeneratorService sequenceGeneratorService) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
+        this.sequenceGeneratorService = sequenceGeneratorService;
+
     }
 
-
     public ProjectEntity addProject(@NotNull ProjectEntity projectEntity) {
+        projectEntity.setProjectId((int) sequenceGeneratorService.generateSequence(ProjectEntity.class.getSimpleName()));
+
         return projectRepository.save(projectEntity);
     }
 
@@ -47,40 +53,38 @@ public class ProjectService {
     }
 
     public ProjectEntity getProjectsById(Integer id) {
-        return  projectRepository.findById(id)
+        return projectRepository.findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException(id));
     }
-    public List<ProjectEntity>getAllProject () {
+
+    public List<ProjectEntity> getAllProject() {
         return projectRepository.findAll();
     }
 
-
     public List<ProjectEntity> getAllProjectByIdUser(Integer userId) {
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoudException(userId));
+        UserEntity user = findUserById(userId);
 
-        List<ProjectEntity> userTodos = projectRepository.findByUserId(userId);
+        List<ProjectEntity> userProjects = projectRepository.findByUserId(userId);
 
-        if (userTodos.isEmpty()) {
-            log.info("No todos found for user with id {}", userId);
+        if (userProjects.isEmpty()) {
+            log.info("No projects found for user with id {}", userId);
             throw new ProjectIsEmpty();
         }
-        return userTodos;
+        return userProjects;
     }
 
     public void delAllProjectByIdUser(Integer userId) {
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoudException(userId));
+        UserEntity user = findUserById(userId);
 
-        List<ProjectEntity> userTodos = projectRepository.findByUserId(userId);
+        List<ProjectEntity> userProjects = projectRepository.findByUserId(userId);
 
-        if (userTodos.isEmpty()) {
-            log.info("No todos found for user with id {}", userId);
+        if (userProjects.isEmpty()) {
+            log.info("No projects found for user with id {}", userId);
             return;
         }
 
-        projectRepository.deleteAll(userTodos);
-        log.info("All todos for user with id {} deleted", userId);
+        projectRepository.deleteAll(userProjects);
+        log.info("All projects for user with id {} deleted", userId);
     }
 
     public ProjectAnalyticsDTO getProjectAnalytics(Integer projectId) {
@@ -130,21 +134,8 @@ public class ProjectService {
         return analyticsDTO;
     }
 
-
+    private UserEntity findUserById(Integer userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoudException(userId));
+    }
 }
-
-//    @Transactional(readOnly = true)
-//    public List<ProjectDTO> getAllProject() {
-//        return projectRepository.findAll().stream()
-//                .map(this::convertToDto)
-//                .collect(Collectors.toList());
-//    }
-////
-//    private ProjectDTO convertToDto(ProjectEntity projectEntity) {
-//        ProjectDTO projectDTO = new ProjectDTO();
-//        projectDTO.setName(projectEntity.getName());
-//        projectDTO.setDescription(projectEntity.getDescription());
-//        projectDTO.setUserProject(projectEntity.getUserProject());
-//        projectDTO.setGroupProject(projectEntity.getGroup());
-//        return projectDTO;
-//    }

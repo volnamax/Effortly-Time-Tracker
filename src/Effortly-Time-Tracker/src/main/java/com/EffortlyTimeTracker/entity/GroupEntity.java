@@ -8,6 +8,7 @@ package com.EffortlyTimeTracker.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -37,6 +38,11 @@ public class GroupEntity {
     @OneToOne
     @JoinColumn(name = "project_id", referencedColumnName = "id_project")
     private ProjectEntity project;
+
+    // Добавляем поле userId для MongoDB (индексируемое)
+    @Indexed(unique = true)
+    @Transient  // Транзитное для JPA, но используемое MongoDB
+    private Integer projectId;
 
     @Override
     public String toString() {

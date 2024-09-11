@@ -1,7 +1,12 @@
 package com.EffortlyTimeTracker.service;
 
+import com.EffortlyTimeTracker.repository.IUserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
-import com.EffortlyTimeTracker.repository.UserRepository;
+import com.EffortlyTimeTracker.repository.IUserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -9,9 +14,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class JpaUserDetailsService implements UserDetailsService {
-    private final UserRepository userRepository;
 
-    public JpaUserDetailsService(UserRepository userRepository) {
+    private final IUserRepository userRepository;
+
+    // Inject the repository based on the active database configuration
+    public JpaUserDetailsService(IUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

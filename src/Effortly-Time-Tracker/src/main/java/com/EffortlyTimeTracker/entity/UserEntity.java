@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -22,7 +23,8 @@ import java.util.Set;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_user")
+    @org.springframework.data.annotation.Id             // Для MongoDB
+    @org.springframework.data.mongodb.core.mapping.Field("_id")  // Связываем с _id в MongoDB    @Column(name = "id_user")
     Integer userId;
 
     @Column(name = "user_name", nullable = false)

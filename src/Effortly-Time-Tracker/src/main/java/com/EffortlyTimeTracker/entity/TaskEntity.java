@@ -23,6 +23,8 @@ public class TaskEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_task")
+    @org.springframework.data.annotation.Id             // Для MongoDB
+    @org.springframework.data.mongodb.core.mapping.Field("_id")
     Integer taskId;
 
     @Column(name = "name", nullable = false)
@@ -50,6 +52,13 @@ public class TaskEntity {
     @JoinColumn(name = "table_id")
     @JsonBackReference
     TableEntity table;
+
+    // Поле для хранения идентификатора пользователя mongo
+    @Column(name = "table_id", insertable = false, updatable = false)
+    private Integer tableId;
+
+    private Integer projectId; // Связь с ProjectEntity
+
 
     @OneToMany(mappedBy = "task",  cascade = CascadeType.ALL, orphanRemoval = true)
     Set<TaskTagEntity> tasks = new HashSet<>();

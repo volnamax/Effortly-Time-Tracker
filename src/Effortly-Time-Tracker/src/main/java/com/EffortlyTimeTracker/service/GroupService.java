@@ -8,50 +8,48 @@ import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.exception.group.GroupNotFoundException;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.mapper.ProjectMapper;
-import com.EffortlyTimeTracker.repository.GroupMemberRepository;
-import com.EffortlyTimeTracker.repository.GroupRepository;
-import com.EffortlyTimeTracker.repository.ProjectRepository;
-import com.EffortlyTimeTracker.repository.UserRepository;
+import com.EffortlyTimeTracker.repository.IProjectRepository;
+import com.EffortlyTimeTracker.repository.postgres.GroupMemberRepository;
+import com.EffortlyTimeTracker.repository.postgres.GroupRepository;
+import com.EffortlyTimeTracker.repository.IUserRepository;
+import com.EffortlyTimeTracker.repository.postgres.ProjectPostgresRepository;
 import jakarta.transaction.Transactional;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
 public class GroupService {
 
     private final GroupRepository groupRepository;
-    private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
+    private final IProjectRepository projectRepository;
+    private final IUserRepository userRepository;
     private final GroupMemberRepository groupMemberRepository;
     private final ProjectMapper projectMapper;
 
-
     @Autowired
-    public GroupService(@NonNull GroupRepository groupRepository, ProjectRepository projectRepository, UserRepository userRepository, GroupMemberRepository groupMemberRepository, ProjectMapper projectMapper) {
+    public GroupService(GroupRepository groupRepository,
+                        IProjectRepository projectRepository,
+                        IUserRepository userRepository,
+                        GroupMemberRepository groupMemberRepository,
+                        ProjectMapper projectMapper) {
         this.groupRepository = groupRepository;
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.groupMemberRepository = groupMemberRepository;
         this.projectMapper = projectMapper;
     }
+
     @Transactional
     public GroupEntity addGroup(GroupEntity groupEntity) {
         ProjectEntity project = projectRepository.findById(groupEntity.getProject().getProjectId())
                 .orElseThrow(() -> new ProjectNotFoundException(groupEntity.getProject().getProjectId()));
 
-        // Устанавливаем связь с проектом
         groupEntity.setProject(project);
-        // Сохраняем группу, которая теперь связана с проектом
         GroupEntity savedGroup = groupRepository.save(groupEntity);
-        // Обязательно обновляем проект с новым group_id
         project.setGroup(savedGroup);
         projectRepository.save(project);
 
@@ -65,13 +63,12 @@ public class GroupService {
         return savedGroup;
     }
 
-
     public void delGroupById(Integer id) {
         if (!groupRepository.existsById(id)) {
             throw new GroupNotFoundException(id);
         }
         groupRepository.deleteById(id);
-        log.info("group with id {} delete", id);
+        log.info("Group with id {} deleted", id);
     }
 
     public GroupEntity getGroupById(Integer id) {
@@ -83,16 +80,16 @@ public class GroupService {
         return groupRepository.findAll();
     }
 
-
     public void addUserToGroup(Integer groupId, Integer userId) {
-        GroupEntity group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException("Group not found"));
-        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        GroupEntity group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("Group not found"));
+        UserEntity user = findUserById(userId);
 
         if (group.getMembers().stream().anyMatch(member -> member.getUser().getUserId().equals(userId))) {
             throw new IllegalArgumentException("User is already a member of this group");
         }
 
-        GroupMermberEntity groupMember  = new GroupMermberEntity();
+        GroupMermberEntity groupMember = new GroupMermberEntity();
         groupMember.setGroup(group);
         groupMember.setUser(user);
         groupMember.setRole(Role.MANAGER);
@@ -102,10 +99,10 @@ public class GroupService {
         groupRepository.save(group);
     }
 
-
     public void removeUserFromGroup(Integer groupId, Integer userId) {
-        GroupEntity group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException("Group not found"));
-        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        GroupEntity group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("Group not found"));
+        UserEntity user = findUserById(userId);
 
         GroupMermberEntity groupMember = group.getMembers().stream()
                 .filter(member -> member.getUser().getUserId().equals(userId))
@@ -121,6 +118,8 @@ public class GroupService {
         groupRepository.save(group);
     }
 
+    private UserEntity findUserById(Integer userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
 }
-
-

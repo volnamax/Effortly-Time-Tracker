@@ -186,6 +186,15 @@ ALTER TABLE public.task
 ALTER TABLE public.task
     ADD CONSTRAINT chk_table_status CHECK (status IN ('NO_ACTIVE', 'ACTIVE'));
 
+CREATE TABLE public.inactive_task
+(
+    id_inactive_task SERIAL PRIMARY KEY,      -- Идентификатор неактивной задачи
+    task_id          INTEGER NOT NULL,        -- Внешний ключ на таблицу task
+    deactivated_at   TIMESTAMP(6) NOT NULL,   -- Время деактивации задачи
+    reason           VARCHAR(255),            -- Причина деактивации (опционально)
+
+    FOREIGN KEY (task_id) REFERENCES public.task(id_task) -- Связь с таблицей task
+);
 
 
 CREATE TABLE public.tag

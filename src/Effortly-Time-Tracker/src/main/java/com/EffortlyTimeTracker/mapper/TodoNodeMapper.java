@@ -29,8 +29,6 @@ public interface TodoNodeMapper {
     @Mapping(source = "user.userId", target = "userID")
     List<TodoNodeResponseDTO> toDtoResponse(List<TodoNodeEntity> entity);
 
-
-
 }
 
 

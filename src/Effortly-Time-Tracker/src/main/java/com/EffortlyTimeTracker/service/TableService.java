@@ -2,12 +2,13 @@ package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TableEntity;
-import com.EffortlyTimeTracker.exception.project.ProjectIsEmpty;
+import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.table.TableIsEmpty;
 import com.EffortlyTimeTracker.exception.table.TableNotFoundException;
-import com.EffortlyTimeTracker.repository.ProjectRepository;
-import com.EffortlyTimeTracker.repository.TableRepository;
+import com.EffortlyTimeTracker.repository.IProjectRepository;
+import com.EffortlyTimeTracker.repository.ITableRepository;
+import com.EffortlyTimeTracker.repository.IUserRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +19,26 @@ import java.util.List;
 @Slf4j
 @Service
 public class TableService {
-    private final TableRepository tableRepository;
-    private final ProjectRepository projectRepository;
+    private final ITableRepository tableRepository;
+    private final IProjectRepository postgresRepository;
+    private final SequenceGeneratorService sequenceGeneratorService;
 
     @Autowired
-    public TableService(TableRepository tableRepository, ProjectRepository projectRepository) {
+    public TableService(ITableRepository tableRepository, IProjectRepository postgresRepository, SequenceGeneratorService sequenceGeneratorService) {
         this.tableRepository = tableRepository;
-        this.projectRepository = projectRepository;
+        this.postgresRepository = postgresRepository;
+        this.sequenceGeneratorService = sequenceGeneratorService;
     }
 
+
     public TableEntity addTable(@NonNull TableEntity tableEntity) {
+        ProjectEntity project = postgresRepository.findById(tableEntity.getProjectId())
+                .orElseThrow(() -> new ProjectNotFoundException(tableEntity.getProjectId()));
+        tableEntity.setProject(project); // Устанавливаем проект для таблицы
+        tableEntity.setTableId((int) sequenceGeneratorService.generateSequence(TableEntity.class.getSimpleName()));
         return tableRepository.save(tableEntity);
     }
+
 
 
     public void delTableById(Integer tableId) {
@@ -49,7 +58,7 @@ public class TableService {
     }
 
     public List<TableEntity> getAllTableByIdProject(Integer projectId) {
-        ProjectEntity project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException(projectId));
+        ProjectEntity project = postgresRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException(projectId));
         List<TableEntity> tableEntities = tableRepository.findByProjectId(projectId);
 
         if (tableEntities.isEmpty()) {
@@ -60,7 +69,7 @@ public class TableService {
     }
 
     public void delAllTablleByIdProject(Integer projectId) {
-        ProjectEntity project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException(projectId));
+        ProjectEntity project = postgresRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException(projectId));
         List<TableEntity> tableEntities = tableRepository.findByProjectId(projectId);
 
         if (tableEntities.isEmpty()) {

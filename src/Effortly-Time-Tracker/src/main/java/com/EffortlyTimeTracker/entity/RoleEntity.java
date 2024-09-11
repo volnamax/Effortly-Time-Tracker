@@ -1,6 +1,5 @@
 package com.EffortlyTimeTracker.entity;
 
-
 import com.EffortlyTimeTracker.enums.Role;
 import jakarta.persistence.*;
 
@@ -16,6 +15,16 @@ public class RoleEntity {
     @Column(name = "name")
     private Role name;
 
+    // Конструктор по умолчанию (если необходим для JPA)
+    public RoleEntity() {}
+
+    // Конструктор с параметрами
+    public RoleEntity(Integer id, Role name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    // Геттеры и сеттеры
     public Integer getId() {
         return id;
     }
@@ -31,5 +40,4 @@ public class RoleEntity {
     public void setName(Role name) {
         this.name = name;
     }
-
 }

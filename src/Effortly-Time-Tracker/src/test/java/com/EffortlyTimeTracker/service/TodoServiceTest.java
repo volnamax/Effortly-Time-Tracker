@@ -4,8 +4,7 @@ import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.exception.todo.TodoNodeIsEmpty;
 import com.EffortlyTimeTracker.exception.todo.TodoNotFoudException;
-import com.EffortlyTimeTracker.repository.TodoRepository;
-import com.EffortlyTimeTracker.repository.UserRepository;
+import com.EffortlyTimeTracker.repository.IUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +24,7 @@ class TodoServiceTest {
     private TodoRepository todoRepository;
 
     @Mock
-    private UserRepository userRepository;
+    private IUserRepository userRepository;
 
     @InjectMocks
     private TodoService todoService;

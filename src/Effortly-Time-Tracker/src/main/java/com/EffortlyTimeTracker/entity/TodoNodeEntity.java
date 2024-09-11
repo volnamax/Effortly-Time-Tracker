@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.time.LocalDateTime;
 
@@ -39,6 +40,11 @@ public class TodoNodeEntity {
     @JoinColumn(name = "user_id")
     @JsonBackReference
     UserEntity user;
+
+    // Добавляем поле userId для MongoDB (индексируемое)
+    @Indexed(unique = true)
+    @Transient  // Транзитное для JPA, но используемое MongoDB
+    private Integer userId;
 
     @Override
     public String toString() {
