@@ -39,28 +39,32 @@ public class TaskService {
         this.sequenceGeneratorService = sequenceGeneratorService;
     }
 
-    public TaskEntity addTask( TaskEntity task) {
-                log.info("task ======={}", task);
+    public TaskEntity addTask(@NonNull TaskEntity task) {
+        log.info("Adding task: {}", task);
 
-        TableEntity table = tableRepository.findById(task.getTableId())
-                .orElseThrow(() -> new TableNotFoundException(task.getTableId()));
-
-        log.info("Table found: {}", table);
-
-        if (table.getProject() == null) {
-            log.error("Table with ID {} is not linked to a project.", task.getTableId());
-            throw new IllegalStateException("Таблица не связана с проектом.");
+        // Check if the table is set in the task entity
+        if (task.getTable() == null || task.getTable().getTableId() == null) {
+            log.error("Table not found in task entity");
+            throw new IllegalArgumentException("Task must be linked to a table with a valid table ID.");
         }
 
-        log.info("Project for the table: {}", table.getProject());
+        TableEntity table = tableRepository.findById(task.getTable().getTableId())
+                .orElseThrow(() -> new TableNotFoundException(task.getTable().getTableId()));
+
+        if (table.getProject() == null) {
+            log.error("Table with ID {} is not linked to a project.", task.getTable().getTableId());
+            throw new IllegalStateException("Table is not linked to a project.");
+        }
 
         task.setProjectId(table.getProject().getProjectId());
         task.setTimeAddTask(LocalDateTime.now());
         task.setTaskId((int) sequenceGeneratorService.generateSequence(TaskEntity.class.getSimpleName()));
 
-        log.info("Saving task: {}", task);
-        return taskRepository.save(task);
+        TaskEntity savedTask = taskRepository.save(task);
+        log.info("Task '{}' added with ID {}", savedTask.getName(), savedTask.getTaskId());
+        return savedTask;
     }
+
 
 
     public void delTaskById(Integer taskId) {
