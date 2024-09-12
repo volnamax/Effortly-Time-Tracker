@@ -87,7 +87,5 @@ public class OwnershipGroup {
         }
         return false;
     }
-
-
 }
 

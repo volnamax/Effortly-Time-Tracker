@@ -4,8 +4,9 @@ import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.table.TableNotFoundException;
+import com.EffortlyTimeTracker.repository.IProjectRepository;
+import com.EffortlyTimeTracker.repository.ITableRepository;
 import com.EffortlyTimeTracker.repository.postgres.ProjectPostgresRepository;
-import com.EffortlyTimeTracker.repository.postgres.TableRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,10 +27,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class TableServiceTest {
 
     @Mock
-    private TableRepository tableRepository;
+    private ITableRepository tableRepository;
 
     @Mock
-    private ProjectPostgresRepository projectPostgresRepository;
+    private IProjectRepository projectPostgresRepository;
 
     @InjectMocks
     private TableService tableService;

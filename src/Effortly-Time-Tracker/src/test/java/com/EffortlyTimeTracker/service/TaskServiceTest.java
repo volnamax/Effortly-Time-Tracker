@@ -7,7 +7,9 @@ import com.EffortlyTimeTracker.enums.Status;
 import com.EffortlyTimeTracker.exception.table.TableIsEmpty;
 import com.EffortlyTimeTracker.exception.table.TableNotFoundException;
 import com.EffortlyTimeTracker.exception.task.TaskNotFoundException;
-import com.EffortlyTimeTracker.repository.postgres.TableRepository;
+import com.EffortlyTimeTracker.repository.ITableRepository;
+import com.EffortlyTimeTracker.repository.ITaskRepository;
+import com.EffortlyTimeTracker.repository.ITaskTagRepository;
 import com.EffortlyTimeTracker.repository.postgres.TaskPostgresRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,10 +31,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class TaskServiceTest {
     @Mock
-    private TaskPostgresRepository taskRepository;
+    private ITaskRepository taskRepository;
 
     @Mock
-    private TableRepository tableRepository;
+    private ITableRepository tableRepository;
 
     @InjectMocks
     private TaskService taskService;

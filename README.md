@@ -72,7 +72,7 @@
 
 ![img.png](img/img.png)
 
-![img.png](img.png)
+![img.png](img/img1.png)
 ### 6) Use-Case - диаграмма
 
 ![ Use-Case - диаграмма](img/use-case-new-c.jpg)

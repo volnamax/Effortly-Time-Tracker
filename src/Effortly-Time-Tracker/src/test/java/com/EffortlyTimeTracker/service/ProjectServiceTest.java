@@ -6,6 +6,7 @@ import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.project.ProjectIsEmpty;
+import com.EffortlyTimeTracker.repository.IProjectRepository;
 import com.EffortlyTimeTracker.repository.IUserRepository;
 import com.EffortlyTimeTracker.repository.postgres.ProjectPostgresRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +27,7 @@ import static org.mockito.Mockito.*;
 class ProjectServiceTest {
 
     @Mock
-    private ProjectPostgresRepository projectPostgresRepository;
+    private IProjectRepository projectPostgresRepository;
 
     @Mock
     private IUserRepository userRepository;

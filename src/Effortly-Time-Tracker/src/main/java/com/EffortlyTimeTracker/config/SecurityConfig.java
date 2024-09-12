@@ -1,6 +1,6 @@
 package com.EffortlyTimeTracker.config;
- // todo define user  = group owner
-// define guest = user
+// todo define user  = group owner
+
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -30,12 +30,9 @@ import java.security.interfaces.RSAPublicKey;
 
 @Configuration
 public class SecurityConfig {
-
-    private final UserDetailsService userDetailsService;
     private final RsaKeyProperties rsaKeyProperties;
 
-    public SecurityConfig(UserDetailsService userDetailsService, RsaKeyProperties rsaKeyProperties) {
-        this.userDetailsService = userDetailsService;
+    public SecurityConfig(RsaKeyProperties rsaKeyProperties) {
         this.rsaKeyProperties = rsaKeyProperties;
     }
     //Компонент SecurityFilterChain: Настраивает цепочку фильтров безопасности для отключения CSRF, авторизации запросов и настройки управления сеансами без состояния.
@@ -51,7 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/todo/**").hasAnyRole("MANAGER", "USER", "ADMIN")
                         .requestMatchers("/api/group/**").hasAnyRole("MANAGER", "ADMIN")
 
-                      //  .requestMatchers("/api/todo/get-all").hasRole("ADMIN")
+                        //  .requestMatchers("/api/todo/get-all").hasRole("ADMIN")
                         .requestMatchers("/api/project/get-all").hasRole("ADMIN")
                         .requestMatchers("/api/table/get-all").hasRole("ADMIN")
                         .requestMatchers("/api/task/get-all").hasRole("ADMIN")
@@ -61,11 +58,13 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
+
     //Компонент JwtDecoder: Настраивает декодирование JWT с использованием открытого ключа RSA.
     @Bean
     public JwtDecoder jwtDecoder() throws Exception {
         return NimbusJwtDecoder.withPublicKey(rsaKeyProperties.getPublicKey()).build();
     }
+
     //Компонент JwtEncoder: Настраивает кодировку JWT с использованием открытого и закрытого ключей RSA.
     @Bean
     public JwtEncoder jwtEncoder() throws Exception {
@@ -76,16 +75,19 @@ public class SecurityConfig {
         JWKSource<SecurityContext> jwkSource = new ImmutableJWKSet<>(jwkSet);
         return new NimbusJwtEncoder(jwkSource);
     }
+
     //Компонент AuthenticationManager: Настраивает диспетчер аутентификации, который будет использоваться для аутентификации.
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-//    Компонент PasswordEncoder: Настраивает кодировщик паролей с помощью BCrypt.
+
+    //    Компонент PasswordEncoder: Настраивает кодировщик паролей с помощью BCrypt.
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     private JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         grantedAuthoritiesConverter.setAuthoritiesClaimName("scope");

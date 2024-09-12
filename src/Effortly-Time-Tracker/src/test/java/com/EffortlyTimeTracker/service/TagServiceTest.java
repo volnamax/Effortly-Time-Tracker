@@ -3,6 +3,7 @@ package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.entity.TagEntity;
 import com.EffortlyTimeTracker.exception.tag.TagNotFoundException;
+import com.EffortlyTimeTracker.repository.ITagRepository;
 import com.EffortlyTimeTracker.repository.postgres.TagPostgresRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ import static org.mockito.Mockito.*;
 class TagServiceTest {
 
     @Mock
-    private TagPostgresRepository tagRepository;
+    private ITagRepository tagRepository;
 
     @InjectMocks
     private TagService tagService;

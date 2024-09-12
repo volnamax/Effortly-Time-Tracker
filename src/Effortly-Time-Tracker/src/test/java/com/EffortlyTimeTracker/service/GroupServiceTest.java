@@ -4,6 +4,7 @@ import com.EffortlyTimeTracker.entity.*;
 import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.exception.group.GroupNotFoundException;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
+import com.EffortlyTimeTracker.repository.IProjectRepository;
 import com.EffortlyTimeTracker.repository.postgres.GroupMemberRepository;
 import com.EffortlyTimeTracker.repository.postgres.GroupRepository;
 import com.EffortlyTimeTracker.repository.IUserRepository;
@@ -29,7 +30,7 @@ class GroupServiceTest {
     private GroupRepository groupRepository;
 
     @Mock
-    private ProjectPostgresRepository projectPostgresRepository;
+    private IProjectRepository projectPostgresRepository;
 
     @Mock
     private GroupMemberRepository groupMemberRepository;

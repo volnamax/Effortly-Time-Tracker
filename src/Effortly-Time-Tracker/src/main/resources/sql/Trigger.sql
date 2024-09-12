@@ -6,8 +6,7 @@ CREATE TABLE public.activity_log
     data       JSONB,
     logged_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE OR REPLACE FUNCTION log_activity() RETURNS trigger AS
-$$
+CREATE OR REPLACE FUNCTION log_activity() RETURNS trigger AS $$
 DECLARE
     log_data JSONB;
 BEGIN
