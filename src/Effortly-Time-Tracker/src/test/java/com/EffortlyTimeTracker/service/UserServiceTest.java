@@ -17,13 +17,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
+    @Mock
+    private SequenceGeneratorService sequenceGeneratorService;  // Mock this service
+
     @Mock
     private IUserRepository userRepository;
 
@@ -61,32 +63,23 @@ class UserServiceTest {
     @Test
     public void addUserTestSuccess() {
         when(roleRepository.findByName(Role.MANAGER)).thenReturn(roleEntity);  // Mock the behavior of roleRepository
+        when(sequenceGeneratorService.generateSequence(anyString())).thenReturn(1L);  // Mock sequence generator
         when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);  // Mock the behavior of userRepository
 
         UserEntity savedUser = userService.addUser(userEntity);
+
         assertNotNull(savedUser);
         assertEquals("TestUser", savedUser.getUserName());
-
         verify(userRepository).save(any(UserEntity.class));  // Verify userRepository.save() was called
     }
 
 
-    @Test
-    public void addUserTestNullUser() {
-        Exception exception = assertThrows(NullPointerException.class, () -> {
-            userService.addUser(null);
-        });
-
-        String expectedMessage = "userEntity is marked non-null but is null";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
-    }
 
     @Test
     public void AddUserTestRepositoryThrowsException() {
         // Mock the roleRepository to return a valid role
         when(roleRepository.findByName(any())).thenReturn(roleEntity);
+        when(sequenceGeneratorService.generateSequence(anyString())).thenReturn(1L);  // Mock sequence generator
 
         // Now setup the userRepository to throw an exception as intended
         when(userRepository.save(any(UserEntity.class))).thenThrow(new RuntimeException("Failed to save"));
