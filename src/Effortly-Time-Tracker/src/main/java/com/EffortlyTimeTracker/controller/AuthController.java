@@ -19,8 +19,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -91,9 +93,14 @@ public class AuthController {
 //    }
 //
     private String getTokenByLoginAndPassword(String login, String password) {
-        var auth = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(login, password));
-        return tokenService.generateToken(auth);
+        try {
+            var auth = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(login, password));
+            return tokenService.generateToken(auth);
+        } catch (AuthenticationException e) {
+            throw new BadCredentialsException("Invalid login or password");
+        }
+
     }
 
     @GetMapping("/get-user-id")
