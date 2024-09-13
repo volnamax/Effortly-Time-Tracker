@@ -1,7 +1,6 @@
 package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.entity.InactiveTaskEntity;
-import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.entity.TaskEntity;
 import com.EffortlyTimeTracker.enums.Status;
@@ -11,7 +10,6 @@ import com.EffortlyTimeTracker.exception.task.TaskNotFoundException;
 import com.EffortlyTimeTracker.repository.ITableRepository;
 import com.EffortlyTimeTracker.repository.ITaskRepository;
 import com.EffortlyTimeTracker.repository.postgres.InactiveTaskRepository;
-import com.EffortlyTimeTracker.repository.postgres.TaskPostgresRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +46,7 @@ public class TaskService {
             throw new IllegalArgumentException("Task must be linked to a table with a valid table ID.");
         }
 
-        TableEntity table = tableRepository.findById(task.getTable().getTableId())
-                .orElseThrow(() -> new TableNotFoundException(task.getTable().getTableId()));
+        TableEntity table = tableRepository.findById(task.getTable().getTableId()).orElseThrow(() -> new TableNotFoundException(task.getTable().getTableId()));
 
         if (table.getProject() == null) {
             log.error("Table with ID {} is not linked to a project.", task.getTable().getTableId());
@@ -66,7 +63,6 @@ public class TaskService {
     }
 
 
-
     public void delTaskById(Integer taskId) {
         if (!taskRepository.existsById(taskId)) {
             throw new TaskNotFoundException(taskId);
@@ -76,8 +72,7 @@ public class TaskService {
     }
 
     public TaskEntity getTaskById(Integer taskId) {
-        return taskRepository.findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException(taskId));
+        return taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException(taskId));
     }
 
     public List<TaskEntity> getAllTask() {
@@ -109,8 +104,7 @@ public class TaskService {
     }
 
     public TaskEntity startTaskTimer(Integer taskId) {
-        TaskEntity task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException(taskId));
+        TaskEntity task = taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException(taskId));
 
         if (task.getStartTimer() != null) {
             throw new IllegalStateException("Timer is already running for this task.");
@@ -121,8 +115,7 @@ public class TaskService {
     }
 
     public TaskEntity stopTaskTimer(Integer taskId) {
-        TaskEntity task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException(taskId));
+        TaskEntity task = taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException(taskId));
 
         if (task.getStartTimer() == null) {
             throw new IllegalStateException("Timer is not running for this task.");
@@ -138,8 +131,7 @@ public class TaskService {
     }
 
     public TaskEntity completeTask(Integer taskId) {
-        TaskEntity task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException(taskId));
+        TaskEntity task = taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException(taskId));
 
         if (task.getStatus() == Status.NO_ACTIVE) {
             throw new IllegalStateException("Task is already completed.");
@@ -161,8 +153,7 @@ public class TaskService {
 
     public InactiveTaskEntity deactivateTask(Integer taskId, String reason) {
         // Найти задачу по ID
-        TaskEntity task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException(taskId));
+        TaskEntity task = taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException(taskId));
 
         // Проверка, что задача еще активна
         if (task.getStatus() == Status.NO_ACTIVE) {
@@ -170,11 +161,7 @@ public class TaskService {
         }
 
         // Создание записи в inactive_task
-        InactiveTaskEntity inactiveTask = InactiveTaskEntity.builder()
-                .task(task)
-                .deactivatedAt(LocalDateTime.now())
-                .reason(reason)
-                .build();
+        InactiveTaskEntity inactiveTask = InactiveTaskEntity.builder().task(task).deactivatedAt(LocalDateTime.now()).reason(reason).build();
 
         // Изменение статуса задачи на NO_ACTIVE
         task.setStatus(Status.NO_ACTIVE);

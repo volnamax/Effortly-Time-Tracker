@@ -1,5 +1,6 @@
 package com.EffortlyTimeTracker.service;
 
+import com.EffortlyTimeTracker.entity.DatabaseSequence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Update;

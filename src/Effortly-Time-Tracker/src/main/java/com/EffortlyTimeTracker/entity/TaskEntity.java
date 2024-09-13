@@ -58,7 +58,7 @@ public class TaskEntity {
 
     private Integer projectId; // Связь с ProjectEntity
 
-
+    @Builder.Default
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<TaskTagEntity> tasks = new HashSet<>();
 

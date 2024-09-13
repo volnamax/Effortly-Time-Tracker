@@ -1,4 +1,4 @@
-package com.EffortlyTimeTracker.service;
+package com.EffortlyTimeTracker.entity;
 
 
 import lombok.AllArgsConstructor;

@@ -28,9 +28,7 @@ public class TokenService {
     private final IUserRepository userRepository;
 
     @Autowired
-    public TokenService(JwtEncoder jwtEncoder,
-                        AuthenticationManager authenticationManager,
-                        IUserRepository userRepository) {
+    public TokenService(JwtEncoder jwtEncoder, AuthenticationManager authenticationManager, IUserRepository userRepository) {
         this.jwtEncoder = jwtEncoder;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
@@ -38,44 +36,27 @@ public class TokenService {
 
     public String generateToken(Authentication authentication) {
         Instant now = Instant.now();
-        String scope = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(" "));
+        String scope = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
 
-        JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("self")
-                .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.DAYS))
-                .subject(authentication.getName())
-                .claim("scope", scope)
-                .claim("role", scope) // Добавляем роль в токен
+        JwtClaimsSet claims = JwtClaimsSet.builder().issuer("self").issuedAt(now).expiresAt(now.plus(1, ChronoUnit.DAYS)).subject(authentication.getName()).claim("scope", scope).claim("role", scope) // Добавляем роль в токен
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
     public String getTokenByLoginAndPassword(String login, String password) {
-        var auth = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(login, password));
+        var auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
         return generateToken(auth);
     }
 
     public String refreshToken(Authentication authentication, Role role) {
         Instant now = Instant.now();
-        return jwtEncoder.encode(JwtEncoderParameters.from(JwtClaimsSet.builder()
-                        .issuer("self")
-                        .issuedAt(now)
-                        .expiresAt(now.plus(1, ChronoUnit.DAYS))
-                        .subject(authentication.getName())
-                        .claim("scope", role.toString())
-                        .claim("role", role.toString()) // Добавляем роль в токен
-                        .build()))
-                .getTokenValue();
+        return jwtEncoder.encode(JwtEncoderParameters.from(JwtClaimsSet.builder().issuer("self").issuedAt(now).expiresAt(now.plus(1, ChronoUnit.DAYS)).subject(authentication.getName()).claim("scope", role.toString()).claim("role", role.toString()) // Добавляем роль в токен
+                .build())).getTokenValue();
     }
 
     public UserEntity getCurrentUser() {
         Jwt principal = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userRepository.findByEmail(principal.getSubject())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with login: " + principal.getSubject()));
+        return userRepository.findByEmail(principal.getSubject()).orElseThrow(() -> new UsernameNotFoundException("User not found with login: " + principal.getSubject()));
     }
 }

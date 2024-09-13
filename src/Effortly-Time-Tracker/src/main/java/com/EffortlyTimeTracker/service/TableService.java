@@ -2,13 +2,11 @@ package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TableEntity;
-import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
 import com.EffortlyTimeTracker.exception.table.TableIsEmpty;
 import com.EffortlyTimeTracker.exception.table.TableNotFoundException;
 import com.EffortlyTimeTracker.repository.IProjectRepository;
 import com.EffortlyTimeTracker.repository.ITableRepository;
-import com.EffortlyTimeTracker.repository.IUserRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +36,6 @@ public class TableService {
         tableEntity.setTableId((int) sequenceGeneratorService.generateSequence(TableEntity.class.getSimpleName()));
         return tableRepository.save(tableEntity);
     }
-
 
 
     public void delTableById(Integer tableId) {

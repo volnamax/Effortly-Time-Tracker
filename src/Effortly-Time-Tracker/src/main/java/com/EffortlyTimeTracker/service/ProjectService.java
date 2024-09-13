@@ -10,7 +10,6 @@ import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
 import com.EffortlyTimeTracker.repository.IProjectRepository;
 import com.EffortlyTimeTracker.repository.ITaskRepository;
 import com.EffortlyTimeTracker.repository.IUserRepository;
-import com.EffortlyTimeTracker.repository.postgres.TaskPostgresRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
