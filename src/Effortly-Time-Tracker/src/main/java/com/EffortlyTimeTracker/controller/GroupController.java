@@ -4,12 +4,10 @@ import com.EffortlyTimeTracker.DTO.group.AddUserToGroupDTO;
 import com.EffortlyTimeTracker.DTO.group.GroupCreateDTO;
 import com.EffortlyTimeTracker.DTO.group.GroupResponseDTO;
 import com.EffortlyTimeTracker.entity.GroupEntity;
-//import com.EffortlyTimeTracker.mapper.GroupMapper;
 import com.EffortlyTimeTracker.mapper.GroupMapper;
 import com.EffortlyTimeTracker.service.GroupService;
 import com.EffortlyTimeTracker.service.middlewareOwn.group.CheckGroupOwner;
 import com.EffortlyTimeTracker.service.middlewareOwn.group.CheckProjectOwner;
-import com.EffortlyTimeTracker.service.middlewareOwn.todo.CheckUserIdMatchesCurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -47,7 +45,7 @@ public class GroupController {
         GroupEntity groupEntity = groupMapper.toEntity(groupDTO);
         log.info("Add group ENTITY: {}", groupEntity);
 
-        log.info("id proj is = {} ", groupEntity.getProject().getProjectId() );
+        log.info("id proj is = {} ", groupEntity.getProject().getProjectId());
         GroupEntity savedGroupEntity = groupService.addGroup(groupEntity);
         log.info("Saved group entity: {}", savedGroupEntity);
 
@@ -77,18 +75,19 @@ public class GroupController {
     public GroupResponseDTO getGroup(@RequestParam(required = true) Integer id) {
         log.info("api/group/del");
         log.info("id group to get = {}", id);
-        GroupResponseDTO groupResponseDTO =  groupMapper.toDto(groupService.getGroupById(id));
+        GroupResponseDTO groupResponseDTO = groupMapper.toDto(groupService.getGroupById(id));
         log.info("groupResponseDTO = {}", groupResponseDTO);
         return groupResponseDTO;
     }
+
     //  todo user can hand this
     @Operation(summary = "Get all group")
     @GetMapping("/get-all")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize ("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<GroupResponseDTO> getGroupAll() {
         log.info("api/group/get-all");
-        List <GroupResponseDTO> groupResponseDTOS = groupMapper.toDto(groupService.getAllGroup());
+        List<GroupResponseDTO> groupResponseDTOS = groupMapper.toDto(groupService.getAllGroup());
         log.info("groupResponseDTOS = {}", groupResponseDTOS);
         return groupResponseDTOS;
     }

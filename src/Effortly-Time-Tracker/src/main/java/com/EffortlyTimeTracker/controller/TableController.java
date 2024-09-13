@@ -1,7 +1,6 @@
 package com.EffortlyTimeTracker.controller;
 
 import com.EffortlyTimeTracker.DTO.table.TableCreateDTO;
-import com.EffortlyTimeTracker.DTO.table.TableDTO;
 import com.EffortlyTimeTracker.DTO.table.TableResponseDTO;
 import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.mapper.TableMapper;
@@ -20,6 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @Slf4j
 @Tag(name = "Table-controller")
 @RestController
@@ -112,7 +112,7 @@ public class TableController {
         List<TableEntity> resEntity = tableService.getAllTableByIdProject(id);
         log.info("Table entity: {}", resEntity);
 
-        List<TableResponseDTO> tableResponseDTOS= tableMapper.toResponseDTO(resEntity);
+        List<TableResponseDTO> tableResponseDTOS = tableMapper.toResponseDTO(resEntity);
         log.info("Getting all table respons dto: {}", tableResponseDTOS);
 
         return tableResponseDTOS;

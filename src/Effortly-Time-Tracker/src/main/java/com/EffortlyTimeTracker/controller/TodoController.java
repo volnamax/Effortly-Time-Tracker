@@ -22,6 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @Slf4j
 @Tag(name = "TODO-controller")
 @RestController
@@ -100,8 +101,6 @@ public class TodoController {
 
         return ResponseEntity.ok(updatedTodoDTO);
     }
-
-
 
 
 }

@@ -21,6 +21,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @Slf4j
 @Tag(name = "Task-controller")
 @RestController
@@ -77,10 +78,10 @@ public class TaskController {
         log.info("api/task/get");
         log.info("taskId: {}", taskId);
 
-        TaskEntity task =taskService.getTaskById(taskId);
+        TaskEntity task = taskService.getTaskById(taskId);
         log.info("task: {}", task);
 
-        TaskResponseDTO taskResponseDTO =  taskMapper.toResponseDTO(task);
+        TaskResponseDTO taskResponseDTO = taskMapper.toResponseDTO(task);
         log.info("taskResponseDTO: {}", taskResponseDTO);
 
         return taskResponseDTO;
@@ -92,7 +93,7 @@ public class TaskController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<TaskResponseDTO> getTask() {
         log.info("api/task/get-all");
-        List<TaskEntity> tasks=  taskService.getAllTask();
+        List<TaskEntity> tasks = taskService.getAllTask();
         log.info("tasks: {}", tasks);
 
         List<TaskResponseDTO> taskResponseDTOS = taskMapper.toResponseDTO(tasks);
@@ -100,6 +101,7 @@ public class TaskController {
 
         return taskResponseDTOS;
     }
+
     @Operation(summary = "Get all task by id table", description = "need table id")
     @GetMapping("/get-all-by-table-id")
     @ResponseStatus(HttpStatus.OK)
@@ -127,6 +129,7 @@ public class TaskController {
 
         taskService.delAllTaskByIdTable(id);
     }
+
     @Operation(summary = "Start timer", description = "need task id")
     @PostMapping("/start-timer")
     @ResponseStatus(HttpStatus.OK)
@@ -138,7 +141,7 @@ public class TaskController {
         TaskEntity task = taskService.startTaskTimer(taskId);
         log.info("task: {}", task);
 
-        TaskResponseDTO taskResponseDTO =  taskMapper.toResponseDTO(task);
+        TaskResponseDTO taskResponseDTO = taskMapper.toResponseDTO(task);
         log.info("taskResponseDTO: {}", taskResponseDTO);
         return taskResponseDTO;
     }
@@ -154,7 +157,7 @@ public class TaskController {
         TaskEntity task = taskService.stopTaskTimer(taskId);
         log.info("task: {}", task);
 
-        TaskResponseDTO taskResponseDTO =  taskMapper.toResponseDTO(task);
+        TaskResponseDTO taskResponseDTO = taskMapper.toResponseDTO(task);
         log.info("taskResponseDTO: {}", taskResponseDTO);
         return taskResponseDTO;
     }
@@ -170,10 +173,11 @@ public class TaskController {
         TaskEntity task = taskService.completeTask(taskId);
         log.info("task: {}", task);
 
-        TaskResponseDTO taskResponseDTO =  taskMapper.toResponseDTO(task);
+        TaskResponseDTO taskResponseDTO = taskMapper.toResponseDTO(task);
         log.info("taskResponseDTO: {}", taskResponseDTO);
         return taskResponseDTO;
     }
+
     @Operation(summary = "Deactivate task")
     @PostMapping("/deactivate")
     public ResponseEntity<InactiveTaskDTO> deactivateTask(@RequestParam Integer taskId, @RequestParam(required = false) String reason) {

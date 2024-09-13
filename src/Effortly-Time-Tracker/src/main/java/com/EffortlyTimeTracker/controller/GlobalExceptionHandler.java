@@ -12,8 +12,8 @@ import com.EffortlyTimeTracker.exception.tag.TagNotFoundException;
 import com.EffortlyTimeTracker.exception.task.InvalidTaskException;
 import com.EffortlyTimeTracker.exception.task.TaskNotFoundException;
 import com.EffortlyTimeTracker.exception.todo.InvalidTodoException;
-import com.EffortlyTimeTracker.exception.todo.TodoNotFoudException;
 import com.EffortlyTimeTracker.exception.todo.TodoNodeIsEmpty;
+import com.EffortlyTimeTracker.exception.todo.TodoNotFoudException;
 import com.EffortlyTimeTracker.exception.user.InvalidUserException;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
 import com.EffortlyTimeTracker.exception.user.UserNotRoleException;
@@ -24,6 +24,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
 //todo after add all exeption
 @Slf4j
 @ControllerAdvice
