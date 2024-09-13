@@ -88,13 +88,18 @@ public class UserController {
     }
 
 
-    //todo
- //   @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/get-by-email")
+    @ResponseStatus(HttpStatus.OK)
     public UserResponseDTO getUserByEmail(@RequestParam String email) {
-        Optional<UserEntity> user = userService.getUserByEmail(email);
-        log.info("UserEntity: {}", user);
-        UserResponseDTO userResponseDTO = userMapper.toDTOResponse(user.get());
+        log.info("Get user by email: {}", email);
+
+        Optional<UserEntity> userEntity = userService.getUserByEmail(email);
+        if (userEntity.isEmpty()) {
+            log.warn("User with email {} not found", email);
+            throw new RuntimeException("User not found");
+        }
+
+        UserResponseDTO userResponseDTO = userMapper.toDTOResponse(userEntity.get());
         log.info("UserResponseDTO: {}", userResponseDTO);
         return userResponseDTO;
     }
