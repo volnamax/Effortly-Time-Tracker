@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -49,11 +48,11 @@ public class UserEntity {
     @JoinColumn(name = "role_id")
     RoleEntity role;
 
-    @OneToMany(mappedBy ="user",  cascade = CascadeType.ALL,  orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     List<TodoNodeEntity> todoNodeEntityList;
 
-    @OneToMany(mappedBy ="userProject",  cascade = CascadeType.ALL,  orphanRemoval = true)
+    @OneToMany(mappedBy = "userProject", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     List<ProjectEntity> projectEntities;
 
@@ -67,12 +66,13 @@ public class UserEntity {
                 ", userName='" + userName + '\'' +
                 ", userSecondname='" + userSecondname + '\'' +
                 ", email='" + email + '\'' +
-                ", passwordHash='" + passwordHash + '\''+
-                ", role ='" + (role != null ? role.getName() : "null") + '\''+
+                ", passwordHash='" + passwordHash + '\'' +
+                ", role ='" + (role != null ? role.getName() : "null") + '\'' +
                 ", dataSignIn=" + dataSignIn + '\'' +
-                ", dataLastLogin=" + dataLastLogin +'\''
+                ", dataLastLogin=" + dataLastLogin + '\''
                 + "}";
     }
+
     public UserEntity(Integer userId) {
         this.userId = userId;
     }

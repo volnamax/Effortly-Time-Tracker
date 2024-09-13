@@ -16,7 +16,8 @@ public class RoleEntity {
     private Role name;
 
     // Конструктор по умолчанию (если необходим для JPA)
-    public RoleEntity() {}
+    public RoleEntity() {
+    }
 
     // Конструктор с параметрами
     public RoleEntity(Integer id, Role name) {

@@ -51,12 +51,6 @@ public class TableEntity {
 
     @Override
     public String toString() {
-        return "TableEntity{" +
-                "tableId=" + tableId +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                ", project=" + (project != null ? project.getProjectId() : "null") + '\'' +
-                '}';
+        return "TableEntity{" + "tableId=" + tableId + ", name='" + name + '\'' + ", description='" + description + '\'' + ", status=" + status + ", project=" + (project != null ? project.getProjectId() : "null") + '\'' + '}';
     }
 }

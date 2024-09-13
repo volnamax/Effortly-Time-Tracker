@@ -1,7 +1,3 @@
-
-
-
-
 package com.EffortlyTimeTracker.entity;
 
 
@@ -46,11 +42,6 @@ public class GroupEntity {
 
     @Override
     public String toString() {
-        return "GroupEntity{" +
-                "groupId=" + groupId +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", project=" + project.getProjectId() +
-                '}';
+        return "GroupEntity{" + "groupId=" + groupId + ", name='" + name + '\'' + ", description='" + description + '\'' + ", project=" + project.getProjectId() + '}';
     }
 }

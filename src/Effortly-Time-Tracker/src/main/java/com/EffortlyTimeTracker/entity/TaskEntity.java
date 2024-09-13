@@ -1,7 +1,6 @@
 package com.EffortlyTimeTracker.entity;
 
 
-import com.EffortlyTimeTracker.enums.Status;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -60,7 +59,7 @@ public class TaskEntity {
     private Integer projectId; // Связь с ProjectEntity
 
 
-    @OneToMany(mappedBy = "task",  cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<TaskTagEntity> tasks = new HashSet<>();
 
     // @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -80,18 +79,7 @@ public class TaskEntity {
 
     @Override
     public String toString() {
-        return "TaskEntity{" +
-                "taskId=" + taskId +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                ", sumTimer=" + sumTimer +
-                ", startTimer=" + startTimer +
-                ", timeAddTask=" + timeAddTask +
-                ", timeEndTask=" + timeEndTask +
-                ", table=" + table +
-                ", tasks=" + tasks +
-                '}';
+        return "TaskEntity{" + "taskId=" + taskId + ", name='" + name + '\'' + ", description='" + description + '\'' + ", status=" + status + ", sumTimer=" + sumTimer + ", startTimer=" + startTimer + ", timeAddTask=" + timeAddTask + ", timeEndTask=" + timeEndTask + ", table=" + table + ", tasks=" + tasks + '}';
     }
 }
 
