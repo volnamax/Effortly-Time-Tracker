@@ -1,27 +1,22 @@
 package com.EffortlyTimeTracker.controller;
 
 import com.EffortlyTimeTracker.DTO.auth.LoginRequestDto;
-import com.EffortlyTimeTracker.DTO.auth.RegisterRequestDto;
 import com.EffortlyTimeTracker.DTO.auth.TokenResponse;
 import com.EffortlyTimeTracker.DTO.user.UserCreateDTO;
 import com.EffortlyTimeTracker.DTO.user.UserResponseDTO;
 import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.mapper.UserMapper;
 import com.EffortlyTimeTracker.service.TokenService;
-
 import com.EffortlyTimeTracker.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,59 +34,58 @@ public class AuthController {
 
     @Operation(summary = "Get token auth")
     @PostMapping("/login")
-    public TokenResponse loginHandler(@RequestBody LoginRequestDto request) {
-        log.info("Got request on /api/v1/login");
-        log.info("Got login request for '{}'", request.login());
-        log.info("Request body: {}", request);
-        var token = getTokenByLoginAndPassword(request.login(), request.password());
-        log.info("Generated token: {}", token);
+    public ResponseEntity<TokenResponse> loginHandler(@Valid @RequestBody LoginRequestDto request) {
+        log.info("Received login request for '{}'", request.login());
 
+        try {
+            var token = getTokenByLoginAndPassword(request.login(), request.password());
+            log.info("Generated token: {}", token);
 
-        Optional<UserEntity> userEntityOpt = userService.getUserByEmail(request.login());
-        if (userEntityOpt.isPresent()) {
-            UserEntity userEntity = userEntityOpt.get();
-            return new TokenResponse(
-                    token,
-                    userMapper.toDTOResponse(userEntity)
-            );
-        } else {
-            throw new RuntimeException("User not found");
+            Optional<UserEntity> userEntityOpt = userService.getUserByEmail(request.login());
+            if (userEntityOpt.isPresent()) {
+                UserEntity userEntity = userEntityOpt.get();
+                TokenResponse tokenResponse = new TokenResponse(token, userMapper.toDTOResponse(userEntity));
+                return ResponseEntity.ok(tokenResponse);
+            } else {
+                log.warn("User not found for login '{}'", request.login());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        } catch (BadCredentialsException e) {
+            log.error("Invalid login or password for '{}'", request.login());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
 
-    @Operation(summary = "registration new user", description = "need: name , sname, email, password, role (ADMIN, MANAGER, USER)")
+    @Operation(summary = "Register new user", description = "name, sname, email, password, role (ADMIN, MANAGER, USER)")
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<TokenResponse> registrationHandler(@Valid @RequestBody UserCreateDTO request) {
-        log.info("Got request on /api/v1/register");
-        log.info("Got registration request for '{}'", request.getEmail());
-        log.info("Request body: {}", request);
-        UserEntity userEntity  = userMapper.toEntity(request);
-        log.info("Userentity = {}", userEntity);
+    public ResponseEntity<?> registrationHandler(@Valid @RequestBody UserCreateDTO request) {
+        log.info("Received registration request for '{}'", request.getEmail());
 
-        UserEntity user = userService.addUser(userEntity);
-        log.info("added user in  db = {}", user);
+        // Проверка на существующего пользователя с таким email
+        if (userService.getUserByEmail(request.getEmail()).isPresent()) {
+            log.warn("Email '{}' already in use", request.getEmail());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already in use");
+        }
 
-        var token = getTokenByLoginAndPassword(request.getEmail(), request.getPasswordHash());
-        log.info("Generated token: {}", token);
+        try {
+            UserEntity userEntity = userMapper.toEntity(request);
+            log.info("UserEntity = {}", userEntity);
 
-        UserResponseDTO responseDTO= userMapper.toDTOResponse(user);
-        log.info("Generated responseDTO = {}", responseDTO);
+            UserEntity user = userService.addUser(userEntity);
+            log.info("Added user to the database: {}", user);
 
-        return new ResponseEntity<>(new TokenResponse(token, responseDTO), HttpStatus.CREATED);
+            String token = getTokenByLoginAndPassword(request.getEmail(), request.getPasswordHash());
+            log.info("Generated token: {}", token);
+
+            UserResponseDTO responseDTO = userMapper.toDTOResponse(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new TokenResponse(token, responseDTO));
+        } catch (Exception e) {
+            log.error("Error occurred during user registration for '{}'", request.getEmail(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Registration failed");
+        }
     }
 
-    //todo
-//
-//    @Operation(summary = "Обновление токена аутентификации", security = @SecurityRequirement(name = "bearerAuth"))
-//    @GetMapping("/token/refresh")
-//    @PreAuthorize("isAuthenticated()")
-//    public TokenResponse refreshToken(Authentication authentication) {
-//        var user = tokenService.getCurrentUser();
-//        var token = tokenService.refreshToken(authentication, user.role());
-//        return new TokenResponse(token, userMapper.mapModelToSlimResponse(user));
-//    }
-//
     private String getTokenByLoginAndPassword(String login, String password) {
         try {
             var auth = authenticationManager
@@ -100,13 +94,12 @@ public class AuthController {
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid login or password");
         }
-
     }
 
     @GetMapping("/get-user-id")
     public ResponseEntity<Integer> getUserIdByEmail(@RequestParam String email) {
         Optional<UserEntity> userEntity = userService.getUserByEmail(email);
-        return userEntity.map(entity -> ResponseEntity.ok(entity.getUserId())).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+        return userEntity.map(entity -> ResponseEntity.ok(entity.getUserId()))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
-
 }

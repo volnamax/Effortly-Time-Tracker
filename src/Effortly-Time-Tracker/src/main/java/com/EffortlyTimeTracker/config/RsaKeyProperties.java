@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPrivateKey;
@@ -22,6 +21,7 @@ public class RsaKeyProperties {
 
     @Value("${rsa.public-key}")
     private Resource publicKeyResource;
+
     public RSAPublicKey getPublicKey() throws Exception {
         String key = new String(FileCopyUtils.copyToByteArray(publicKeyResource.getInputStream()), StandardCharsets.UTF_8)
                 .replace("-----BEGIN PUBLIC KEY-----", "")
@@ -33,6 +33,7 @@ public class RsaKeyProperties {
         KeyFactory kf = KeyFactory.getInstance("RSA");
         return (RSAPublicKey) kf.generatePublic(spec);
     }
+
     public RSAPrivateKey getPrivateKey() throws Exception {
         String key = new String(FileCopyUtils.copyToByteArray(privateKeyResource.getInputStream()), StandardCharsets.UTF_8)
                 .replace("-----BEGIN PRIVATE KEY-----", "")
@@ -45,7 +46,7 @@ public class RsaKeyProperties {
         return (RSAPrivateKey) kf.generatePrivate(spec);
     }
 
-    }
+}
 
 
 
