@@ -22,7 +22,7 @@ import java.util.List;
 @Slf4j
 @Tag(name = "Tag-controller")
 @RestController
-@RequestMapping("api/tag")
+@RequestMapping("api/tags")
 public class TagController {
     private final TagService tagService;
     private final TagMapper tagMapper;

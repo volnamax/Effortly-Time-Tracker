@@ -22,7 +22,7 @@ import java.util.Optional;
 @Tag(name = "User-controller")
 @Slf4j //loginig
 @RestController
-@RequestMapping("api/user")
+@RequestMapping("api/users")
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
@@ -37,7 +37,7 @@ public class UserController {
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Add user for dto obj",
-            description = "need name , sname, email, password, role (ADMIN, MANAGER, USER)")
+            description = "need:  name , sname, email, password, role (ADMIN, MANAGER, USER)")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserResponseDTO> addUser(@Valid @RequestBody UserCreateDTO userCreateDTO) {
         log.info("Add user: {}", userCreateDTO);

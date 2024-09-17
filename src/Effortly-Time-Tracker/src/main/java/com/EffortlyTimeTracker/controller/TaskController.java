@@ -25,7 +25,7 @@ import java.util.List;
 @Slf4j
 @Tag(name = "Task-controller")
 @RestController
-@RequestMapping("api/task")
+@RequestMapping("api/tasks")
 public class TaskController {
     private final TaskService taskService;
     private final TaskMapper taskMapper;
@@ -36,7 +36,7 @@ public class TaskController {
         this.taskMapper = taskMapper;
     }
 
-    @Operation(summary = "Add task", description = "need name and id table, status = ACTIVE NO_ACTIVEl")
+    @Operation(summary = "Add task", description = "need:  name and id table, status = ACTIVE NO_ACTIVEl")
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN') or hasRole('ROLE_GUEST')")

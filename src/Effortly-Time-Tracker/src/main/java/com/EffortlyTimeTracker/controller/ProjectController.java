@@ -23,7 +23,7 @@ import java.util.List;
 @Slf4j
 @Tag(name = "Project-controller")
 @RestController
-@RequestMapping("api/project")
+@RequestMapping("api/projects")
 public class ProjectController {
     private final ProjectService projectService;
     private final ProjectMapper projectMapper;

@@ -22,7 +22,7 @@ import java.util.List;
 
 @Tag(name = "Group-controller")
 @RestController
-@RequestMapping("api/group")
+@RequestMapping("api/groups")
 @Slf4j
 public class GroupController {
     private final GroupService groupService;

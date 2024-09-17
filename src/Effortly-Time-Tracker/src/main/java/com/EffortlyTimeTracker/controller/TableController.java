@@ -23,7 +23,7 @@ import java.util.List;
 @Slf4j
 @Tag(name = "Table-controller")
 @RestController
-@RequestMapping("api/table")
+@RequestMapping("api/tables")
 public class TableController {
     private final TableService tableService;
     private final TableMapper tableMapper;
@@ -34,7 +34,7 @@ public class TableController {
         this.tableMapper = tableMapper;
     }
 
-    @Operation(summary = "Add table", description = "need projectId, and name, status = ACTIVE, NO_ACTIVE")
+    @Operation(summary = "Add table", description = "need: projectId,  name, status = ACTIVE, NO_ACTIVE")
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')  or hasRole('ROLE_GUEST')")
