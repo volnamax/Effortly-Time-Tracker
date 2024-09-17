@@ -81,24 +81,19 @@ class UserServiceTest {
         Exception exception = assertThrows(RuntimeException.class, () -> {
             userService.addUser(userEntity);
         });
-
         assertEquals("Failed to save", exception.getMessage());
     }
 
     @Test
     public void addUserTestNullRole() {
-        // Имитируем, что роль не найдена
         when(roleRepository.findByName(any())).thenReturn(null);
 
-        // Проверяем, что метод addUser выбрасывает UserNotRoleException
         Exception exception = assertThrows(UserNotRoleException.class, () -> {
             userService.addUser(userEntity);
         });
 
-        // Проверяем, что сообщение исключения совпадает с ожидаемым
         assertNotNull(exception);
         assertEquals("User with id not found role", exception.getMessage());
-
         // Проверяем, что метод поиска роли был вызван
         verify(roleRepository).findByName(any());
     }
@@ -152,10 +147,8 @@ class UserServiceTest {
     public void getUserByEmailTestSuccess() {
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(userEntity));
 
-        // Вызов метода
         Optional<UserEntity> foundUser = userService.getUserByEmail("teweft@example.com");
 
-        // Проверки
         assertTrue(foundUser.isPresent());
         assertEquals("TestUser", foundUser.get().getUserName());
         assertEquals("teweft@example.com", foundUser.get().getEmail());
@@ -166,30 +159,21 @@ class UserServiceTest {
 
     @Test
     public void getUserByEmailTestNotFound() {
-        // Настройка: возвращаем пустой Optional, если пользователя нет
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        // Вызов метода
         Optional<UserEntity> foundUser = userService.getUserByEmail("notfound@example.com");
 
-        // Проверки
         assertFalse(foundUser.isPresent());
-
-        // Проверяем, что метод findByEmail был вызван
         verify(userRepository, times(1)).findByEmail("notfound@example.com");
     }
 
     @Test
     public void getUserByEmailTestNullEmail() {
-        // Проверяем, что при null выбрасывается IllegalArgumentException
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             userService.getUserByEmail(null);
         });
 
-        // Проверка сообщения исключения
         assertEquals("Email cannot be null", exception.getMessage());
-
-        // Проверяем, что метод findByEmail не был вызван
         verify(userRepository, never()).findByEmail(anyString());
     }
 
