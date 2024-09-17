@@ -1,5 +1,7 @@
 package com.EffortlyTimeTracker.service;
 
+import com.EffortlyTimeTracker.builder.RoleEntityBuilder;
+import com.EffortlyTimeTracker.builder.UserEntityBuilder;
 import com.EffortlyTimeTracker.entity.RoleEntity;
 import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.enums.Role;
@@ -44,17 +46,20 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        userEntity = new UserEntity();
-        roleEntity = new RoleEntity();
-        roleEntity.setName(Role.MANAGER);
+        roleEntity = new RoleEntityBuilder()
+                .withRole(Role.MANAGER)
+                .build();
 
-        userEntity.setUserId(1);
-        userEntity.setUserName("TestUser");
-        userEntity.setUserSecondname("TestSecondName");
-        userEntity.setEmail("teweft@example.com");
-        userEntity.setPasswordHash("password");
-        userEntity.setRole(roleEntity);
+        userEntity = new UserEntityBuilder()
+                .withUserId(1)
+                .withUserName("TestUser")
+                .withUserSecondName("TestSecondName")
+                .withEmail("teweft@example.com")
+                .withPasswordHash("password")
+                .withRole(roleEntity)
+                .build();
     }
+
 
 
     @Test

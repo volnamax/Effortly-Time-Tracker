@@ -8,6 +8,7 @@ import com.EffortlyTimeTracker.exception.todo.TodoNotFoudException;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
 import com.EffortlyTimeTracker.repository.ITodoRepository;
 import com.EffortlyTimeTracker.repository.IUserRepository;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class TodoService {
         this.userRepository = userRepository;
     }
 
-    public TodoNodeEntity addTodo(TodoNodeEntity todoNodeEntity) {
+    public TodoNodeEntity addTodo(@NonNull TodoNodeEntity todoNodeEntity) {
         return todoRepository.save(todoNodeEntity);
     }
 
@@ -46,8 +47,6 @@ public class TodoService {
     }
 
     public void delAllTodoByIdUser(Integer userId) {
-        UserEntity user = findUserById(userId);
-
         List<TodoNodeEntity> userTodos = todoRepository.findByUserId(userId);
 
         if (userTodos.isEmpty()) {
@@ -62,8 +61,6 @@ public class TodoService {
     }
 
     public List<TodoNodeEntity> getAllTodoByIdUser(Integer userId) {
-        UserEntity user = findUserById(userId);
-
         List<TodoNodeEntity> userTodos = todoRepository.findByUserId(userId);
 
         if (userTodos.isEmpty()) {
@@ -77,11 +74,10 @@ public class TodoService {
         TodoNodeEntity todo = todoRepository.findById(id)
                 .orElseThrow(() -> new TodoNotFoudException(id));
 
-        todo.setStatus(status);  // Обновляем статус
-        return todoRepository.save(todo);  // Сохраняем изменения
+        todo.setStatus(status);
+        return todoRepository.save(todo);
     }
 
-    // Метод для поиска пользователя через единый интерфейс IUserRepository
     private UserEntity findUserById(Integer userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoudException(userId));

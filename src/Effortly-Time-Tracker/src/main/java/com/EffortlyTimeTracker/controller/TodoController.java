@@ -93,6 +93,11 @@ public class TodoController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
     public ResponseEntity<?> updateTodoStatus(@RequestParam Integer id, @RequestParam Status status) {
+        if (id == null || status == null) {
+            log.error("Invalid request: id or status is null.");
+            throw new IllegalArgumentException("ID and status cannot be null.");
+        }
+
         log.info("Updating status of todo with ID: {} to {}", id, status);
 
         TodoNodeEntity updatedTodo = todoService.updateTodoStatus(id, status);  // Логика обновления статуса
