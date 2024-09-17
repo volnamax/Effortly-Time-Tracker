@@ -20,7 +20,7 @@ public class UserService {
 
     private final IUserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;  // Внедрение PasswordEncoder
+    private final PasswordEncoder passwordEncoder;
     private final SequenceGeneratorService sequenceGeneratorService;
 
     @Autowired
@@ -35,46 +35,43 @@ public class UserService {
 
     }
 
-    // Метод для получения роли по имени
     public RoleEntity getRoleByName(String roleName) {
         return roleRepository.findByName(Role.valueOf(roleName));
     }
 
-    // Метод для добавления пользователя
     public UserEntity addUser(@NonNull UserEntity userEntity) {
         RoleEntity role = getRoleByName(userEntity.getRole().getName().name());
         if (role == null) {
-            throw new UserNotRoleException();  // Если роль не найдена, выбрасываем исключение
+            throw new UserNotRoleException();
         }
-        userEntity.setRole(role);  // Устанавливаем роль пользователю
-        userEntity.setPasswordHash(passwordEncoder.encode(userEntity.getPasswordHash()));  // Шифрование пароля
-        // Присваиваем userId с помощью SequenceGeneratorService
+        userEntity.setRole(role);
+        userEntity.setPasswordHash(passwordEncoder.encode(userEntity.getPasswordHash()));
         userEntity.setUserId((int) sequenceGeneratorService.generateSequence(UserEntity.class.getSimpleName()));
 
-        return userRepository.save(userEntity);  // Сохранение пользователя в базу данных
+        return userRepository.save(userEntity);
     }
 
-    // Метод для удаления пользователя по ID
     public void delUserById(Integer id) {
         if (!userRepository.existsById(id)) {
-            throw new UserNotFoudException(id);  // Исключение, если пользователь не найден
+            throw new UserNotFoudException(id);
         }
         userRepository.deleteById(id);
     }
 
-    // Метод для получения пользователя по ID
     public UserEntity getUserById(Integer id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoudException(id));
     }
 
-    // Метод для получения всех пользователей
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
     }
 
-    // Метод для получения пользователя по email
     public Optional<UserEntity> getUserByEmail(String email) {
+        if (email == null) {
+            throw new IllegalArgumentException("Email cannot be null");
+        }
         return userRepository.findByEmail(email);
     }
+
 }

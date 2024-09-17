@@ -4,6 +4,7 @@ import com.EffortlyTimeTracker.entity.RoleEntity;
 import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.exception.user.UserNotFoudException;
+import com.EffortlyTimeTracker.exception.user.UserNotRoleException;
 import com.EffortlyTimeTracker.repository.IUserRepository;
 import com.EffortlyTimeTracker.repository.postgres.RoleRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,13 +19,12 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
     @Mock
-    private SequenceGeneratorService sequenceGeneratorService;  // Mock this service
+    private SequenceGeneratorService sequenceGeneratorService;
 
     @Mock
     private IUserRepository userRepository;
@@ -42,11 +42,8 @@ class UserServiceTest {
     private PasswordEncoder passwordEncoder;
 
 
-
     @BeforeEach
     void setUp() {
-      //  userService = new UserService(userRepository);
-
         userEntity = new UserEntity();
         roleEntity = new RoleEntity();
         roleEntity.setName(Role.MANAGER);
@@ -62,9 +59,9 @@ class UserServiceTest {
 
     @Test
     public void addUserTestSuccess() {
-        when(roleRepository.findByName(Role.MANAGER)).thenReturn(roleEntity);  // Mock the behavior of roleRepository
-        when(sequenceGeneratorService.generateSequence(anyString())).thenReturn(1L);  // Mock sequence generator
-        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);  // Mock the behavior of userRepository
+        when(roleRepository.findByName(Role.MANAGER)).thenReturn(roleEntity);
+        when(sequenceGeneratorService.generateSequence(anyString())).thenReturn(1L);
+        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
 
         UserEntity savedUser = userService.addUser(userEntity);
 
@@ -74,25 +71,37 @@ class UserServiceTest {
     }
 
 
-
     @Test
     public void AddUserTestRepositoryThrowsException() {
-        // Mock the roleRepository to return a valid role
         when(roleRepository.findByName(any())).thenReturn(roleEntity);
-        when(sequenceGeneratorService.generateSequence(anyString())).thenReturn(1L);  // Mock sequence generator
+        when(sequenceGeneratorService.generateSequence(anyString())).thenReturn(1L);
 
-        // Now setup the userRepository to throw an exception as intended
         when(userRepository.save(any(UserEntity.class))).thenThrow(new RuntimeException("Failed to save"));
 
-        // Execute the test
         Exception exception = assertThrows(RuntimeException.class, () -> {
             userService.addUser(userEntity);
         });
 
-        // Check the exception message to see if it's the one we expect from userRepository
         assertEquals("Failed to save", exception.getMessage());
     }
 
+    @Test
+    public void addUserTestNullRole() {
+        // Имитируем, что роль не найдена
+        when(roleRepository.findByName(any())).thenReturn(null);
+
+        // Проверяем, что метод addUser выбрасывает UserNotRoleException
+        Exception exception = assertThrows(UserNotRoleException.class, () -> {
+            userService.addUser(userEntity);
+        });
+
+        // Проверяем, что сообщение исключения совпадает с ожидаемым
+        assertNotNull(exception);
+        assertEquals("User with id not found role", exception.getMessage());
+
+        // Проверяем, что метод поиска роли был вызван
+        verify(roleRepository).findByName(any());
+    }
 
     @Test
     public void deleteUserByIdTestExists() {
@@ -100,7 +109,7 @@ class UserServiceTest {
 
         userService.delUserById(1);
 
-        verify(userRepository).deleteById(1);
+        verify(userRepository, times(1)).deleteById(1);
     }
 
     @Test
@@ -112,6 +121,7 @@ class UserServiceTest {
         });
 
         assertEquals("User with id 1 not found", exception.getMessage());
+        verify(userRepository, never()).deleteById(anyInt());
     }
 
     @Test
@@ -122,6 +132,8 @@ class UserServiceTest {
 
         assertNotNull(foundUser);
         assertEquals("TestUser", foundUser.getUserName());
+        assertEquals(1, foundUser.getUserId());
+
     }
 
     @Test
@@ -133,6 +145,52 @@ class UserServiceTest {
         });
 
         assertEquals("User with id 1 not found", exception.getMessage());
+        verify(userRepository, times(1)).findById(1);
+    }
+
+    @Test
+    public void getUserByEmailTestSuccess() {
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(userEntity));
+
+        // Вызов метода
+        Optional<UserEntity> foundUser = userService.getUserByEmail("teweft@example.com");
+
+        // Проверки
+        assertTrue(foundUser.isPresent());
+        assertEquals("TestUser", foundUser.get().getUserName());
+        assertEquals("teweft@example.com", foundUser.get().getEmail());
+
+        // Проверяем, что метод findByEmail был вызван
+        verify(userRepository, times(1)).findByEmail("teweft@example.com");
+    }
+
+    @Test
+    public void getUserByEmailTestNotFound() {
+        // Настройка: возвращаем пустой Optional, если пользователя нет
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+
+        // Вызов метода
+        Optional<UserEntity> foundUser = userService.getUserByEmail("notfound@example.com");
+
+        // Проверки
+        assertFalse(foundUser.isPresent());
+
+        // Проверяем, что метод findByEmail был вызван
+        verify(userRepository, times(1)).findByEmail("notfound@example.com");
+    }
+
+    @Test
+    public void getUserByEmailTestNullEmail() {
+        // Проверяем, что при null выбрасывается IllegalArgumentException
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            userService.getUserByEmail(null);
+        });
+
+        // Проверка сообщения исключения
+        assertEquals("Email cannot be null", exception.getMessage());
+
+        // Проверяем, что метод findByEmail не был вызван
+        verify(userRepository, never()).findByEmail(anyString());
     }
 
 }
