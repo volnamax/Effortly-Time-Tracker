@@ -1,12 +1,15 @@
 package com.EffortlyTimeTracker.service;
 
+import com.EffortlyTimeTracker.builder.ProjectEntityBuilder;
+import com.EffortlyTimeTracker.builder.TableEntityBuilder;
 import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TableEntity;
+import com.EffortlyTimeTracker.enums.Status;
 import com.EffortlyTimeTracker.exception.project.ProjectNotFoundException;
+import com.EffortlyTimeTracker.exception.table.TableIsEmpty;
 import com.EffortlyTimeTracker.exception.table.TableNotFoundException;
 import com.EffortlyTimeTracker.repository.IProjectRepository;
 import com.EffortlyTimeTracker.repository.ITableRepository;
-import com.EffortlyTimeTracker.repository.postgres.ProjectPostgresRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,18 +18,19 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class TableServiceTest {
     @Mock
-    private SequenceGeneratorService sequenceGeneratorService;  // Mock the SequenceGeneratorService
+    private SequenceGeneratorService sequenceGeneratorService;
 
     @Mock
     private ITableRepository tableRepository;
@@ -42,32 +46,34 @@ class TableServiceTest {
 
     @BeforeEach
     void setUp() {
-        project = new ProjectEntity();
-        project.setProjectId(1);
-        project.setName("Test Project");
+        project = new ProjectEntityBuilder()
+                .withName("Test Project")
+                .withProjectId(1)
+                .build();
 
-        table = new TableEntity();
-        table.setTableId(1);
-        table.setProject(project);
-        table.setName("Test Table");
+        table = new TableEntityBuilder()
+                .withTableId(1)
+                .withName("Project Table")
+                .withDescription("Table description")
+                .withStatus(Status.ACTIVE)
+                .withProject(project) // где project — это объект ProjectEntity
+                .build();
     }
 
     @Test
     void addTableTest() {
-        when(sequenceGeneratorService.generateSequence(anyString())).thenReturn(1L);  // Mock sequence generator
-
-        // Ensure project has a valid ID
+        when(sequenceGeneratorService.generateSequence(anyString())).thenReturn(1L);
         project.setProjectId(1);
         table.setProject(project);
         table.setProjectId(1);
 
-        when(projectPostgresRepository.findById(1)).thenReturn(Optional.of(project));  // Mock the project repository
-        when(tableRepository.save(any(TableEntity.class))).thenReturn(table);  // Mock table saving
+        when(projectPostgresRepository.findById(1)).thenReturn(Optional.of(project));
+        when(tableRepository.save(any(TableEntity.class))).thenReturn(table);
 
         TableEntity savedTable = tableService.addTable(table);
 
         assertNotNull(savedTable);
-        assertEquals("Test Table", savedTable.getName());
+        assertEquals("Project Table", savedTable.getName());
         assertEquals(1, savedTable.getProject().getProjectId());
 
         verify(tableRepository).save(table);
@@ -97,7 +103,7 @@ class TableServiceTest {
         TableEntity foundTable = tableService.getTableById(1);
 
         assertNotNull(foundTable);
-        assertEquals("Test Table", foundTable.getName());
+        assertEquals("Project Table", foundTable.getName());
     }
 
     @Test
@@ -116,7 +122,7 @@ class TableServiceTest {
         List<TableEntity> tables = tableService.getAllTableByIdProject(1);
         assertFalse(tables.isEmpty());
         assertEquals(1, tables.size());
-        assertEquals("Test Table", tables.get(0).getName());
+        assertEquals("Project Table", tables.get(0).getName());
     }
 
 
@@ -127,13 +133,13 @@ class TableServiceTest {
         assertThrows(ProjectNotFoundException.class, () -> tableService.getAllTableByIdProject(1));
     }
 
-//    @Test
-//    void getAllTableByIdProjectTestEmpty() {
-//        when(projectRepository.findById(anyInt())).thenReturn(Optional.of(project));
-//        when(tableRepository.findByProjectId(anyInt())).thenReturn(Arrays.asList());
-//
-//        assertThrows(ProjectIsEmpty.class, () -> tableService.getAllTableByIdProject(1));
-//    }
+    @Test
+    void getAllTableByIdProjectTestEmpty() {
+        when(projectPostgresRepository.findById(anyInt())).thenReturn(Optional.of(project));
+        when(tableRepository.findByProjectId(anyInt())).thenReturn(Collections.emptyList());
+
+        assertThrows(TableIsEmpty.class, () -> tableService.getAllTableByIdProject(1));
+    }
 
     @Test
     void delAllTableByIdProjectTest() {

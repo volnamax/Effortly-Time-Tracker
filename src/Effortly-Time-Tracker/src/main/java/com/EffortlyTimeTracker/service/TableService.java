@@ -32,7 +32,7 @@ public class TableService {
     public TableEntity addTable(@NonNull TableEntity tableEntity) {
         ProjectEntity project = postgresRepository.findById(tableEntity.getProjectId())
                 .orElseThrow(() -> new ProjectNotFoundException(tableEntity.getProjectId()));
-        tableEntity.setProject(project); // Устанавливаем проект для таблицы
+        tableEntity.setProject(project);
         tableEntity.setTableId((int) sequenceGeneratorService.generateSequence(TableEntity.class.getSimpleName()));
         return tableRepository.save(tableEntity);
     }
