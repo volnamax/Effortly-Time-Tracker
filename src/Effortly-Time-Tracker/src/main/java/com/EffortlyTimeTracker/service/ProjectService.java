@@ -110,12 +110,12 @@ public class ProjectService {
                 .collect(Collectors.toList());
 
         long totalTimeSpent = timeSpentList.stream().mapToLong(Long::longValue).sum();
-        long averageTimeSpent = totalTimeSpent / timeSpentList.size();
+        long averageTimeSpent = timeSpentList.isEmpty() ? 0L : totalTimeSpent / timeSpentList.size(); // Проверка на пустой список
         long maxTimeSpent = timeSpentList.stream().max(Comparator.naturalOrder()).orElse(0L);
         long minTimeSpent = timeSpentList.stream().min(Comparator.naturalOrder()).orElse(0L);
-        long medianTimeSpent = timeSpentList.size() % 2 == 0
+        long medianTimeSpent = timeSpentList.isEmpty() ? 0L : (timeSpentList.size() % 2 == 0
                 ? (timeSpentList.get(timeSpentList.size() / 2 - 1) + timeSpentList.get(timeSpentList.size() / 2)) / 2
-                : timeSpentList.get(timeSpentList.size() / 2);
+                : timeSpentList.get(timeSpentList.size() / 2));
 
         Optional<ProjectAnalyticsDTO.TaskAnalyticsDTO> longestTask = taskAnalytics.stream()
                 .max(Comparator.comparingLong(ProjectAnalyticsDTO.TaskAnalyticsDTO::getTimeSpent));
@@ -133,8 +133,11 @@ public class ProjectService {
         return analyticsDTO;
     }
 
+
     private UserEntity findUserById(Integer userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoudException(userId));
     }
+
+
 }
