@@ -12,6 +12,10 @@ import com.EffortlyTimeTracker.service.middlewareOwn.todo.CheckOwner;
 import com.EffortlyTimeTracker.service.middlewareOwn.todo.CheckTaskOwner;
 import com.EffortlyTimeTracker.service.middlewareOwn.todo.CheckUserIdMatchesCurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +44,16 @@ public class TodoController {
     @Operation(summary = "Add todo", description = "need: user, content, status: (NO_ACTIVE, ACTIVE), " +
             "priority(IMPORTANT_URGENTLY, NO_IMPORTANT_URGENTLY, IMPORTANT_NO_URGENTLY, NO_IMPORTANT_NO_URGENTLY)")
     @PostMapping("/add")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Todo successfully added",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = TodoNodeResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request data",
+                    content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated",
+                    content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - User does not have sufficient permissions",
+                    content = @Content)
+    })
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
     @CheckUserIdMatchesCurrentUser
@@ -59,30 +73,78 @@ public class TodoController {
     @DeleteMapping("/del")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST', 'ROLE_ADMIN')")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Todo successfully deleted",
+                    content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated",
+                    content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - User does not have sufficient permissions",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Todo not found",
+                    content = @Content)
+    })
     @CheckTaskOwner
     public void delTodo(@RequestParam(required = true) Integer id) {
         log.info("Del todo: {}", id);
         todoService.delTodoById(id);
     }
-
-    @Operation(summary = "Dell all todo by user id", description = "need user id")
+    @Operation(summary = "Delete all todos by user id", description = "need user id")
     @DeleteMapping("/del-by-user-id")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Todos successfully deleted",
+                    content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated",
+                    content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - User does not have sufficient permissions",
+                    content = @Content),
+            @ApiResponse(responseCode = "400", description = "User not found or no todos to delete",
+                    content = @Content)
+    })
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
     @CheckOwner
     public void delAllTodoBuUserID(@RequestParam(required = true) Integer id) {
-        log.info("Del all todo by user: {}", id);
+        log.info("Deleting all todos for user with id: {}", id);
+
+        // Проверяем, существуют ли задачи у пользователя
+        List<TodoNodeEntity> todos = todoService.getAllTodoByIdUser(id);
+        if (todos == null || todos.isEmpty()) {
+            log.warn("No todos found for user with id: {}", id);
+            throw new RuntimeException("User not found or no todos to delete");
+        }
+
+        // Если задачи есть, то удаляем их
         todoService.delAllTodoByIdUser(id);
+        log.info("Successfully deleted all todos for user with id: {}", id);
     }
 
-    @Operation(summary = "Get all todo by id user")
+    @Operation(summary = "Get all todo by user id")
     @GetMapping("/get-all-by-user-id")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Todos successfully retrieved",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = TodoNodeResponseDTO.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated",
+                    content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - User does not have sufficient permissions",
+                    content = @Content),
+            @ApiResponse(responseCode = "400", description = "User not found or Todo list is empty",
+                    content = @Content)
+    })
     @CheckOwner
-    public List<TodoNodeResponseDTO> getTodoAll(Integer id) {
-        log.info("Get todo by id: {}", id);
+    public List<TodoNodeResponseDTO> getTodoAll(@RequestParam Integer id) {
+        log.info("Get todos by user id: {}", id);
+
+        // Получаем задачи пользователя
         List<TodoNodeEntity> resTodoNodeEntity = todoService.getAllTodoByIdUser(id);
+
+        // Проверяем, есть ли задачи у пользователя
+        if (resTodoNodeEntity == null || resTodoNodeEntity.isEmpty()) {
+            log.warn("No todos found for user with id: {}", id);
+            throw new RuntimeException("User not found or Todo list is empty");
+        }
+
         log.info("Response: {}", resTodoNodeEntity);
         List<TodoNodeResponseDTO> todoNodeResponseDTOS = todoNodeMapper.toDtoResponse(resTodoNodeEntity);
         log.info("Response: {}", todoNodeResponseDTOS);
@@ -91,6 +153,14 @@ public class TodoController {
 
     @PatchMapping("/update-status")
     @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Todo status successfully updated",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = TodoNodeResponseDTO.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Todo not found",
+                    content = @Content)
+    })
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_GUEST')")
     public ResponseEntity<?> updateTodoStatus(@RequestParam Integer id, @RequestParam Status status) {
         if (id == null || status == null) {
