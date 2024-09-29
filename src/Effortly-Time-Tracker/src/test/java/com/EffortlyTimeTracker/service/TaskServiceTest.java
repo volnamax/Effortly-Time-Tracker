@@ -1,6 +1,7 @@
 package com.EffortlyTimeTracker.service;
 
 
+import com.EffortlyTimeTracker.builder.ProjectEntityBuilder;
 import com.EffortlyTimeTracker.entity.ProjectEntity;
 import com.EffortlyTimeTracker.entity.TableEntity;
 import com.EffortlyTimeTracker.entity.TaskEntity;
@@ -10,8 +11,6 @@ import com.EffortlyTimeTracker.exception.table.TableNotFoundException;
 import com.EffortlyTimeTracker.exception.task.TaskNotFoundException;
 import com.EffortlyTimeTracker.repository.ITableRepository;
 import com.EffortlyTimeTracker.repository.ITaskRepository;
-import com.EffortlyTimeTracker.repository.ITaskTagRepository;
-import com.EffortlyTimeTracker.repository.postgres.TaskPostgresRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +31,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class TaskServiceTest {
     @Mock
-    private SequenceGeneratorService sequenceGeneratorService;  // Mock the SequenceGeneratorService
+    private SequenceGeneratorService sequenceGeneratorService;
 
     @Mock
     private ITaskRepository taskRepository;
@@ -57,7 +56,7 @@ class TaskServiceTest {
         table.setTableId(1);
         table.setName("Test Table");
         table.setProjectId(1);
-        table.setProject(project);  // Linking project to the table
+        table.setProject(project);
 
 
         task = new TaskEntity();
@@ -275,7 +274,6 @@ class TaskServiceTest {
         verify(taskRepository).findById(1);
         verify(taskRepository, never()).save(any(TaskEntity.class));
     }
-
 
 
 }
