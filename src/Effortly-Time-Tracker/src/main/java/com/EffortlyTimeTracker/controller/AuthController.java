@@ -9,6 +9,10 @@ import com.EffortlyTimeTracker.mapper.UserMapper;
 import com.EffortlyTimeTracker.service.TokenService;
 import com.EffortlyTimeTracker.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +37,14 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @Operation(summary = "Get token auth")
-    @PostMapping("/login")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful authentication",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = TokenResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - Invalid credentials",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content)
+    })    @PostMapping("/login")
     public ResponseEntity<TokenResponse> loginHandler(@Valid @RequestBody LoginRequestDto request) {
         log.info("Received login request for '{}'", request.login());
 
@@ -57,7 +68,14 @@ public class AuthController {
     }
 
     @Operation(summary = "Register new user", description = "name, sname, email, password, role (ADMIN, MANAGER, USER)")
-    @PostMapping("/register")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "User successfully registered",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = TokenResponse.class))),
+            @ApiResponse(responseCode = "409", description = "Conflict - Email already in use",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error - Registration failed",
+                    content = @Content)
+    })    @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> registrationHandler(@Valid @RequestBody UserCreateDTO request) {
         log.info("Received registration request for '{}'", request.getEmail());
