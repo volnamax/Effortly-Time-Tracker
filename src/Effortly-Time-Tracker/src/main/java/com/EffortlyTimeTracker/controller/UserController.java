@@ -6,6 +6,10 @@ import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.mapper.UserMapper;
 import com.EffortlyTimeTracker.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +42,16 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Add user for dto obj",
             description = "need:  name , sname, email, password, role (ADMIN, MANAGER, USER)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "User successfully added",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDTO.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated",
+                    content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - Insufficient permissions",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error - Failed to add user",
+                    content = @Content)
+    })
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserResponseDTO> addUser(@Valid @RequestBody UserCreateDTO userCreateDTO) {
         log.info("Add user: {}", userCreateDTO);
@@ -56,6 +70,16 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Dell user by id",
             description = "need id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "User successfully deleted",
+                    content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - Insufficient permissions",
+                    content = @Content)
+    })
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteUser(@RequestParam(required = true) Integer id) {
         log.info("Delete user by id: {}", id);
@@ -66,6 +90,16 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get user by id",
             description = "need id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User successfully retrieved",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDTO.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - Insufficient permissions",
+                    content = @Content)
+    })
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public UserResponseDTO getUser(@RequestParam(required = true) Integer id) {
         log.info("Get user by id: {}", id);
@@ -79,6 +113,14 @@ public class UserController {
     @GetMapping("/get-all")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get all user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Users successfully retrieved",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDTO.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated",
+                    content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - Insufficient permissions",
+                    content = @Content)
+    })
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<UserResponseDTO> getUser() {
         log.info("Get all user");
@@ -90,6 +132,14 @@ public class UserController {
 
     @GetMapping("/get-by-email")
     @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User successfully retrieved",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDTO.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content)
+    })
     public UserResponseDTO getUserByEmail(@RequestParam String email) {
         log.info("Get user by email: {}", email);
 
