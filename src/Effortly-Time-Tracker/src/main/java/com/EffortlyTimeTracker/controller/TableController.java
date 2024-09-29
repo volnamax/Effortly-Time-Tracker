@@ -9,6 +9,10 @@ import com.EffortlyTimeTracker.service.middlewareOwn.project.CheckProjectOwner;
 import com.EffortlyTimeTracker.service.middlewareOwn.table.CheckTableOwner;
 import com.EffortlyTimeTracker.service.middlewareOwn.table.CheckUserIdMatchesCurrentUserTable;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +39,14 @@ public class TableController {
     }
 
     @Operation(summary = "Add table", description = "need: projectId,  name, status = ACTIVE, NO_ACTIVE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Table successfully created",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = TableResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - User does not have sufficient permissions", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Project not found", content = @Content)
+    })
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')  or hasRole('ROLE_GUEST')")
@@ -42,18 +54,22 @@ public class TableController {
     public ResponseEntity<TableResponseDTO> addTable(@Valid @RequestBody TableCreateDTO tableDTO) {
         log.info("api/table/add");
         log.info("Adding table dto: {}", tableDTO);
+
         TableEntity tableEntity = tableMapper.toEntity(tableDTO);
-        log.info("Adding table entity: {}", tableEntity);
+        TableEntity newTableEntity = tableService.addTable(tableEntity);
+        TableResponseDTO responseDto = tableMapper.toResponseDTO(newTableEntity);
 
-        TableEntity newTableEntity1 = tableService.addTable(tableEntity);
-        log.info("Adding  table newentity: {}", newTableEntity1);
-
-        TableResponseDTO responsDto = tableMapper.toResponseDTO(newTableEntity1);
-        log.info("Adding table respons dto: {}", responsDto);
-        return new ResponseEntity<>(responsDto, HttpStatus.CREATED);
+        log.info("Table successfully created: {}", responseDto);
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Dell table by id", description = "need id table")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Table successfully deleted", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - User does not have sufficient permissions", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Table not found", content = @Content)
+    })
     @DeleteMapping("/del")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     //todo not need autth controll
@@ -63,10 +79,23 @@ public class TableController {
         log.info("api/table/del");
         log.info("Deleting table by id: {}", id_table);
 
+        // Проверяем, существует ли таблица
+        if (tableService.getTableById(id_table) == null) {
+            log.warn("Table with id {} not found", id_table);
+            throw new RuntimeException("Table not found");
+        }
+
         tableService.delTableById(id_table);
     }
 
     @Operation(summary = "Get table by id", description = "need id table")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Table successfully retrieved",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = TableResponseDTO.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - User does not have sufficient permissions", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Table not found", content = @Content)
+    })
     @GetMapping("/get")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')  or hasRole('ROLE_GUEST')")
@@ -76,15 +105,23 @@ public class TableController {
         log.info("Getting table by id: {}", tableId);
 
         TableEntity tableEntity = tableService.getTableById(tableId);
-        log.info("Table entity: {}", tableEntity);
+        if (tableEntity == null) {
+            log.warn("Table with id {} not found", tableId);
+            throw new RuntimeException("Table not found");
+        }
 
         TableResponseDTO responsDto = tableMapper.toResponseDTO(tableEntity);
-        log.info("Getting table respons dto: {}", responsDto);
-
+        log.info("Successfully retrieved table: {}", responsDto);
         return responsDto;
     }
 
     @Operation(summary = "Get all table")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tables successfully retrieved",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = TableResponseDTO.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - User does not have sufficient permissions", content = @Content)
+    })
     @GetMapping("/get-all")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -101,31 +138,48 @@ public class TableController {
     }
 
     @Operation(summary = "Get all table by id project", description = "need proj id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tables successfully retrieved",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = TableResponseDTO.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - User does not have sufficient permissions", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Project not found", content = @Content)
+    })
     @GetMapping("/get-all-by-project-id")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')  or hasRole('ROLE_GUEST')")
     @CheckProjectOwner
     public List<TableResponseDTO> getTableAllByProjectId(Integer id) {
         log.info("api/table/get-all-by-project-id");
-        log.info("Getting all table by id project: {}", id);
+
+        if (tableService.getAllTableByIdProject(id) == null) {
+            log.warn("Project with id {} not found", id);
+            throw new RuntimeException("Project not found");
+        }
 
         List<TableEntity> resEntity = tableService.getAllTableByIdProject(id);
-        log.info("Table entity: {}", resEntity);
-
-        List<TableResponseDTO> tableResponseDTOS = tableMapper.toResponseDTO(resEntity);
-        log.info("Getting all table respons dto: {}", tableResponseDTOS);
-
-        return tableResponseDTOS;
+        return tableMapper.toResponseDTO(resEntity);
     }
 
     @Operation(summary = "Dell all table by project id", description = "need proj id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Tables successfully deleted", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - User does not have sufficient permissions", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Project not found", content = @Content)
+    })
     @DeleteMapping("/del-by-project-id")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')  or hasRole('ROLE_GUEST')")
     @CheckProjectOwner
     public void delAllTableByProjectId(@RequestParam(required = true) Integer id) {
         log.info("api/table/del-by-project-id");
-        log.info("Deleting table by project id: {}", id);
+
+        if (tableService.getAllTableByIdProject(id) == null) {
+            log.warn("Project with id {} not found", id);
+            throw new RuntimeException("Project not found");
+        }
+
         tableService.delAllTablleByIdProject(id);
     }
 }

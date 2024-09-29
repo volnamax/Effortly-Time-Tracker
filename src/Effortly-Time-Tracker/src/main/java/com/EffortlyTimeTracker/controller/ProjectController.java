@@ -55,11 +55,6 @@ public class ProjectController {
         log.info("api/project/add");
         log.info("in projectDTO = {}", projectDTO);
 
-        // Проверяем, существует ли пользователь
-            if (projectService.getAllProjectByIdUser(projectDTO.getUserProject()) == null) {
-            log.warn("User with id {} not found", projectDTO.getUserProject());
-            throw new RuntimeException("User not found");
-        }
 
         ProjectEntity projectEntity = projectMapper.toEntity(projectDTO);
         log.info("projectEntity = {}", projectEntity);
