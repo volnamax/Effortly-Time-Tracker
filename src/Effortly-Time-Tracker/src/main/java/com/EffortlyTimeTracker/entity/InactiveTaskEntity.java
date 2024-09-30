@@ -1,6 +1,7 @@
 package com.EffortlyTimeTracker.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -21,7 +22,8 @@ public class InactiveTaskEntity {
     Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "task_id", nullable = false)
+    @JsonBackReference
+    @JoinColumn(name = "task_id", nullable =  false)
     TaskEntity task;
 
     @Column(name = "deactivated_at", nullable = false)

@@ -9,6 +9,10 @@ import com.EffortlyTimeTracker.service.GroupService;
 import com.EffortlyTimeTracker.service.middlewareOwn.group.CheckGroupOwner;
 import com.EffortlyTimeTracker.service.middlewareOwn.group.CheckProjectOwner;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +42,14 @@ public class GroupController {
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Group successfully created",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GroupResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - User does not have sufficient permissions", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Project not found", content = @Content)
+    })
     @CheckProjectOwner
     public ResponseEntity<GroupResponseDTO> addGroup(@Valid @RequestBody GroupCreateDTO groupDTO) {
         log.info("api/group/add");
@@ -58,6 +70,12 @@ public class GroupController {
             description = "need id")
     @DeleteMapping("/del")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Group successfully deleted", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - User does not have sufficient permissions", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Group not found", content = @Content)
+    })
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @CheckGroupOwner
     public void delGroup(@RequestParam(required = true) Integer id) {
@@ -69,6 +87,13 @@ public class GroupController {
     @Operation(summary = "Get group by id",
             description = "need id")
     @GetMapping("/get")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Group successfully retrieved",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GroupResponseDTO.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - User does not have sufficient permissions", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Group not found", content = @Content)
+    })
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @CheckGroupOwner
@@ -83,6 +108,12 @@ public class GroupController {
     //  todo user can hand this
     @Operation(summary = "Get all group")
     @GetMapping("/get-all")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Groups successfully retrieved",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GroupResponseDTO.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - User does not have sufficient permissions", content = @Content)
+    })
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<GroupResponseDTO> getGroupAll() {
@@ -95,6 +126,12 @@ public class GroupController {
     @Operation(summary = "Add user to group", description = "Need groupId and userId")
     @PostMapping("/add-user-to-group")
     @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User successfully added to group", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - User does not have sufficient permissions", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Group or User not found", content = @Content)
+    })
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @CheckGroupOwner
     public ResponseEntity<Void> addUserToGroup(@Valid @RequestBody AddUserToGroupDTO addUserToGroupDTO) {
@@ -108,6 +145,12 @@ public class GroupController {
     @Operation(summary = "Remove user from group", description = "Need groupId and userId")
     @DeleteMapping("/remove-user-from-group")
     @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User successfully removed from group", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden - User does not have sufficient permissions", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Group or User not found", content = @Content)
+    })
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @CheckGroupOwner
     public ResponseEntity<Void> removeUserFromGroup(@RequestBody AddUserToGroupDTO addUserToGroupDTO) {
@@ -117,6 +160,5 @@ public class GroupController {
         groupService.removeUserFromGroup(addUserToGroupDTO.getGroupId(), addUserToGroupDTO.getUserId());
         return ResponseEntity.ok().build();
     }
-
 }
 
