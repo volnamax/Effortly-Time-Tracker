@@ -60,8 +60,12 @@
 			<artifactId>postgresql</artifactId>
 			<version>42.6.0</version>
 		</dependency>
-
-
+		<!--ХЗ для интеграционного теста  -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
 		<dependency>

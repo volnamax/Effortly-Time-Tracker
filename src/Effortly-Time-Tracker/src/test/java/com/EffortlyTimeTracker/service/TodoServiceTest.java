@@ -31,12 +31,11 @@ class TodoServiceTest {
     @InjectMocks
     private TodoService todoService;
 
-    private UserEntity user;
     private TodoNodeEntity todo;
 
     @BeforeEach
     void setUp() {
-        user = new UserEntityBuilder()
+        UserEntity user = new UserEntityBuilder()
                 .withUserId(1)
                 .withUserName("TestUser")
                 .withEmail("test@test.com")
