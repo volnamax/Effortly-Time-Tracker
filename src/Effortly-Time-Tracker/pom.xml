@@ -165,9 +165,30 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version> <!-- или ваша версия -->
                 <configuration>
+                    <!-- Запустить все тесты в одном процессе -->
+                    <forkCount>1</forkCount>
+                    <reuseForks>true</reuseForks> <!-- Повторное использование процессов -->
+
+                    <!-- Или можно указать несколько процессов -->
+                    <!-- <forkCount>2</forkCount>  --> <!-- Два процесса -->
+
+                    <!-- Режим запуска тестов (класс, тест и т.д.) -->
+                    <forkMode>always</forkMode> <!-- Создавать новый процесс для каждого класса -->
+
+                    <!-- Отчет о потребляемых ресурсах -->
+                    <argLine>-XX:+PrintGCDetails</argLine> <!-- Для более детального вывода информации о процессах -->
+
                     <systemPropertyVariables>
                         <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+                        <!-- Активация случайного порядка выполнения тестов -->
+                        <junit.jupiter.execution.order.random>true</junit.jupiter.execution.order.random>
                     </systemPropertyVariables>
+                    <properties>
+                        <property>
+                            <name>junit.jupiter.execution.order.random</name>
+                            <value>true</value>
+                        </property>
+                    </properties>
                 </configuration>
             </plugin>
             <!-- Allure Maven Plugin -->
