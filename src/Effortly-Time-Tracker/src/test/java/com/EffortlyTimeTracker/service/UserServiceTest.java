@@ -61,7 +61,6 @@ class UserServiceTest {
     }
 
 
-
     @Test
     public void addUserTestSuccess() {
         when(roleRepository.findByName(Role.MANAGER)).thenReturn(roleEntity);
@@ -72,7 +71,7 @@ class UserServiceTest {
 
         assertNotNull(savedUser);
         assertEquals("TestUser", savedUser.getUserName());
-        verify(userRepository).save(any(UserEntity.class));  // Verify userRepository.save() was called
+        verify(userRepository).save(any(UserEntity.class));
     }
 
 
@@ -99,7 +98,6 @@ class UserServiceTest {
 
         assertNotNull(exception);
         assertEquals("User with id not found role", exception.getMessage());
-        // Проверяем, что метод поиска роли был вызван
         verify(roleRepository).findByName(any());
     }
 

@@ -9,19 +9,16 @@ import com.EffortlyTimeTracker.entity.UserEntity;
 import com.EffortlyTimeTracker.enums.Role;
 import com.EffortlyTimeTracker.enums.Status;
 import com.EffortlyTimeTracker.repository.ITodoRepository;
-import com.EffortlyTimeTracker.repository.IUserRepository;
 import com.EffortlyTimeTracker.repository.postgres.RoleRepository;
 import com.EffortlyTimeTracker.repository.postgres.UserPostgresRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.repository.CrudRepository;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
 class TodoServiceIntegrationTest {
@@ -75,9 +72,34 @@ class TodoServiceIntegrationTest {
         assertEquals("Test Todo", savedTodo.getContent());
 
         TodoNodeEntity foundTodo = todoRepository.findById(savedTodo.getTodoId()).orElse(null);
+
         assertNotNull(foundTodo);
         assertEquals(todo.getTodoId(), foundTodo.getTodoId());
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //
 //    @Test
 //    void getTodoByIdIntegrationTest() {
