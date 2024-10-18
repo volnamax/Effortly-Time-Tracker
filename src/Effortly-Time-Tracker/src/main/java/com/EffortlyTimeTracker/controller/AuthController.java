@@ -113,7 +113,7 @@ public class AuthController {
             throw new BadCredentialsException("Invalid login or password");
         }
     }
-
+//todo del
     @GetMapping("/get-user-id")
     public ResponseEntity<Integer> getUserIdByEmail(@RequestParam String email) {
         Optional<UserEntity> userEntity = userService.getUserByEmail(email);

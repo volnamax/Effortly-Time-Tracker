@@ -29,7 +29,7 @@
     @AutoConfigureMockMvc
     @Testcontainers
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-    public class IntegrationTest {
+    public class E2E {
         @Container
         public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest")
                 .withDatabaseName("testdb")
