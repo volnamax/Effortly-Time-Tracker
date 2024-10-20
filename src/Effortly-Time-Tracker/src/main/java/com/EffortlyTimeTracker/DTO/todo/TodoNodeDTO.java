@@ -26,5 +26,4 @@ public class TodoNodeDTO {
     @NotNull(message = "Error todo node not have user id")
     Integer userID;
 
-    LocalDateTime dueData;
 }

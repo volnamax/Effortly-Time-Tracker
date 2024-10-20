@@ -26,5 +26,4 @@ public class UserCreateDTO {
     @NotBlank(message = "Error user role is empty")
     String role;
 
-    LocalDateTime dataSignIn;
 }
