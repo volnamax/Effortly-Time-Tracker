@@ -5,3 +5,4 @@ COPY src/Effortly-Time-Tracker/target/Effortly-Time-Tracker-0.0.1-SNAPSHOT.jar /
 EXPOSE 8088
 
 ENTRYPOINT ["java", "-jar", "/app.jar"]
+
