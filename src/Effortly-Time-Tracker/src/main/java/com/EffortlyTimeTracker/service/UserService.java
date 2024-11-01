@@ -27,7 +27,7 @@ public class UserService {
     public UserService(IUserRepository userRepository,
                        RoleRepository roleRepository,
                        PasswordEncoder passwordEncoder,
-                       SequenceGeneratorService sequenceGeneratorService) {
+                       @Autowired(required = false) SequenceGeneratorService sequenceGeneratorService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -39,15 +39,28 @@ public class UserService {
         return roleRepository.findByName(Role.valueOf(roleName));
     }
 
+
     public UserEntity addUser(@NonNull UserEntity userEntity) {
+        // Получаем роль пользователя по имени
         RoleEntity role = getRoleByName(userEntity.getRole().getName().name());
         if (role == null) {
             throw new UserNotRoleException();
         }
         userEntity.setRole(role);
-        userEntity.setPasswordHash(passwordEncoder.encode(userEntity.getPasswordHash()));
-        userEntity.setUserId((int) sequenceGeneratorService.generateSequence(UserEntity.class.getSimpleName()));
 
+        // Хэшируем пароль пользователя
+        userEntity.setPasswordHash(passwordEncoder.encode(userEntity.getPasswordHash()));
+
+        if (sequenceGeneratorService != null) {
+            // Если активен профиль 'mongo', используем SequenceGeneratorService
+            userEntity.setUserId((int) sequenceGeneratorService.generateSequence(UserEntity.class.getSimpleName()));
+        } else {
+            // Если активен профиль 'postgres', полагаемся на автоинкремент в БД
+            // Не устанавливаем userId вручную
+            userEntity.setUserId(null); // Или просто не задаем это поле
+        }
+
+        // Сохраняем пользователя в базе данных
         return userRepository.save(userEntity);
     }
 

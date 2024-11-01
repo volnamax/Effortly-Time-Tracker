@@ -1,12 +1,14 @@
 package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.repository.IUserRepository;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@Profile("postgres")
 public class JpaUserDetailsService implements UserDetailsService {
     private final IUserRepository userRepository;
 

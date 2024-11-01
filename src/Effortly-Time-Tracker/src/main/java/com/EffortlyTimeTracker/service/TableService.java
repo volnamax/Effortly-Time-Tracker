@@ -22,7 +22,7 @@ public class TableService {
     private final SequenceGeneratorService sequenceGeneratorService;
 
     @Autowired
-    public TableService(ITableRepository tableRepository, IProjectRepository postgresRepository, SequenceGeneratorService sequenceGeneratorService) {
+    public TableService(ITableRepository tableRepository, IProjectRepository postgresRepository,  @Autowired(required = false) SequenceGeneratorService sequenceGeneratorService) {
         this.tableRepository = tableRepository;
         this.postgresRepository = postgresRepository;
         this.sequenceGeneratorService = sequenceGeneratorService;
@@ -33,7 +33,15 @@ public class TableService {
         ProjectEntity project = postgresRepository.findById(tableEntity.getProjectId())
                 .orElseThrow(() -> new ProjectNotFoundException(tableEntity.getProjectId()));
         tableEntity.setProject(project);
-        tableEntity.setTableId((int) sequenceGeneratorService.generateSequence(TableEntity.class.getSimpleName()));
+
+
+        if (sequenceGeneratorService != null) {
+            // Если активен профиль 'mongo', используем SequenceGeneratorService
+            tableEntity.setTableId((int) sequenceGeneratorService.generateSequence(TableEntity.class.getSimpleName()));
+        } else {
+            // Если активен профиль 'postgres', полагаемся на автоинкремент в БД
+            tableEntity.setTableId(null); // Или не устанавливаем значение вручную
+        }
         return tableRepository.save(tableEntity);
     }
 

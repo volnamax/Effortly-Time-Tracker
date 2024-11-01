@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Profile("postgres")  // Переименовываем бин для PostgreSQL
 @Repository
+@Profile("postgres")  // Переименовываем бин для PostgreSQL
 public interface UserPostgresRepository extends JpaRepository<UserEntity, Integer>, IUserRepository {
     @Override
     // Метод для поиска пользователя по email

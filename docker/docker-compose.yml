@@ -6,7 +6,6 @@ services:
     container_name: app
     depends_on:
       - db
-      - mongodb
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1564
@@ -14,7 +13,6 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=1564
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/effortlyTimeTrackerDB
     ports:
       - "8080:8080"
 
@@ -28,8 +26,3 @@ services:
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  mongodb:
-    image: mongo
-    container_name: mongodb
-    ports:
-      - "27017:27017"

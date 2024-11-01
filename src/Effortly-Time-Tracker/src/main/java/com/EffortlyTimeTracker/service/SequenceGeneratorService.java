@@ -2,6 +2,7 @@ package com.EffortlyTimeTracker.service;
 
 import com.EffortlyTimeTracker.entity.DatabaseSequence;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import static org.springframework.data.mongodb.core.FindAndModifyOptions.options
 import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Service
+@Profile("mongo")
 public class SequenceGeneratorService {
 
     private final MongoOperations mongoOperations;

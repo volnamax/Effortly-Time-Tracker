@@ -30,7 +30,7 @@ public class TaskService {
 
 
     @Autowired
-    public TaskService(ITaskRepository taskRepository, ITableRepository tableRepository, InactiveTaskRepository inactiveTaskRepository, SequenceGeneratorService sequenceGeneratorService) {
+    public TaskService(ITaskRepository taskRepository, ITableRepository tableRepository, InactiveTaskRepository inactiveTaskRepository,   @Autowired(required = false) SequenceGeneratorService sequenceGeneratorService) {
         this.taskRepository = taskRepository;
         this.tableRepository = tableRepository;
         this.inactiveTaskRepository = inactiveTaskRepository;
@@ -40,13 +40,14 @@ public class TaskService {
     public TaskEntity addTask(@NonNull TaskEntity task) {
         log.info("Adding task: {}", task);
 
-        // Check if the table is set in the task entity
+        // Проверяем, что таблица установлена в сущности задачи
         if (task.getTable() == null || task.getTable().getTableId() == null) {
             log.error("Table not found in task entity");
             throw new IllegalArgumentException("Task must be linked to a table with a valid table ID.");
         }
 
-        TableEntity table = tableRepository.findById(task.getTable().getTableId()).orElseThrow(() -> new TableNotFoundException(task.getTable().getTableId()));
+        TableEntity table = tableRepository.findById(task.getTable().getTableId())
+                .orElseThrow(() -> new TableNotFoundException(task.getTable().getTableId()));
 
         if (table.getProject() == null) {
             log.error("Table with ID {} is not linked to a project.", task.getTable().getTableId());
@@ -55,7 +56,14 @@ public class TaskService {
 
         task.setProjectId(table.getProject().getProjectId());
         task.setTimeAddTask(LocalDateTime.now());
-        task.setTaskId((int) sequenceGeneratorService.generateSequence(TaskEntity.class.getSimpleName()));
+
+        if (sequenceGeneratorService != null) {
+            // Если активен профиль 'mongo', используем SequenceGeneratorService
+            task.setTaskId((int) sequenceGeneratorService.generateSequence(TaskEntity.class.getSimpleName()));
+        } else {
+            // Если активен профиль 'postgres', полагаемся на автоинкремент в БД
+            task.setTaskId(null); // Или не устанавливаем значение вручную
+        }
 
         TaskEntity savedTask = taskRepository.save(task);
         log.info("Task '{}' added with ID {}", savedTask.getName(), savedTask.getTaskId());

@@ -30,7 +30,7 @@ public class ProjectService {
 
 
     @Autowired
-    public ProjectService(IProjectRepository projectRepository, IUserRepository userRepository, ITaskRepository taskRepository, SequenceGeneratorService sequenceGeneratorService) {
+    public ProjectService(IProjectRepository projectRepository, IUserRepository userRepository, ITaskRepository taskRepository,  @Autowired(required = false)  SequenceGeneratorService sequenceGeneratorService) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
@@ -39,7 +39,13 @@ public class ProjectService {
     }
 
     public ProjectEntity addProject(@NotNull ProjectEntity projectEntity) {
-        projectEntity.setProjectId((int) sequenceGeneratorService.generateSequence(ProjectEntity.class.getSimpleName()));
+        if (sequenceGeneratorService != null) {
+            // Если активен профиль 'mongo', используем SequenceGeneratorService
+            projectEntity.setProjectId((int) sequenceGeneratorService.generateSequence(ProjectEntity.class.getSimpleName()));
+        } else {
+            // Если активен профиль 'postgres', полагаемся на автоинкремент в БД
+            projectEntity.setProjectId(null); // Или не устанавливаем значение вручную
+        }
 
         return projectRepository.save(projectEntity);
     }
