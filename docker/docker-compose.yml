@@ -1,38 +1,35 @@
-version: '3.8'
 services:
   app:
+    image: 'docker-spring-boot-postgres:latest'
     build:
-      context: ../  # Путь к корню проекта, откуда Docker будет брать файлы
-      dockerfile: docker/Dockerfile
+      context: .
+    container_name: app
+    depends_on:
+      - db
+      - mongodb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1564
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=1564
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/effortlyTimeTrackerDB
     ports:
       - "8080:8080"
-    environment:
-      SPRING_PROFILES_ACTIVE : docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/postgres
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: 1564
-      ENTITY_TYPE: User  # Указываем сущность для управления через переменную окружения
 
-
-    depends_on:
-      - postgres-db
-    networks:
-      - app-network
-  postgres-db:
-    image: postgres:14
+  db:
+    image: postgres
+    container_name: db
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1564
-    ports:
-      - "5432:5432"
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1564
+      - POSTGRES_DB=postgres
     volumes:
-      - postgres-data:/var/lib/postgresql/data
-    networks:
-      - app-network
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
-volumes:
-  postgres-data:
-
-networks:
-  app-network:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27017:27017"
