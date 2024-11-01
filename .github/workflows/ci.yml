@@ -2,7 +2,7 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [ "main" ]  # Укажите ветки, для которых будет запускаться пайплайн
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -24,9 +24,8 @@ jobs:
         run: mvn -f src/Effortly-Time-Tracker/pom.xml clean verify
 
       - name: Build Docker Image
-        run: docker build -t your-docker-image-name -f docker/Dockerfile .
+        run: docker build -t your-dockerhub-username/effortly-time-tracker -f docker/Dockerfile .
 
-      # Если вы хотите пушить образ в Docker Hub или другой реестр
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -35,5 +34,4 @@ jobs:
 
       - name: Push Docker Image
         run: |
-          docker tag your-docker-image-name your-dockerhub-username/your-docker-image-name:latest
-          docker push your-dockerhub-username/your-docker-image-name:latest
+          docker push your-dockerhub-username/effortly-time-tracker:latest
