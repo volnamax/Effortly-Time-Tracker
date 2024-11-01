@@ -4,7 +4,8 @@ services:
     image: 'docker-spring-boot-postgres:latest'
     build:
       # Контекст сборки - текущая директория (где находится Dockerfile)
-      context: .
+      context: ../
+      dockerfile: docker/Dockerfile  # Указываем путь к Dockerfile относительно контекста сборки
     # Название контейнера для приложени
     container_name: app
     # Зависимости - приложение запускается после запуска сервиса 'db'
@@ -14,7 +15,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1564
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgresdocker
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=1564
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
@@ -29,8 +30,8 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1564
-      - POSTGRES_DB=postgres
+      - POSTGRES_DB=postgresdocker
     # Монтируем файл инициализации SQL в контейнер
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    - ../src/Effortly-Time-Tracker/src/main/resources/sql/CreateTables.sql:/docker-entrypoint-initdb.d/CreateTables.sql
 

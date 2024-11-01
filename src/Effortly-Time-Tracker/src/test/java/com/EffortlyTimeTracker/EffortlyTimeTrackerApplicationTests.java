@@ -13,11 +13,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @Disabled("Отключено до решения проблемы с загрузкой контекста")
 @SpringBootTest
 public class EffortlyTimeTrackerApplicationTests {
-
-
 	@Test
 	void contextLoads() {
 	}
-
 }
 
