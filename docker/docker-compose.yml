@@ -1,11 +1,16 @@
 services:
   app:
+    # Используем образ с именем 'docker-spring-boot-postgres:latest'
     image: 'docker-spring-boot-postgres:latest'
     build:
+      # Контекст сборки - текущая директория (где находится Dockerfile)
       context: .
+    # Название контейнера для приложени
     container_name: app
+    # Зависимости - приложение запускается после запуска сервиса 'db'
     depends_on:
       - db
+    # Переменные окружения для контейнера приложения
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1564
@@ -13,16 +18,19 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=1564
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    # Пробрасываем порт 8080 контейнера на порт 8080 хоста
     ports:
       - "8080:8080"
 
   db:
+    # Используем официальный образ PostgreSQL
     image: postgres
     container_name: db
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1564
       - POSTGRES_DB=postgres
+    # Монтируем файл инициализации SQL в контейнер
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
