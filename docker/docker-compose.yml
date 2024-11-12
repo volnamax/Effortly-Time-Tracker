@@ -21,7 +21,7 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     # Пробрасываем порт 8080 контейнера на порт 8080 хоста
     ports:
-      - "8088:8080"
+      - "8080:8080"
 
   db:
     # Используем официальный образ PostgreSQL
