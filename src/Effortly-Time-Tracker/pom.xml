@@ -83,7 +83,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.2.0</version>
+            <version>2.6.0</version>
         </dependency>
 
         <dependency>
@@ -159,6 +159,24 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-maven-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <id>generate-openapi-docs</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <apiDocsUrl>http://localhost:8080/v3/api-docs</apiDocsUrl>
+                    <outputDir>${project.basedir}/../../docker/swagger</outputDir>
+                    <outputFileName>swagger.json</outputFileName>
+                </configuration>
+            </plugin>
             <!-- Allure Maven Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

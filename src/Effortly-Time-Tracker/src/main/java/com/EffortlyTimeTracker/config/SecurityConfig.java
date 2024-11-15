@@ -26,6 +26,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.List;
 
 @Slf4j
 @Configuration
@@ -43,13 +44,19 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(request -> {
+                    var corsConfig = new org.springframework.web.cors.CorsConfiguration();
+                    corsConfig.setAllowedOrigins(List.of("http://localhost:8081")); // разрешить запросы с порта 8081
+                    corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    corsConfig.setAllowedHeaders(List.of("*"));
+                    corsConfig.setAllowCredentials(true);
+                    return corsConfig;
+                }))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/login", "/api/register", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers("/api/users/**").hasRole("ADMIN")
                         .requestMatchers("/api/todo/**").hasAnyRole("MANAGER", "USER", "ADMIN")
                         .requestMatchers("/api/groups/**").hasAnyRole("MANAGER", "ADMIN")
-
-                        //  .requestMatchers("/api/todo/get-all").hasRole("ADMIN")
                         .requestMatchers("/api/projects/get-all").hasRole("ADMIN")
                         .requestMatchers("/api/tables/get-all").hasRole("ADMIN")
                         .requestMatchers("/api/tasks/get-all").hasRole("ADMIN")
@@ -59,6 +66,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
+
 
     //Компонент JwtDecoder: Настраивает декодирование JWT с использованием открытого ключа RSA.
     @Bean

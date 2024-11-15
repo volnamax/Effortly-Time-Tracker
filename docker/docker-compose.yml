@@ -1,17 +1,12 @@
 services:
   app:
-    # Используем образ с именем 'docker-spring-boot-postgres:latest'
     image: 'docker-spring-boot-postgres:latest'
     build:
-      # Контекст сборки - текущая директория (где находится Dockerfile)
       context: ../
-      dockerfile: docker/Dockerfile  # Указываем путь к Dockerfile относительно контекста сборки
-    # Название контейнера для приложени
+      dockerfile: docker/Dockerfile
     container_name: app
-    # Зависимости - приложение запускается после запуска сервиса 'db'
     depends_on:
       - db
-    # Переменные окружения для контейнера приложения
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1564
@@ -19,19 +14,33 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=1564
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-    # Пробрасываем порт 8080 контейнера на порт 8080 хоста
     ports:
       - "8080:8080"
 
   db:
-    # Используем официальный образ PostgreSQL
     image: postgres
     container_name: db
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1564
       - POSTGRES_DB=postgresdocker
-    # Монтируем файл инициализации SQL в контейнер
     volumes:
     - ../src/Effortly-Time-Tracker/src/main/resources/sql/CreateTables.sql:/docker-entrypoint-initdb.d/CreateTables.sql
 
+  swagger-ui:
+    image: nginx:1.27
+    container_name: swagger-ui
+    volumes:
+      - ./swagger:/usr/share/nginx/html
+    ports:
+      - "8081:80"
+#  nginx:
+#    image: nginx:latest
+#    container_name: nginx
+#    volumes:
+#      - ./nginx.conf:/etc/nginx/nginx.conf
+#    ports:
+#      - "8081:80"
+#    depends_on:
+#      - app
+    # Service to validate and bundle OpenAPI JSON
