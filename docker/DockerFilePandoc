@@ -1,0 +1,19 @@
+# Dockerfile для Nginx с Pandoc
+FROM nginx:1.27
+
+# Установка Pandoc
+RUN apt-get update && apt-get install -y \
+    pandoc \
+    && rm -rf /var/lib/apt/lists/*
+
+
+
+# Копируем файл README.md в директорию статики Nginx
+COPY README.md /usr/share/nginx/html/static
+# Копируем папку с изображениями для документации
+COPY documentation/img /usr/share/nginx/html/static/img
+# Копируем ресурсы SPA-приложения
+COPY docker/my-spa/ usr/share/nginx/html/my-spa
+
+# Генерация readme.html из README.md
+RUN pandoc /usr/share/nginx/html/static/README.md -f markdown -t html -s -o /usr/share/nginx/html/static/readme.html

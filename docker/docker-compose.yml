@@ -1,12 +1,14 @@
 services:
   app:
-    image: 'docker-spring-boot-postgres:latest'
+    # Сервис приложения Spring Boot
+    image: 'docker-spring-boot-postgres:latest'  # Используемый образ
     build:
-      context: ../
-      dockerfile: docker/Dockerfile
-    container_name: app
+      context: ../ # Контекст сборки Dockerfile
+      dockerfile: docker/Dockerfile # Путь до Dockerfile
+    container_name: app # Имя контейнера
     depends_on:
-      - db
+      - db # Зависимость от базы данных
+    # Настройки для подключения к базе данных PostgreSQL
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1564
@@ -15,47 +17,57 @@ services:
       - SPRING_DATASOURCE_PASSWORD=1564
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
-      - "8080:8080"
+      - "8080:8080"  # Прокси порт для доступа к приложению
     networks:
-      - app-network
+      - app-network # Подключение к общей сети
 
   db:
-    image: postgres
+    # Сервис базы данных PostgreSQL
+    image: postgres  # Используемый образ PostgreSQL
     container_name: db
     environment:
+      # Конфигурация базы данных
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1564
       - POSTGRES_DB=postgresdocker
     volumes:
-    - ../src/Effortly-Time-Tracker/src/main/resources/sql/CreateTables.sql:/docker-entrypoint-initdb.d/CreateTables.sql
+      # Скрипт инициализации для базы данных
+      - ../src/Effortly-Time-Tracker/src/main/resources/sql/CreateTables.sql:/docker-entrypoint-initdb.d/CreateTables.sql
     networks:
       - app-network
 
+  pgadmin:
+    # Сервис для работы с базой данных через веб-интерфейс pgAdmin
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      # Конфигурация учётных данных pgAdmin
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com  # Замените на ваш email
+      - PGADMIN_DEFAULT_PASSWORD=1234         # Замените на ваш пароль
+    ports:
+      - "5050:80" # Прокси порт для доступа к pgAdmin
+    networks:
+      - app-network
+    depends_on:
+      - db # Зависимость от базы данных
+
   nginx:
+    # Сервис Nginx для маршрутизации и прокси
     image: nginx:1.27
     container_name: nginx
+    build:
+      context: ../
+      dockerfile: docker/DockerFilePandoc  # Dockerfile для Nginx с Pandoc
     volumes:
+      # Монтирование Swagger UI и конфигурации Nginx
       - ./swagger:/usr/share/nginx/html/swagger-ui
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./static:/usr/share/nginx/html/static
     ports:
       - "8081:80"
     networks:
       - app-network
     depends_on:
-      - app
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@admin.com  # Замените на ваш email
-      - PGADMIN_DEFAULT_PASSWORD=1564         # Замените на ваш пароль
-    ports:
-      - "5050:80"
-    networks:
-      - app-network
-    depends_on:
-      - db
+      - app # Зависимость от приложения
 
 
 networks:

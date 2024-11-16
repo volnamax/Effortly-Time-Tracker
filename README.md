@@ -4,7 +4,7 @@
 
 > Android application for conveniently measuring time for everyday or work tasks
 
-## Курсач : [coursework.pdf](img%2Fcoursework.pdf)
+## Курсач : [coursework.pdf](documentation/img/coursework.pdf)
 # Идея
 
 > Приложение для управления задачами и аналитики времени, объединяет функциональность канбан-досок в стиле Trello для планирования и организации проектов, задач и карточек с возможностями измерения времени по методике Toggl Track.
@@ -50,7 +50,7 @@
 |ПЛАТФОРМЫ | Android |Android / ios / desktop |Android / ios / desktop| Android / ios / desktop | Android / ios |
 |канбан-доски| ✅|❌|❌|❌|✅|
 
-![img_1.png](img%2Fimg_1.png)
+![img_1.png](documentation/img/img_1.png)
 ### 4) Обоснование целесообразности и актуальности проекта
 
 > Данный проект предлагает инновационное решение — приложение, объединяющее канбан-доски для визуального управления задачами с интегрированным таймером для учета времени на каждую задачу.
@@ -70,39 +70,39 @@
 3 —пользователь
 
 
-![img.png](img/img.png)
+![img.png](documentation/img/img.png)
 
-![img.png](img/img1.png)
+![img.png](documentation/img/img1.png)
 ### 6) Use-Case - диаграмма
 
-![ Use-Case - диаграмма](img/use-case-new-c.jpg)
+![ Use-Case - диаграмма](documentation/img/use-case-new-c.jpg)
 
-[pdf-format](img/use-case-new-c.pdf)
+[pdf-format](documentation/img/use-case-new-c.pdf)
 
 ### 7) ER-диаграмма сущностей
 
-![ER-диаграмма сущностей](img/er_rus.jpg)
-[pdf-format](img/er_rus.pdf)  
+![ER-диаграмма сущностей](documentation/img/er_rus.jpg)
+[pdf-format](documentation/img/er_rus.pdf)  
 
 ### Диаграмма  БД 
 
-![Диаграмма.jpg](img%2F%D0%94%D0%B8%D0%B0%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B0%20%D0%B1%D0%B5%D0%B7%20%D0%BD%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F.jpg)
+![Диаграмма.jpg](documentation/img/db.jpg)
 
 [Развертка](https://dbdiagram.io/d/er-diagram-bd-course-65cdf790ac844320ae364a42)
 
-[pdf-format.pdf](img%2FdbDiagramcopy.pdf)
+[pdf-format.pdf](documentation/img/dbDiagramcopy.pdf)
 
 ### 9) Формализация бизнес-правил BPMN
 
 Вход в систему.
 
-![Вход в систему.](img/bpmn0.jpg)
+![Вход в систему.](documentation/img/bpmn0.jpg)
 
 Создание проекта.
-![Создание проекта.](img/bpmn.jpg)
+![Создание проекта.](documentation/img/bpmn.jpg)
 
-![alt text](img/bpmn1.jpg)
-[pdf format](img/bpmn1.pdf)
+![alt text](documentation/img/bpmn1.jpg)
+[pdf format](documentation/img/bpmn1.pdf)
 
 
 ### 10) Описание типа приложения и выбранного технологического стека
@@ -112,18 +112,18 @@
 
 ### 11) Верхнеуровневое разбиение на компоненты
 
-![Верхнеуровневое разбиение на компоненты](img/components.svg)
+![Верхнеуровневое разбиение на компоненты](documentation/img/components.svg)
 
 
 ## OLD
 
 ### 12) UML диаграммы классов
 
-![uml ](img/uml.svg)
-[pdf-format](img/uml.pdf)
+![uml ](documentation/img/uml.svg)
+[pdf-format](documentation/img/uml.pdf)
 
 # Use-Case - диаграмма
 
-![alt text](img/use_case.jpg)
+![alt text](documentation/img/use_case.jpg)
 
-[pdf-format](img/use_case.pdf)
+[pdf-format](documentation/img/use_case.pdf)
