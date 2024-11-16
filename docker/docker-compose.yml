@@ -31,9 +31,9 @@ services:
     networks:
       - app-network
 
-  swagger-ui:
+  nginx:
     image: nginx:1.27
-    container_name: swagger-ui
+    container_name: nginx
     volumes:
       - ./swagger:/usr/share/nginx/html/swagger-ui
       - ./nginx.conf:/etc/nginx/nginx.conf
