@@ -115,6 +115,34 @@
 ![Верхнеуровневое разбиение на компоненты](documentation/img/components.svg)
 
 
+# КАК ЗАПУСТИТЬСЯ 
+
+[About.md](documentation/md/About.md)
+[About.html](documentation/md/About.html)
+
+# О докере 
+
+[Docker_Image_Build_and_Push_Guide_RU.md](documentation/md/Docker_Image_Build_and_Push_Guide_RU.md)
+[Docker_Image_Build_and_Push_Guide_RU.html](documentation/md/Docker_Image_Build_and_Push_Guide_RU.html)
+
+
+# О запуске и тестах и доки 
+
+[START.md](documentation/md/START.md)
+[START.html](documentation/md/START.html)
+
+# О статическом свагере 
+
+[Swagger_UI_Docker_Setup_Guide.md](documentation/md/Swagger_UI_Docker_Setup_Guide.md)
+[Swagger_UI_Docker_Setup_Guide.html](documentation/md/Swagger_UI_Docker_Setup_Guide.html)
+
+# О хостинге на вк клауде 
+
+[VK_Cloud_Podman_Setup_Instructions.md](documentation/md/VK_Cloud_Podman_Setup_Instructions.md)
+[VK_Cloud_Podman_Setup_Instructions.html](documentation/md/VK_Cloud_Podman_Setup_Instructions.html)
+
+
+
 ## OLD
 
 ### 12) UML диаграммы классов
@@ -127,3 +155,4 @@
 ![alt text](documentation/img/use_case.jpg)
 
 [pdf-format](documentation/img/use_case.pdf)
+

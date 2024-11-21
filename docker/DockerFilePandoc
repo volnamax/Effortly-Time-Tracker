@@ -6,14 +6,22 @@ RUN apt-get update && apt-get install -y \
     pandoc \
     && rm -rf /var/lib/apt/lists/*
 
-
-
 # Копируем файл README.md в директорию статики Nginx
-COPY README.md /usr/share/nginx/html/static
+COPY README.md /usr/share/nginx/html/static/README.md
+
 # Копируем папку с изображениями для документации
 COPY documentation/img /usr/share/nginx/html/static/img
+
+# Копируем папку с md для документации
+COPY documentation/md /usr/share/nginx/html/static/md
+
 # Копируем ресурсы SPA-приложения
 COPY docker/my-spa/ usr/share/nginx/html/my-spa
 
 # Генерация readme.html из README.md
 RUN pandoc /usr/share/nginx/html/static/README.md -f markdown -t html -s -o /usr/share/nginx/html/static/readme.html
+
+# Генерация HTML для всех файлов в папке md
+RUN for file in /usr/share/nginx/html/static/md/*.md; do \
+        pandoc "$file" -f markdown -t html -s -o "${file%.md}.html"; \
+    done
