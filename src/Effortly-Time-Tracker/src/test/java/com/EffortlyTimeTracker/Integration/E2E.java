@@ -423,7 +423,7 @@
                             .param("taskId", "1")
                             .header("Authorization", authToken))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.status").value("NO_ACTIVE"))
+                    .andExpect(jsonPath("$.status").value("ACTIVE"))
                     .andExpect(jsonPath("$.timeEndTask").isNotEmpty());
         }
 

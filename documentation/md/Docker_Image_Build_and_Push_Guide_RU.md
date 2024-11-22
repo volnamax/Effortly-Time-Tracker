@@ -43,6 +43,12 @@ docker login
 
 ```bash
 docker push volnamax1/effortly-time-tracker:latest
+
+
+
+ docker tag 4660496684b8 volnamax1/docker-spring-boot-postgres:latest
+PS D:\service\docker> docker push volnamax1/docker-spring-boot-postgres:latest
+
 ```
 
 Эта команда загрузит образ с тегом `latest` в ваш репозиторий на Docker Hub.
