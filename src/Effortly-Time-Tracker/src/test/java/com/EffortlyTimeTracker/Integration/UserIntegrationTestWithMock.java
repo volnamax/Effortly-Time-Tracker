@@ -13,8 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -25,13 +29,20 @@ import static org.mockito.Mockito.*;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class UserIntegrationTestWithMock {
 
-    @Mock
+    @Container
+    public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest")
+            .withDatabaseName("testdb")
+            .withUsername("test")
+            .withPassword("test")
+            .withInitScript("sql/CreateTables.sql");
+
+    @MockBean
     private IUserRepository userRepository;
 
-    @Mock
+    @MockBean
     private SequenceGeneratorService sequenceGeneratorService;
 
-    @InjectMocks
+    @Autowired
     private UserService userService;
 
     private UserEntity mockUser;
@@ -39,8 +50,6 @@ public class UserIntegrationTestWithMock {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-
         mockRole = new RoleEntityBuilder()
                 .withRole(Role.MANAGER)
                 .build();
