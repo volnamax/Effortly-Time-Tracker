@@ -29,7 +29,7 @@
     @AutoConfigureMockMvc
     @Testcontainers
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-    public class E2E {
+    public class E2ETest {
         @Container
         public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest")
                 .withDatabaseName("testdb")
@@ -423,7 +423,7 @@
                             .param("taskId", "1")
                             .header("Authorization", authToken))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.status").value("ACTIVE"))
+                    .andExpect(jsonPath("$.status").value("NO_ACTIVE"))
                     .andExpect(jsonPath("$.timeEndTask").isNotEmpty());
         }
 

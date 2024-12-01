@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class ProjectIntegrationTestWithMockedUser {
+public class ProjectIntegrationTestWithMockedUserTest {
 
     @Container
     public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest")
