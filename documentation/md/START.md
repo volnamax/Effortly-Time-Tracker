@@ -67,6 +67,10 @@
 
 Тесты выполняются параллельно в несколько потоков согласно настройкам Maven.
 
+```bash
+PS D:\service\src\Effortly-Time-Tracker\.allure\allure-2.30.0\bin> ./allure serve D:\service\src\Effortly-Time-Tracker\target\allure-results  --host localhost --port 9999
+```
+
 ---
 
 ### 3. Генерация отчетов Allure
