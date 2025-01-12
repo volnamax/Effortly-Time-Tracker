@@ -27,6 +27,12 @@
 
 Чтобы запустить базу данных PostgreSQL и приложение Spring Boot с помощью Docker, выполните следующие шаги:
 
+```bash
+mvn clean package -DskipTests
+```
+
+
+
 1. **Перейдите в директорию с Docker-файлами**:
 
    ```bash
