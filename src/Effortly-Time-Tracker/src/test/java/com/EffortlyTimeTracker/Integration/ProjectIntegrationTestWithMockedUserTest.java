@@ -69,7 +69,7 @@ public class ProjectIntegrationTestWithMockedUserTest {
 
         UserEntity user = new UserEntityBuilder()
                 .withUserId(1)
-                .withUserName("TestUser")
+                .withUserName(" TestUser")
                 .withUserSecondName("TestSecondName")
                 .withEmail("testuser@example.com")
                 .withPasswordHash("password123")
