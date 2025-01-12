@@ -1,4 +1,5 @@
 services:
+
   app:
     # Сервис приложения Spring Boot
     image: 'docker-spring-boot-postgres:latest'  # Используемый образ
