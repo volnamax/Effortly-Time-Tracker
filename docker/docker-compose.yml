@@ -37,6 +37,7 @@ services:
     networks:
       - app-network
 
+
   pgadmin:
     # Сервис для работы с базой данных через веб-интерфейс pgAdmin
     image: dpage/pgadmin4
