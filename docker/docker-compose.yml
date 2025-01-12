@@ -1,5 +1,4 @@
 services:
-
   app:
     # Сервис приложения Spring Boot
     image: 'docker-spring-boot-postgres:latest'  # Используемый образ
@@ -8,12 +7,12 @@ services:
       dockerfile: docker/Dockerfile # Путь до Dockerfile
     container_name: app # Имя контейнера
     depends_on:
-      - db # Зависимость от базы данных хуц
+      - db # Зависимость от базы данных
     # Настройки для подключения к базе данных PostgreSQL
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1564
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/postgresdocker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgresdocker
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=1564
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
@@ -36,7 +35,6 @@ services:
       - ../src/Effortly-Time-Tracker/src/main/resources/sql/CreateTables.sql:/docker-entrypoint-initdb.d/CreateTables.sql
     networks:
       - app-network
-
 
   pgadmin:
     # Сервис для работы с базой данных через веб-интерфейс pgAdmin
