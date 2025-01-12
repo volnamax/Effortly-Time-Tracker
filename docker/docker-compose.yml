@@ -8,7 +8,7 @@ services:
       dockerfile: docker/Dockerfile # Путь до Dockerfile
     container_name: app # Имя контейнера
     depends_on:
-      - db # Зависимость от базы данных
+      - db # Зависимость от базы данных хуц
     # Настройки для подключения к базе данных PostgreSQL
     environment:
       - POSTGRES_USER=postgres
