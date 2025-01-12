@@ -10,6 +10,11 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
+    env:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/postgresdocker"
+      SPRING_DATASOURCE_USERNAME: "postgres"
+      SPRING_DATASOURCE_PASSWORD: "1564"
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
