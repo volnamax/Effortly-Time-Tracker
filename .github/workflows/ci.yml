@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 permissions:
-  contents: write  # Обеспечивает необходимые права для `GITHUB_TOKEN`
+  contents: write
 
 jobs:
   build-and-test:
@@ -72,18 +72,21 @@ jobs:
       - name: Generate Allure Report with Maven
         run: mvn -f src/Effortly-Time-Tracker/pom.xml allure:report
 
+      - name: Copy Allure Report to Target Directory
+        run: cp -r src/Effortly-Time-Tracker/target/site/allure-maven src/Effortly-Time-Tracker/target/allure-report
+
       - name: List Allure Report Files
-        run: ls -la target/allure-report
+        run: ls -la src/Effortly-Time-Tracker/target/allure-report
 
       - name: Upload Allure Report as Artifact
         uses: actions/upload-artifact@v3
         with:
           name: allure-report
-          path: target/allure-report
+          path: src/Effortly-Time-Tracker/target/allure-report
 
       - name: Deploy Allure Report to GitHub Pages
         if: success()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: target/allure-report
+          publish_dir: src/Effortly-Time-Tracker/target/allure-report
