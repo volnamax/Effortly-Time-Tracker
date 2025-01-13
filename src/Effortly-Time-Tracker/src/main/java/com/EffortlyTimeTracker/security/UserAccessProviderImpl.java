@@ -1,7 +1,7 @@
 package com.EffortlyTimeTracker.security;
 
 import com.EffortlyTimeTracker.enums.Role;
-import com.EffortlyTimeTracker.service.TokenService;
+import com.EffortlyTimeTracker.unit.TokenService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

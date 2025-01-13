@@ -7,10 +7,9 @@ import com.EffortlyTimeTracker.DTO.todo.TodoNodeResponseDTO;
 import com.EffortlyTimeTracker.entity.TodoNodeEntity;
 import com.EffortlyTimeTracker.enums.Status;
 import com.EffortlyTimeTracker.mapper.TodoNodeMapper;
-import com.EffortlyTimeTracker.service.TodoService;
-import com.EffortlyTimeTracker.service.middlewareOwn.todo.CheckOwner;
-import com.EffortlyTimeTracker.service.middlewareOwn.todo.CheckTaskOwner;
-import com.EffortlyTimeTracker.service.middlewareOwn.todo.CheckUserIdMatchesCurrentUser;
+import com.EffortlyTimeTracker.unit.TodoService;
+import com.EffortlyTimeTracker.unit.middlewareOwn.todo.CheckTaskOwner;
+import com.EffortlyTimeTracker.unit.middlewareOwn.todo.CheckUserIdMatchesCurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,8 +23,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @Tag(name = "TODO-V2-controller")

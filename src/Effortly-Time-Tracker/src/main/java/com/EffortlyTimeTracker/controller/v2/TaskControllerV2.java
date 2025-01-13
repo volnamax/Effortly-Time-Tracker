@@ -1,16 +1,13 @@
 package com.EffortlyTimeTracker.controller.v2;
 
-import com.EffortlyTimeTracker.DTO.task.InactiveTaskDTO;
 import com.EffortlyTimeTracker.DTO.task.TaskActionRequestDTO;
 import com.EffortlyTimeTracker.DTO.task.TaskCreateDTO;
 import com.EffortlyTimeTracker.DTO.task.TaskResponseDTO;
-import com.EffortlyTimeTracker.entity.InactiveTaskEntity;
 import com.EffortlyTimeTracker.entity.TaskEntity;
 import com.EffortlyTimeTracker.mapper.TaskMapper;
-import com.EffortlyTimeTracker.service.TaskService;
-import com.EffortlyTimeTracker.service.middlewareOwn.table.CheckTableOwner;
-import com.EffortlyTimeTracker.service.middlewareOwn.task.CheckTaskOwner;
-import com.EffortlyTimeTracker.service.middlewareOwn.task.CheckUserIdMatchesCurrentUserTask;
+import com.EffortlyTimeTracker.unit.TaskService;
+import com.EffortlyTimeTracker.unit.middlewareOwn.task.CheckTaskOwner;
+import com.EffortlyTimeTracker.unit.middlewareOwn.task.CheckUserIdMatchesCurrentUserTask;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,7 +23,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Tag(name = "Task-V2-controller")
