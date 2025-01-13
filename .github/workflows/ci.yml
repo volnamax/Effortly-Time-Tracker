@@ -12,7 +12,7 @@ jobs:
 
     services:
       db:
-        image: postgres:latest
+        image: postgres:17.2
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: 1564
@@ -43,6 +43,21 @@ jobs:
             sleep 5
           done
           echo "Database not ready" && exit 1
+
+      - name: Install PostgreSQL Client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Initialize Database
+        run: |
+          PGPASSWORD=1564 psql -h localhost -U postgres -d postgresdocker -f src/Effortly-Time-Tracker/src/main/resources/sql/CreateTables.sql
+        env:
+          PGPASSWORD: 1564
+
+      - name: Verify Roles in Database
+        run: |
+          PGPASSWORD=1564 psql -h localhost -U postgres -d postgresdocker -c "SELECT * FROM roles;"
+        env:
+          PGPASSWORD: 1564
 
       - name: Build and Test with Maven
         env:
