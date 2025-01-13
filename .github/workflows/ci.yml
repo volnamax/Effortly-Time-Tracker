@@ -59,9 +59,33 @@ jobs:
         env:
           PGPASSWORD: 1564
 
+      - name: Install Allure Commandline
+        uses: actions/setup-allure@v2
+        with:
+          allure-version: '2.22.0'  # Укажите актуальную версию
+
       - name: Build and Test with Maven
         env:
           SPRING_DATASOURCE_URL: "jdbc:postgresql://localhost:5432/postgresdocker"
           SPRING_DATASOURCE_USERNAME: "postgres"
           SPRING_DATASOURCE_PASSWORD: "1564"
-        run: mvn -f src/Effortly-Time-Tracker/pom.xml clean verify
+        run: mvn -f src/Effortly-Time-Tracker/pom.xml clean test
+
+      - name: Generate Allure Report
+        run: mvn allure:report
+
+      - name: Serve Allure Report (Optional)
+        run: mvn allure:serve &
+        # Это необязательный шаг, который запускает локальный сервер для просмотра отчета
+
+      - name: Upload Allure Report as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-report
+          path: target/site/allure-maven-plugin
+
+      - name: Publish Allure Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-report
+          path: target/allure-report/
