@@ -60,9 +60,14 @@ jobs:
           PGPASSWORD: 1564
 
       - name: Install Allure Commandline
-        uses: actions/setup-allure@v2
-        with:
-          allure-version: '2.22.0'  # Укажите актуальную версию
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+          wget https://github.com/allure-framework/allure2/releases/download/2.30.0/allure-2.30.0.zip -O allure.zip
+          sudo unzip allure.zip -d /opt/
+          sudo ln -s /opt/allure-2.30.0/bin/allure /usr/bin/allure
+          rm allure.zip
+          allure --version
 
       - name: Build and Test with Maven
         env:
@@ -72,20 +77,18 @@ jobs:
         run: mvn -f src/Effortly-Time-Tracker/pom.xml clean test
 
       - name: Generate Allure Report
-        run: mvn allure:report
-
-      - name: Serve Allure Report (Optional)
-        run: mvn allure:serve &
-        # Это необязательный шаг, который запускает локальный сервер для просмотра отчета
+        run: allure generate target/allure-results --clean -o target/allure-report
 
       - name: Upload Allure Report as Artifact
         uses: actions/upload-artifact@v3
         with:
           name: allure-report
-          path: target/site/allure-maven-plugin
+          path: target/allure-report
 
-      - name: Publish Allure Report
-        uses: actions/upload-artifact@v3
-        with:
-          name: allure-report
-          path: target/allure-report/
+      # Опционально: Публикация отчета на GitHub Pages или другом хостинге
+      # - name: Deploy Allure Report to GitHub Pages
+      #   if: success()
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: target/allure-report
