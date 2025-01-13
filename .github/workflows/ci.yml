@@ -72,10 +72,7 @@ jobs:
       - name: Generate Allure Report with Maven
         run: mvn -f src/Effortly-Time-Tracker/pom.xml allure:report
 
-      - name: Copy Allure Report to Target Directory
-        run: cp -r src/Effortly-Time-Tracker/target/site/allure-maven src/Effortly-Time-Tracker/target/allure-report
-
-      - name: List Allure Report Files
+      - name: Verify Allure Report Directory
         run: ls -la src/Effortly-Time-Tracker/target/allure-report
 
       - name: Upload Allure Report as Artifact
