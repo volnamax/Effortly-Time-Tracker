@@ -56,6 +56,7 @@ jobs:
         env:
           PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
 
+
       - name: Verify Roles in Database
         run: |
           PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }} psql -h localhost -U postgres -d postgresdocker -c "SELECT * FROM roles;"
