@@ -82,14 +82,18 @@ jobs:
       - name: Generate Allure Report
         run: allure generate target/allure-results --clean -o target/allure-report
 
+      - name: List Allure Report Files
+        run: ls -la target/allure-report
+
       - name: Upload Allure Report as Artifact
         uses: actions/upload-artifact@v3
         with:
           name: allure-report
           path: target/allure-report
-      - name: DeployAllureReporttoGitHubPages
+
+      - name: Deploy Allure Report to GitHub Pages
         if: success()
         uses: peaceiris/actions-gh-pages@v3
         with:
-           github_token: ${{ secrets.GITHUB_TOKEN }}
-           publish_dir: target/allure-report
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: target/allure-report
