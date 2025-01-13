@@ -42,7 +42,7 @@ mvn clean package -DskipTests
 2. **Соберите и запустите Docker-контейнеры**:
 
    **Команда**  
-   `docker-compose up --build`
+   `docker-compose up --build` 
 
    Эта команда создаст и запустит контейнеры для базы данных PostgreSQL и приложения Spring Boot.
 
