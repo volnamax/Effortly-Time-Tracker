@@ -62,16 +62,6 @@ jobs:
         env:
           PGPASSWORD: 1564
 
-      - name: Install Allure Commandline
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget unzip
-          wget https://github.com/allure-framework/allure2/releases/download/2.30.0/allure-2.30.0.zip -O allure.zip
-          sudo unzip allure.zip -d /opt/
-          sudo ln -s /opt/allure-2.30.0/bin/allure /usr/bin/allure
-          rm allure.zip
-          allure --version
-
       - name: Build and Test with Maven
         env:
           SPRING_DATASOURCE_URL: "jdbc:postgresql://localhost:5432/postgresdocker"
@@ -79,8 +69,8 @@ jobs:
           SPRING_DATASOURCE_PASSWORD: "1564"
         run: mvn -f src/Effortly-Time-Tracker/pom.xml clean test
 
-      - name: Generate Allure Report
-        run: allure generate target/allure-results --clean -o target/allure-report
+      - name: Generate Allure Report with Maven
+        run: mvn -f src/Effortly-Time-Tracker/pom.xml allure:report
 
       - name: List Allure Report Files
         run: ls -la target/allure-report
