@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: write  # Обеспечивает необходимые права для `GITHUB_TOKEN`
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
