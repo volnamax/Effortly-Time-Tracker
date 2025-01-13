@@ -69,11 +69,27 @@ jobs:
           SPRING_DATASOURCE_PASSWORD: "1564"
         run: mvn -f src/Effortly-Time-Tracker/pom.xml clean test
 
+      - name: Verify Test Results
+        run: |
+          echo "Surefire reports directory:"
+          ls -la src/Effortly-Time-Tracker/target/surefire-reports
+          echo "Surefire report content:"
+          cat src/Effortly-Time-Tracker/target/surefire-reports/*.txt
+
       - name: Generate Allure Report with Maven
         run: mvn -f src/Effortly-Time-Tracker/pom.xml allure:report
 
+      - name: Debug Allure Results
+        run: |
+          echo "Allure results directory:"
+          ls -la src/Effortly-Time-Tracker/target/allure-results
+          echo "Allure result files content:"
+          cat src/Effortly-Time-Tracker/target/allure-results/*.json || echo "No JSON files found"
+
       - name: Verify Allure Report Directory
-        run: ls -la src/Effortly-Time-Tracker/target/allure-report
+        run: |
+          echo "Allure report directory:"
+          ls -la src/Effortly-Time-Tracker/target/allure-report
 
       - name: Upload Allure Report as Artifact
         uses: actions/upload-artifact@v3
