@@ -2,6 +2,7 @@
 .gradle/
 build/
 src/Effortly-Time-Tracker/.allure
+src/Effortly-Time-Tracker/target
 *.iml
 .gradle
 /local.properties
