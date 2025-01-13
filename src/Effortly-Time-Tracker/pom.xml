@@ -225,7 +225,6 @@
                             <value>4</value> <!-- Количество потоков для параллельного выполнения -->
                         </property>
                     </properties>
-
                 </configuration>
             </plugin>
             <!-- Allure Maven Plugin -->
@@ -233,7 +232,20 @@
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-maven</artifactId>
                 <version>${allure-maven.version}</version>
-
+                <configuration>
+                    <reportVersion>2.15.2</reportVersion>
+                    <resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>
+                    <reportDirectory>${project.build.directory}/allure-report</reportDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>allure-report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
