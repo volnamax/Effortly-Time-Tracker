@@ -4,7 +4,7 @@ build/
 src/Effortly-Time-Tracker/.allure
 src/Effortly-Time-Tracker/target
 src/Effortly-Time-Tracker/allure-results
-*.env
+docker/.env
 *.iml
 .gradle
 /local.properties
