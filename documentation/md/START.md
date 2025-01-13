@@ -97,7 +97,7 @@ PS D:\service\src\Effortly-Time-Tracker\.allure\allure-2.30.0\bin> ./allure serv
    **Команда**  
    `mvn allure:report`
 
-резултат будет  в target/allure-report 
+резултат будет  в target/allure-report  
 
 3. **Запустите сервер для отображения отчета Allure**
 
