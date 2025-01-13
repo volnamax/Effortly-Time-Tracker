@@ -64,11 +64,10 @@ jobs:
 
       - name: Build and Test with Maven
         env:
-          SPRING_PROFILES_ACTIVE: "test"
+          SPRING_DATASOURCE_URL: "jdbc:postgresql://localhost:5432/postgresdocker"
+          SPRING_DATASOURCE_USERNAME: "postgres"
+          SPRING_DATASOURCE_PASSWORD: "1564"
         run: mvn -f src/Effortly-Time-Tracker/pom.xml clean test
-
-      - name: List Allure Results Files
-        run: ls -la target/allure-results
 
       - name: Generate Allure Report with Maven
         run: mvn -f src/Effortly-Time-Tracker/pom.xml allure:report
