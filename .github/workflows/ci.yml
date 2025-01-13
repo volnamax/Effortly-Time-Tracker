@@ -18,7 +18,7 @@ jobs:
         image: postgres:17.2
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: 1564
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: postgresdocker
         ports:
           - 5432:5432
@@ -52,21 +52,21 @@ jobs:
 
       - name: Initialize Database
         run: |
-          PGPASSWORD=1564 psql -h localhost -U postgres -d postgresdocker -f src/Effortly-Time-Tracker/src/main/resources/sql/CreateTables.sql
+          PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }} psql -h localhost -U postgres -d postgresdocker -f src/Effortly-Time-Tracker/src/main/resources/sql/CreateTables.sql
         env:
-          PGPASSWORD: 1564
+          PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
 
       - name: Verify Roles in Database
         run: |
-          PGPASSWORD=1564 psql -h localhost -U postgres -d postgresdocker -c "SELECT * FROM roles;"
+          PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }} psql -h localhost -U postgres -d postgresdocker -c "SELECT * FROM roles;"
         env:
-          PGPASSWORD: 1564
+          PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
 
       - name: Build and Test with Maven
         env:
           SPRING_DATASOURCE_URL: "jdbc:postgresql://localhost:5432/postgresdocker"
           SPRING_DATASOURCE_USERNAME: "postgres"
-          SPRING_DATASOURCE_PASSWORD: "1564"
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         run: mvn -f src/Effortly-Time-Tracker/pom.xml clean test
 
       - name: Verify Test Results
