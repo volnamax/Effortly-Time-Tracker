@@ -17,7 +17,7 @@ jobs:
       db:
         image: postgres:17.2
         env:
-          POSTGRES_USER: postgres
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: postgresdocker
         ports:
@@ -66,7 +66,7 @@ jobs:
       - name: Build and Test with Maven
         env:
           SPRING_DATASOURCE_URL: "jdbc:postgresql://localhost:5432/postgresdocker"
-          SPRING_DATASOURCE_USERNAME: "postgres"
+          SPRING_DATASOURCE_USERNAME: ${{ secrets.POSTGRES_USER }}
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         run: mvn -f src/Effortly-Time-Tracker/pom.xml clean test
 
