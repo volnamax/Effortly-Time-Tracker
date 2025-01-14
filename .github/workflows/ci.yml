@@ -76,7 +76,7 @@ jobs:
           SPRING_DATASOURCE_URL: "jdbc:postgresql://localhost:5432/postgresdocker"
           SPRING_DATASOURCE_USERNAME: ${{ secrets.POSTGRES_USER }}
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        run: mvn -f src/Effortly-Time-Tracker/pom.xml clean test -Pintegration-tests
+        run: mvn -f src/Effortly-Time-Tracker/pom.xml test -Pintegration-tests
 
       # E2E Tests
       - name: Run E2E Tests
@@ -84,7 +84,7 @@ jobs:
           SPRING_DATASOURCE_URL: "jdbc:postgresql://localhost:5432/postgresdocker"
           SPRING_DATASOURCE_USERNAME: ${{ secrets.POSTGRES_USER }}
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        run: mvn -f src/Effortly-Time-Tracker/pom.xml clean test -Pe2e-tests
+        run: mvn -f src/Effortly-Time-Tracker/pom.xml  test -Pe2e-tests
 
       - name: Verify Test Results
         run: |
