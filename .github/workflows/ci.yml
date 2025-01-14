@@ -56,19 +56,35 @@ jobs:
         env:
           PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
 
-
       - name: Verify Roles in Database
         run: |
           PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }} psql -h localhost -U postgres -d postgresdocker -c "SELECT * FROM roles;"
         env:
           PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
 
-      - name: Build and Test with Maven
+      # Unit Tests
+      - name: Run Unit Tests
         env:
           SPRING_DATASOURCE_URL: "jdbc:postgresql://localhost:5432/postgresdocker"
           SPRING_DATASOURCE_USERNAME: ${{ secrets.POSTGRES_USER }}
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        run: mvn -f src/Effortly-Time-Tracker/pom.xml clean test
+        run: mvn -f src/Effortly-Time-Tracker/pom.xml clean test -Punit-tests
+
+      # Integration Tests
+      - name: Run Integration Tests
+        env:
+          SPRING_DATASOURCE_URL: "jdbc:postgresql://localhost:5432/postgresdocker"
+          SPRING_DATASOURCE_USERNAME: ${{ secrets.POSTGRES_USER }}
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        run: mvn -f src/Effortly-Time-Tracker/pom.xml clean test -Pintegration-tests
+
+      # E2E Tests
+      - name: Run E2E Tests
+        env:
+          SPRING_DATASOURCE_URL: "jdbc:postgresql://localhost:5432/postgresdocker"
+          SPRING_DATASOURCE_USERNAME: ${{ secrets.POSTGRES_USER }}
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        run: mvn -f src/Effortly-Time-Tracker/pom.xml clean test -Pe2e-tests
 
       - name: Verify Test Results
         run: |
@@ -79,18 +95,6 @@ jobs:
 
       - name: Generate Allure Report with Maven
         run: mvn -f src/Effortly-Time-Tracker/pom.xml allure:report
-
-      - name: Debug Allure Results
-        run: |
-          echo "Allure results directory:"
-          ls -la src/Effortly-Time-Tracker/target/allure-results
-          echo "Allure result files content:"
-          cat src/Effortly-Time-Tracker/target/allure-results/*.json || echo "No JSON files found"
-
-      - name: Verify Allure Report Directory
-        run: |
-          echo "Allure report directory:"
-          ls -la src/Effortly-Time-Tracker/target/allure-report
 
       - name: Upload Allure Report as Artifact
         uses: actions/upload-artifact@v3
