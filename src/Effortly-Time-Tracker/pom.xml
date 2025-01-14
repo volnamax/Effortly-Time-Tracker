@@ -194,9 +194,9 @@
 
 
                 <configuration>
-<!--                    <includes>-->
-<!--                        <include>**/E2ETest.java</include> &lt;!&ndash; E2E-тесты &ndash;&gt;-->
-<!--                    </includes>-->
+                    <includes>
+                        <include>**/e2e/*.java</include> <!-- E2E-тесты -->
+                    </includes>
 
                     <!-- Запустить все тесты в одном процессе -->
                     <forkCount>1</forkCount>
@@ -250,50 +250,6 @@
                     <reportDirectory>${project.build.directory}/allure-report</reportDirectory>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-invoker-plugin</artifactId>
-                <version>3.9.0</version>
-                <executions>
-                    <execution>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <projectsDirectory>${basedir}</projectsDirectory>
-                    <invocations>
-                        <!-- Unit-тесты -->
-                        <invocation>
-                            <goals>
-                                <goal>clean</goal>
-                                <goal>test</goal>
-                            </goals>
-                            <profiles>unit-tests</profiles>
-                        </invocation>
-                        <!-- Integration-тесты -->
-                        <invocation>
-                            <goals>
-                                <goal>clean</goal>
-                                <goal>test</goal>
-                            </goals>
-                            <profiles>integration-tests</profiles>
-                        </invocation>
-                        <!-- E2E-тесты -->
-                        <invocation>
-                            <goals>
-                                <goal>clean</goal>
-                                <goal>verify</goal>
-                            </goals>
-                            <profiles>e2e-tests</profiles>
-                        </invocation>
-                    </invocations>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
