@@ -194,11 +194,7 @@
 
 
                 <configuration>
-<!--                    <includes>-->
-<!--                        <include>**/unit/*.java</include> &lt;!&ndash; E2E-тесты &ndash;&gt;-->
-<!--                        <include>**/e2e/*.java</include> &lt;!&ndash; E2E-тесты &ndash;&gt;-->
 
-<!--                    </includes>-->
 
                     <!-- Запустить все тесты в одном процессе -->
                     <forkCount>1</forkCount>
@@ -298,6 +294,9 @@
                             <includes>
                                 <include>**/unit/**</include> <!-- Путь к Unit-тестам -->
                             </includes>
+                            <systemPropertyVariables>
+                                <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+                            </systemPropertyVariables>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -316,6 +315,9 @@
                             <includes>
                                 <include>**/integration/**</include> <!-- Путь к Integration-тестам -->
                             </includes>
+                            <systemPropertyVariables>
+                                <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+                            </systemPropertyVariables>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -334,6 +336,9 @@
                             <includes>
                                 <include>**/e2e/**</include> <!-- Путь к E2E-тестам -->
                             </includes>
+                            <systemPropertyVariables>
+                                <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+                            </systemPropertyVariables>
                         </configuration>
                     </plugin>
                 </plugins>
