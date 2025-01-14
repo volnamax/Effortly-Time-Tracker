@@ -194,9 +194,11 @@
 
 
                 <configuration>
-                    <includes>
-                        <include>**/e2e/*.java</include> <!-- E2E-тесты -->
-                    </includes>
+<!--                    <includes>-->
+<!--                        <include>**/unit/*.java</include> &lt;!&ndash; E2E-тесты &ndash;&gt;-->
+<!--                        <include>**/e2e/*.java</include> &lt;!&ndash; E2E-тесты &ndash;&gt;-->
+
+<!--                    </includes>-->
 
                     <!-- Запустить все тесты в одном процессе -->
                     <forkCount>1</forkCount>
@@ -280,62 +282,63 @@
             <url>https://repo.maven.apache.org/maven2/</url>
         </repository>
     </repositories>
+    <profiles>
+        <!-- Профиль для Unit-тестов -->
+        <profile>
+            <id>unit-tests</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>**/unit/**</include> <!-- Путь к Unit-тестам -->
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 
-<!--    <profiles>-->
-<!--        &lt;!&ndash; Профиль для Unit-тестов &ndash;&gt;-->
-<!--        <profile>-->
-<!--            <id>unit-tests</id>-->
-<!--            <build>-->
-<!--                <plugins>-->
-<!--                    <plugin>-->
-<!--                        <groupId>org.apache.maven.plugins</groupId>-->
-<!--                        <artifactId>maven-surefire-plugin</artifactId>-->
-<!--                        <configuration>-->
-<!--                            <includes>-->
-<!--                                <include>src/test/unit/**</include> &lt;!&ndash; Папка с Unit-тестами &ndash;&gt;-->
-<!--                            </includes>-->
-<!--                        </configuration>-->
-<!--                    </plugin>-->
-<!--                </plugins>-->
-<!--            </build>-->
-<!--        </profile>-->
+        <!-- Профиль для Integration-тестов -->
+        <profile>
+            <id>integration-tests</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>**/integration/**</include> <!-- Путь к Integration-тестам -->
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 
-<!--        &lt;!&ndash; Профиль для Integration-тестов &ndash;&gt;-->
-<!--        <profile>-->
-<!--            <id>integration-tests</id>-->
-<!--            <build>-->
-<!--                <plugins>-->
-<!--                    <plugin>-->
-<!--                        <groupId>org.apache.maven.plugins</groupId>-->
-<!--                        <artifactId>maven-surefire-plugin</artifactId>-->
-<!--                        <configuration>-->
-<!--                            <includes>-->
-<!--                                <include>src/test/integration/**</include> &lt;!&ndash; Папка с Integration-тестами &ndash;&gt;-->
-<!--                            </includes>-->
-<!--                        </configuration>-->
-<!--                    </plugin>-->
-<!--                </plugins>-->
-<!--            </build>-->
-<!--        </profile>-->
-
-<!--        &lt;!&ndash; Профиль для E2E-тестов &ndash;&gt;-->
-<!--        <profile>-->
-<!--            <id>e2e-tests</id>-->
-<!--            <build>-->
-<!--                <plugins>-->
-<!--                    <plugin>-->
-<!--                        <groupId>org.apache.maven.plugins</groupId>-->
-<!--                        <artifactId>maven-surefire-plugin</artifactId>-->
-<!--                        <configuration>-->
-<!--                            <includes>-->
-<!--                                <include>src/test/e2e/**</include> &lt;!&ndash; Папка с E2E-тестами &ndash;&gt;-->
-<!--                            </includes>-->
-<!--                        </configuration>-->
-<!--                    </plugin>-->
-<!--                </plugins>-->
-<!--            </build>-->
-<!--        </profile>-->
-<!--    </profiles>-->
-
+        <!-- Профиль для E2E-тестов -->
+        <profile>
+            <id>e2e-tests</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>**/e2e/**</include> <!-- Путь к E2E-тестам -->
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
